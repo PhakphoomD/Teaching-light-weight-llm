@@ -1,0 +1,27 @@
+# environment.yml
+# Purpose: Install only machine/runtime-specific dependencies with Conda first.
+# Platforms: Windows (NVIDIA/CUDA driver), macOS (Apple Silicon will use pip for Torch/MPS)
+# Usage:
+#   conda env create -f environment.yml
+#   conda activate tlw
+
+name: tlw # tlp = teaching light weight LLM
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11
+
+  # --- Windows (NVIDIA) / PCs with CUDA driver ---
+  # Installs CUDA-enabled PyTorch matched by Conda to your driver/runtime.
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.4
+
+  # Optional (Linux only): enable FAISS GPU if you are on Linux
+  # - faiss-gpu
+
+  # Keep pip so we can install cross-platform libraries next
+  - pip

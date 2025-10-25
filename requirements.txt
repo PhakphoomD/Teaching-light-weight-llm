@@ -1,30 +1,58 @@
-# Core dependencies
-torch>=1.9.0
-transformers>=4.20.0
-datasets>=2.0.0
-accelerate>=0.20.0
+###############################################################################
+# AI Teaching Loop System — pip requirements (install AFTER environment.yml)
+# Install order:
+#   1) conda env create -f environment.yml   && conda activate ai-loop
+#   2) (macOS only) pip install torch torchvision torchaudio
+#   3) pip install -r requirements.txt
+###############################################################################
 
-# API clients
-groq>=0.4.0
-openai>=1.0.0
+##############################
+# === Core dependencies === #
+##############################
+transformers>=4.43.0       # HF model & tokenizer
+accelerate>=0.33.0         # device orchestration
+datasets>=2.20.0           # dataset workflows
+tqdm>=4.66.0               # progress bars
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+pydantic>=2.7.0            # strict config validation
+python-dotenv>=1.0.1       # .env loader
+PyYAML>=6.0.1              # YAML config
+typer>=0.12.3              # CLI
+loguru>=0.7.2              # logging
+rich>=13.7.1               # pretty console
 
-# Data handling
-pandas>=1.3.0
-numpy>=1.21.0
+###########################################
+# === Memory & Retrieval (CPU) === #
+###########################################
+faiss-cpu>=1.8.0.post1     # vector index (CPU build; safest on Windows)
+sentence-transformers>=3.0.1
 
-# Configuration
-pyyaml>=6.0
-python-dotenv>=0.19.0
+###########################################
+# === Evaluation & Visualization === #
+###########################################
+sacrebleu>=2.4.2
+rouge-score>=0.1.2
+nltk>=3.9
+evaluate>=0.4.2
+matplotlib>=3.8.4
+seaborn>=0.13.2
+tiktoken>=0.7.0            # token counting & cost estimation
 
-# Evaluation and metrics
-scikit-learn>=1.0.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
+#####################################################
+# === LLM Provider SDKs (pip-safe, pure Python) === #
+#####################################################
+# Safe to install via pip on all platforms (no CUDA dependency).
+openai>=1.40.0
+groq>=0.11.0
+google-generativeai>=0.7.2
 
-# Utilities
-tqdm>=4.64.0
-colorama>=0.4.4
-rich>=12.0.0
-
-# Optional: For better logging
-loguru>=0.6.0
+##########################################
+# === Optional / Advanced (commented) === #
+##########################################
+# bitsandbytes>=0.43.1    # 4/8-bit quant (Linux/Colab preferred; limited on Windows)
+# vllm>=0.5.0             # high-performance inference (Linux + GPU)
+# peft>=0.11.1            # LoRA/QLoRA fine-tuning
+# scipy>=1.13.0           # statistical tests for evaluation
+# jsonlines>=4.0.0        # dataset generation helpers
