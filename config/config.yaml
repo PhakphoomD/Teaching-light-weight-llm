@@ -1,0 +1,74 @@
+###############################################################################
+# AI Teaching Loop - Phase 2 (Dataset Generation) Configuration
+# This file focuses on teacher (API) + student (local) + memory + evaluation.
+#
+# IMPORTANT:
+# - API keys and runtime flags (e.g., DAILY_MAX_TOKENS) live in .env, not here.
+# - Only adjust the model/provider lists and limits you actually need.
+###############################################################################
+
+# ---------------------------------------------------------------------------
+# Teacher: LLM(s) that generate QA data and grade answers (JSON scoring)
+# AutoRouter will try providers in this order. Make sure you have the API keys
+# for any provider you enable (in .env).
+# ---------------------------------------------------------------------------
+teacher:
+  # Priority-ordered provider specs (first healthy one wins).
+  # Keep Groq first for free-tier usage; uncomment Gemini if you plan to fallback.
+  providers:
+    - { provider: groq,   model: llama3-70b-8192, timeout_s: 20 }   # main (Groq)
+    # - { provider: gemini, model: gemini-1.5-pro,  timeout_s: 20 } # fallback (optional)
+
+  # Generation controls for teacher prompts (dataset creation / grading)
+  temperature: 0.2       # low = more deterministic for grading | data gen quality
+  max_tokens: 512        # cap for teacher outputs (answers / grading JSON)
+  top_p: 0.9             # nucleus sampling (keep as default unless you need variety)
+  rate_limit_rps: 2      # soft limit for orchestrator pacing (requests per second)
+
+# ---------------------------------------------------------------------------
+# Student: default is local model (no API cost). If later you want API-student,
+# switch "mode: api" and provide a providers list (similar to teacher).
+# ---------------------------------------------------------------------------
+student:
+  mode: local            # local | api
+  model: TinyLlama/TinyLlama-1.1B-Chat-v1.0   # HF model id (used when mode=local)
+  device: auto           # "auto" lets transformers map to CUDA if available
+  max_new_tokens: 128
+  temperature: 0.6
+  top_p: 0.9
+
+  # Example if you later switch to API-student:
+  # providers:
+  #   - { provider: groq,   model: llama3-8b-8192, timeout_s: 20 }
+  #   - { provider: gemini, model: gemini-1.5-flash, timeout_s: 20 }
+
+# ---------------------------------------------------------------------------
+# Memory: embedding encoder + FAISS index paths (CPU on Windows by default)
+# ---------------------------------------------------------------------------
+memory:
+  encoder: all-MiniLM-L6-v2     # 384-dim sentence-transformer (fast, robust)
+  dim: 384
+  index_path: logs/memory/faiss.index   # persisted FAISS index (created if missing)
+  store_path: logs/memory/store.jsonl   # raw memory entries (append-only JSONL)
+  k: 5                                  # top-K contexts to retrieve per question
+
+# ---------------------------------------------------------------------------
+# Evaluation: what to compute after dataset build or loop runs
+# ---------------------------------------------------------------------------
+evaluation:
+  test_path: data/test.jsonl
+  metrics: [exact_match, f1, rougeL, bleu, teacher_score]
+  reports_dir: logs/reports
+
+# ---------------------------------------------------------------------------
+# Costing: token-based cost estimates (fill real prices later if you want AUD)
+# Keep zeros now—Phase 2 uses them mainly for token accounting visibility.
+# ---------------------------------------------------------------------------
+costing:
+  currency: AUD
+  prices_per_1k_tokens:
+    groq:
+      llama3-70b-8192: { prompt: 0.000, completion: 0.000 }
+      # llama3-8b-8192: { prompt: 0.000, completion: 0.000 }
+    gemini:
+      gemini-1.5-pro:  { prompt: 0.000, completion: 0.000 }
