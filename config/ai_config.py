@@ -1,8 +1,8 @@
-# ai_training_system/config/ai_config.py
 from __future__ import annotations
 import os, yaml
 from pydantic import BaseModel, Field, ValidationError
 from dotenv import load_dotenv
+
 
 class ProviderSpec(BaseModel):
     provider: str = Field(..., pattern="^(openai|groq|gemini)$")

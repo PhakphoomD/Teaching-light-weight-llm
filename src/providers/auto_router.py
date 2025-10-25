@@ -16,7 +16,7 @@ class AutoRouter:
         self.temperature = temperature
         self.top_p = top_p
         self.max_tokens = max_tokens
-        self.backoff: Dict[str, float] = {}  # key -> next_allowed_ts
+        self.backoff: Dict[str, float] = {}
 
     def _env(self, provider: str):
         p = provider.lower()
@@ -33,19 +33,21 @@ class AutoRouter:
 
     def _probe(self, client, spec: ProviderSpec) -> bool:
         try:
-            r = client.chat([{"role":"user","content":"ok?"}], 0.0, 1, 1.0, min(10, spec.timeout_s))
-            return isinstance(r.get("text",""), str)
+            out = client.chat([{"role": "user", "content": "ok?"}],
+                              0.0, 1, 1.0, min(10, spec.timeout_s))
+            return isinstance(out.get("text", ""), str)
         except Exception:
             return False
 
     def pick(self):
         for spec in self.specs:
             key = f"{spec.provider}:{spec.model}"
-            if not self._gate(key):  # still in backoff
+            if not self._gate(key):
                 continue
             api_key, base_url = self._env(spec.provider)
-            if not api_key:  # no key → skip
-                self._ban(key, 10); continue
+            if not api_key:
+                self._ban(key, 10)
+                continue
             client = build_llm(spec.provider, spec.model, api_key, base_url)
             if self._probe(client, spec):
                 return client, spec
