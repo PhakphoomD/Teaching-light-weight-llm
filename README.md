@@ -11,12 +11,15 @@ Verify NVIDIA driver:
 If you don't see your GPU/driver, install the official NVIDIA Driver first.
 
 Create Conda env (GPU runtime):
+
     conda env create -f environment.yml
     conda activate tlw```
 Install Python packages with pip:
+
     pip install --upgrade pip
     pip install -r requirements.txt
 Sanity check:
+
     import torch
     print("CUDA available:", torch.cuda.is_available())
     print("Device:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
@@ -24,17 +27,20 @@ Sanity check:
 ### MacOS (Apple Silicon: M1/M2/M3)
 macOS uses MPS/Metal, not CUDA.
 `` same as window without nvidia ``
+
     conda env create -f environment.yml
     conda activate tlw
+
     pip install --upgrade pip
     pip install torch torchvision torchaudio
     pip install -r requirements.txt
-    python - << 'PY'
+
+    
     import torch
     print("MPS available:", getattr(torch.backends, "mps", None) and torch.backends.m)
     is_available()
     print("CUDA available:", torch.cuda.is_available())
-    PY
+    
 
 
 ### Google Colab (pip-only)
@@ -68,6 +74,7 @@ Use CPU build (faiss-cpu) on Windows. If you need FAISS GPU, use Linux/WSL2.
 Correct — use MPS (Metal) via pip install torch torchvision torchaudio.
 
 After a successful setup:
+
     pip freeze > requirements-lock.txt
     conda env export > environment-lock.yml
 this can help us to reproducibility next time.
