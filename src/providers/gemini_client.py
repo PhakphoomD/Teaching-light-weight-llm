@@ -39,27 +39,30 @@ class GeminiClient(LLMClient):
         max_tokens: int = 256,
         timeout_s: int = 30,
     ) -> ChatResult:
-        """Generate once; return safety block as error."""
+        """Generate once; return safety block as error. Retry with last user message if empty."""
+        
+        def _pack(msgs: List[Message]) -> List[types.Content]:
+            """Pack all messages into typed content."""
+            text = "\n".join(f"{m['role']}: {m['content']}" for m in msgs)
+            return [types.Content(role="user", parts=[types.Part.from_text(text=text)])]
+        
+        def _pack_last_user(msgs: List[Message]) -> List[types.Content]:
+            """Pack only last user message for retry."""
+            last_user = next((m["content"] for m in reversed(msgs) if m["role"] == "user"), "")
+            return [types.Content(role="user", parts=[types.Part.from_text(text=last_user or "Say READY")])]
+        
         try:
-            # Build typed contents (single user content; supports multi-part)
-            user_text = "\n".join(f"{m['role']}: {m['content']}" for m in messages)
-            contents = [
-                types.Content(
-                    role="user",
-                    parts=[types.Part.from_text(text=user_text)]
-                )
-            ]
-
-            # Typed generation config with system instruction
+            # Typed generation config with system instruction and response format
             cfg = types.GenerateContentConfig(
                 temperature=temperature,
                 top_p=top_p,
                 max_output_tokens=max_tokens,
                 system_instruction=self._system,
+                response_mime_type="text/plain",  # Nudge SDK to return plain text
             )
 
-            # Call typed API (cast to Any to satisfy static typing across SDKs)
-            contents_payload: Any = cast(Any, contents)
+            # Call typed API
+            contents_payload: Any = cast(Any, _pack(messages))
             resp = self.client.models.generate_content(
                 model=self.model_name,
                 contents=contents_payload,
@@ -82,13 +85,27 @@ class GeminiClient(LLMClient):
                                 chunks.append(t)
                 text = "".join(chunks).strip()
 
+            # Retry once with last user message only if still empty
+            if not text:
+                logger.warning("Empty response from Gemini, retrying with last user message only")
+                resp2 = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=cast(Any, _pack_last_user(messages)),
+                    config=cfg,
+                )
+                text = (getattr(resp2, "text", "") or "").strip()
+
             # Safety check
             pf = getattr(resp, "prompt_feedback", None)
             if pf and getattr(pf, "block_reason", None):
                 return ChatResult(text="", usage=Usage(), raw=resp,
                                   error=f"safety_block:{pf.block_reason}")
 
-            return ChatResult(text=text or "", usage=Usage(), raw=resp)
+            # Return empty_response error if still no text
+            if not text:
+                return ChatResult(text="", usage=Usage(), raw=resp, error="empty_response")
+
+            return ChatResult(text=text, usage=Usage(), raw=resp)
         
         except Exception as e:
             logger.error(f"Gemini error: {e}")

@@ -115,7 +115,7 @@ class LocalTinyLlama(LLMClient):
                 )
 
                 model_kwargs = {
-                    "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32,
+                    "dtype": torch.float16 if self.device == "cuda" else torch.float32,
                     "device_map": "auto" if self.device == "cuda" else None,
                     "load_in_8bit": load_in_8bit if self.device == "cuda" else False,
                     "trust_remote_code": True,
@@ -166,25 +166,18 @@ class LocalTinyLlama(LLMClient):
         """
         Format conversation messages into model-specific prompt structure.
         
-        Primary implementation uses the model's built-in chat template.
-        Falls back to a robust manual template if needed.
-        
-        Note: Manual template preserves message role semantics
-        while maintaining compatibility with older models.
+        Primary: try model's chat template.
+        Fallback: minimal format to reduce drift: `user: ...\nassistant:`
         """
         try:
-            # Preferred: Use model's native chat template
             result = self.tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             if not isinstance(result, str):
                 raise ValueError("Chat template returned non-string result")
             return result
         except Exception as e:
-            # Fallback: Manual template with role preservation
-            logger.warning(f"Native chat template failed: {e}. Using fallback template.")
-            prompt_str = ""
-            for msg in messages:
-                prompt_str += f"<|{msg['role']}|>\n{msg['content']}<|end|>\n"
-            prompt_str += "<|assistant|>\n"
+            logger.warning(f"Native chat template failed: {e}. Using minimal fallback.")
+            last_user = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
+            prompt_str = f"user: {last_user}\nassistant:"
             return prompt_str
 
     def chat(
@@ -212,28 +205,29 @@ class LocalTinyLlama(LLMClient):
             # Ensure tensors are on same device as model
             inputs = {k: v.to(self.mdl.device) for k, v in inputs.items()}
             
-            generation_config = {
-                "max_new_tokens": max_tokens,
-                "do_sample": True,
-                "temperature": max(temperature, 0.01), # Temp 0 causes issues
-                "top_p": top_p,
-                # pad_token_id: prefer eos_token_id or pad_token_id; fallback to 0
-                # to avoid generate() raising when tokenizer lacks these ids
-                
-                }
+            # Determine pad_token_id fallback
             pad_id = getattr(self.tok, "eos_token_id", None) or getattr(self.tok, "pad_token_id", None)
             if pad_id is None:
                 logger.warning("Tokenizer missing eos_token_id and pad_token_id; falling back to 0 for pad_token_id")
                 pad_id = 0
+            
+            # Use deterministic generation when temperature is 0.0 (for smoke tests)
+            do_sample_flag = not (temperature == 0.0)
+            
             generation_config = {
                 "max_new_tokens": max_tokens,
-                "do_sample": True,
-                "temperature": max(temperature, 0.01), # Temp 0 causes issues
-                "top_p": top_p,
+                "do_sample": do_sample_flag,
                 "pad_token_id": int(pad_id),
-                "repetition_penalty": 1.1,
-                "no_repeat_ngram_size": 3
             }
+            
+            # Add sampling parameters only if do_sample is True
+            if do_sample_flag:
+                generation_config.update({
+                    "temperature": max(temperature, 0.01),  # Temp 0 causes issues
+                    "top_p": top_p,
+                    "repetition_penalty": 1.1,
+                    "no_repeat_ngram_size": 3
+                })
             
             with torch.no_grad():
                 gen_ids = self.mdl.generate(**inputs, **generation_config)
