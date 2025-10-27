@@ -1,0 +1,62 @@
+[
+  {
+    "experiment": "rulekey",
+    "total_tasks": 20,
+    "passed": 12,
+    "failed": 8,
+    "success_rate": 0.6,
+    "avg_attempts": 3.5,
+    "avg_retrieval_ms": 0.25,
+    "avg_generation_ms": 39735.3,
+    "avg_total_ms": 39745.7,
+    "total_runtime_s": 799.4957644939423,
+    "timestamp": "2025-10-27 11:00:14",
+    "params": {
+      "dataset_path": "data/datasets/alpaca_20.jsonl",
+      "memory_path": "logs/experiments/self_reflection_critic/rule_key/memory.json",
+      "max_iters": 5,
+      "student_provider": "local",
+      "k_rule": 3
+    }
+  },
+  {
+    "experiment": "rulekey",
+    "total_tasks": 100,
+    "passed": 53,
+    "failed": 47,
+    "success_rate": 0.53,
+    "avg_attempts": 3.54,
+    "avg_retrieval_ms": 0.16,
+    "avg_generation_ms": 41503.83,
+    "avg_total_ms": 41517.39,
+    "total_runtime_s": 4155.916887283325,
+    "timestamp": "2025-10-27 13:54:02",
+    "params": {
+      "dataset_path": "data/datasets/alpaca_100.jsonl",
+      "memory_path": "logs/experiments/self_reflection_critic/rule_key/memory.json",
+      "max_iters": 5,
+      "student_provider": "local",
+      "k_rule": 3
+    }
+  },
+  {
+    "experiment": "rule_key",
+    "total_tasks": 20,
+    "passed": 4,
+    "failed": 16,
+    "success_rate": 0.2,
+    "avg_attempts": 1.8,
+    "avg_retrieval_ms": 0.15,
+    "avg_generation_ms": 24926.35,
+    "avg_total_ms": 42328.4,
+    "total_runtime_s": 851.3754796981812,
+    "timestamp": "2025-10-27 18:13:05",
+    "params": {
+      "dataset_path": "data/datasets/alpaca_20.jsonl",
+      "memory_path": "logs/experiments/self_reflection/rule_key/memory.json",
+      "max_iters": 2,
+      "student_provider": "local",
+      "k_rule": 3
+    }
+  }
+]

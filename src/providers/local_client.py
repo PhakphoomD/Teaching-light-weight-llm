@@ -79,7 +79,8 @@ class LocalTinyLlama(LLMClient):
         model: str = "TinyLlama/TinyLlama-1.1B-Chat-v1.0", 
         device: Optional[str] = None,
         load_in_8bit: bool = False,
-        use_cache: bool = True
+        use_cache: bool = True,
+        use_chat_template: bool = False,
     ) -> None:
         """
         Initialize a new TinyLlama inference provider.
@@ -95,6 +96,7 @@ class LocalTinyLlama(LLMClient):
         """
         self.model_id = model
         self.use_cache = use_cache
+        self.use_chat_template = use_chat_template
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         
         # These will be initialized in the try block
@@ -169,6 +171,10 @@ class LocalTinyLlama(LLMClient):
         Primary: try model's chat template.
         Fallback: minimal format to reduce drift: `user: ...\nassistant:`
         """
+        # Prefer minimal prompt unless explicitly requested to use chat template
+        if not self.use_chat_template:
+            last_user = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
+            return f"user: {last_user}\nassistant:"
         try:
             result = self.tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             if not isinstance(result, str):
@@ -177,8 +183,7 @@ class LocalTinyLlama(LLMClient):
         except Exception as e:
             logger.warning(f"Native chat template failed: {e}. Using minimal fallback.")
             last_user = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
-            prompt_str = f"user: {last_user}\nassistant:"
-            return prompt_str
+            return f"user: {last_user}\nassistant:"
 
     def chat(
         self,
@@ -242,7 +247,7 @@ class LocalTinyLlama(LLMClient):
                 text=text,
                 usage=Usage(
                     prompt_tokens=int(input_length),
-                    completion_tokens=int(gen_ids.size(1) - input_length)
+                    completion_tokens=int(new_tokens.size(0))
                 )
             )
             

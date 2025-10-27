@@ -1,0 +1,2 @@
+{"id": "test-0", "question": "What is 2+2? Answer with just the number.", "expected_exact": "4", "reference": "4"}
+{"id": "test-1", "question": "Name a primary color", "expected_keywords": ["red", "blue", "yellow"], "reference": "Red, blue, or yellow"}
