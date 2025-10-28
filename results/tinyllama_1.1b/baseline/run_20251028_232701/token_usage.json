@@ -1,0 +1,18 @@
+{
+  "experiment_id": "run_20251028_232701",
+  "strategy_name": "Baseline (No Memory)",
+  "student_model": "tinyllama_1.1b",
+  "teacher_model": "tinyllama_1.1b",
+  "timestamp": "2025-10-28T23:27:06.017515",
+  "student_usage": {
+    "model_name": "tinyllama_1.1b",
+    "model_type": "student",
+    "prompt_tokens": 756,
+    "completion_tokens": 1387,
+    "total_tokens": 2143,
+    "num_calls": 20
+  },
+  "total_tokens": 2143,
+  "total_prompt_tokens": 756,
+  "total_completion_tokens": 1387
+}

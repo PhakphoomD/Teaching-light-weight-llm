@@ -1,0 +1,161 @@
+{
+  "tasks": {
+    "alpaca-0": [
+      {
+        "task_id": "alpaca-0",
+        "message": "It's better to use a more advanced machine learning algorithm such as Decision Trees or Random Forest.",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-3": [
+      {
+        "task_id": "alpaca-3",
+        "message": "In the given text, we missed mentioning some popular adventure activities that are not included in the list of five.",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-4": [
+      {
+        "task_id": "alpaca-4",
+        "message": "Please revise your answer to include this information.",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-7": [
+      {
+        "task_id": "alpaca-7",
+        "message": "the text material provided does not include the correct scientific names for the animals. please provide the correct names in parentheses after each animal.",
+        "source": "teacher_reflection"
+      },
+      {
+        "task_id": "alpaca-7",
+        "message": "I want to ensure that my students understand the importance of this information in their studies.",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-8": [
+      {
+        "task_id": "alpaca-8",
+        "message": "the problem you identified in your answer was that the pun you generated did not include the word \"evidently.",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-10": [
+      {
+        "task_id": "alpaca-10",
+        "message": "Here's a revised version with those details included: Question: How can I ensure that my online course has a positive impact on my learners' productivity and en...",
+        "source": "teacher_reflection"
+      },
+      {
+        "task_id": "alpaca-10",
+        "message": "in order to create an engaging and effective online learning experience, it's essential to consider the following factors: 1.",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-12": [
+      {
+        "task_id": "alpaca-12",
+        "message": "correct! here's an updated version of your answer with the missing keywords: question: can you provide me with a lesson on how to correctly use the word \"boil\" ...",
+        "source": "teacher_reflection"
+      }
+    ],
+    "alpaca-17": [
+      {
+        "task_id": "alpaca-17",
+        "message": "The mistake you noticed is that you used the word \"both\" instead of \"and\".",
+        "source": "teacher_reflection"
+      }
+    ]
+  },
+  "rules": {},
+  "index": {},
+  "entries": {},
+  "contexts": {
+    "instruction,select,appropriate": [
+      {
+        "task_id": "alpaca-0",
+        "message": "It's better to use a more advanced machine learning algorithm such as Decision Trees or Random Forest.",
+        "source": "teacher_reflection",
+        "hash": "it's better to use a more advanced machine learning algorithm such as decision trees or random forest.",
+        "question": "Instruction: Select an appropriate Machine Learning algorithm for this problem.\nInput: We would like to predict if someone is a regular customer of a restaurant based on their visit history and demographic information."
+      }
+    ],
+    "name,adventure,sports": [
+      {
+        "task_id": "alpaca-3",
+        "message": "In the given text, we missed mentioning some popular adventure activities that are not included in the list of five.",
+        "source": "teacher_reflection",
+        "hash": "in the given text, we missed mentioning some popular adventure activities that are not included in the list of five.",
+        "question": "Name 5 adventure sports"
+      }
+    ],
+    "write,definition,word": [
+      {
+        "task_id": "alpaca-4",
+        "message": "Please revise your answer to include this information.",
+        "source": "teacher_reflection",
+        "hash": "please revise your answer to include this information.",
+        "question": "Write a definition for the word \"meander\"."
+      }
+    ],
+    "instruction,classify,animals": [
+      {
+        "task_id": "alpaca-7",
+        "message": "the text material provided does not include the correct scientific names for the animals. please provide the correct names in parentheses after each animal.",
+        "source": "teacher_reflection",
+        "hash": "the text material provided does not include the correct scientific names for the animals. please provide the correct names in parentheses after each animal.",
+        "question": "Instruction: Classify these animals into their appropriate taxonomy\nInput: Grizzly bear, zebra"
+      },
+      {
+        "task_id": "alpaca-7",
+        "message": "I want to ensure that my students understand the importance of this information in their studies.",
+        "source": "teacher_reflection",
+        "hash": "i want to ensure that my students understand the importance of this information in their studies.",
+        "question": "Instruction: Classify these animals into their appropriate taxonomy\nInput: Grizzly bear, zebra"
+      }
+    ],
+    "write,puns,about": [
+      {
+        "task_id": "alpaca-8",
+        "message": "the problem you identified in your answer was that the pun you generated did not include the word \"evidently.",
+        "source": "teacher_reflection",
+        "hash": "the problem you identified in your answer was that the pun you generated did not include the word \"evidently.",
+        "question": "Write 2 puns about an orange"
+      }
+    ],
+    "most,important,thing": [
+      {
+        "task_id": "alpaca-10",
+        "message": "Here's a revised version with those details included: Question: How can I ensure that my online course has a positive impact on my learners' productivity and en...",
+        "source": "teacher_reflection",
+        "hash": "here's a revised version with those details included: question: how can i ensure that my online course has a positive impact on my learners' productivity and en...",
+        "question": "What is the most important thing to consider when creating an online course?"
+      },
+      {
+        "task_id": "alpaca-10",
+        "message": "in order to create an engaging and effective online learning experience, it's essential to consider the following factors: 1.",
+        "source": "teacher_reflection",
+        "hash": "in order to create an engaging and effective online learning experience, it's essential to consider the following factors: 1.",
+        "question": "What is the most important thing to consider when creating an online course?"
+      }
+    ],
+    "find,pun,sentence": [
+      {
+        "task_id": "alpaca-12",
+        "message": "correct! here's an updated version of your answer with the missing keywords: question: can you provide me with a lesson on how to correctly use the word \"boil\" ...",
+        "source": "teacher_reflection",
+        "hash": "correct! here's an updated version of your answer with the missing keywords: question: can you provide me with a lesson on how to correctly use the word \"boil\" ...",
+        "question": "Find the pun in this sentence: \"A boiled egg in the morning is hard to beat.\""
+      }
+    ],
+    "instruction,combine,two": [
+      {
+        "task_id": "alpaca-17",
+        "message": "The mistake you noticed is that you used the word \"both\" instead of \"and\".",
+        "source": "teacher_reflection",
+        "hash": "the mistake you noticed is that you used the word \"both\" instead of \"and\".",
+        "question": "Instruction: Combine the two sentences in one\nInput: I like to play soccer. I like to play basketball."
+      }
+    ]
+  }
+}

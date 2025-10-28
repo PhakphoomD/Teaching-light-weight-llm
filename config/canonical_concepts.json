@@ -1,0 +1,115 @@
+{
+  "$schema": "./synonyms.schema.json",
+  "version": "2025-10-28",
+  "description": "Canonical concept mapping for semantic normalization in teaching LLM system",
+  "concepts": [
+    {
+      "id": "machine_learning",
+      "variants": ["machine learning", "ml", "machine-learning"],
+      "patterns": ["\\bmachine\\s+learning\\b", "\\bml\\b"],
+      "domain": "ai",
+      "confidence": 0.95,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "artificial_intelligence",
+      "variants": ["artificial intelligence", "ai", "artificial-intelligence"],
+      "patterns": ["\\bartificial\\s+intelligence\\b", "\\bai\\b"],
+      "domain": "ai",
+      "confidence": 0.95,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "neural_network",
+      "variants": ["neural network", "nn", "neural net", "neural-network"],
+      "patterns": ["\\bneural\\s+network\\b", "\\bnn\\b", "\\bneural\\s+net\\b"],
+      "domain": "ai",
+      "confidence": 0.95,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "gradient_descent",
+      "variants": ["gradient descent", "gd", "gradient-descent", "parameter update"],
+      "patterns": ["\\bgradient\\s+descent\\b", "\\bgd\\b"],
+      "domain": "optimization",
+      "confidence": 0.9,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "explain_describe",
+      "variants": ["explain", "describe", "define", "elaborate"],
+      "patterns": ["\\bexplain\\b", "\\bdescribe\\b", "\\bdefine\\b"],
+      "domain": "instruction",
+      "confidence": 0.85,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "calculate_compute",
+      "variants": ["calculate", "compute", "determine", "find"],
+      "patterns": ["\\bcalculate\\b", "\\bcompute\\b", "\\bdetermine\\b"],
+      "domain": "instruction",
+      "confidence": 0.85,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "about_face",
+      "variants": ["about face", "turn back", "rotate 180", "turn around"],
+      "patterns": ["\\babout\\s+face\\b", "rotate\\s*180", "\\bturn\\s+back\\b"],
+      "domain": "commands",
+      "confidence": 0.8,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "algorithm",
+      "variants": ["algorithm", "algo", "method", "procedure"],
+      "patterns": ["\\balgorithm\\b", "\\balgo\\b"],
+      "domain": "computer_science",
+      "confidence": 0.9,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "data_structure",
+      "variants": ["data structure", "datastructure", "data-structure"],
+      "patterns": ["\\bdata\\s+structure\\b"],
+      "domain": "computer_science",
+      "confidence": 0.9,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "overfitting",
+      "variants": ["overfitting", "overfit", "over-fitting"],
+      "patterns": ["\\boverfit(?:ting)?\\b"],
+      "domain": "ml_problems",
+      "confidence": 0.9,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "underfitting",
+      "variants": ["underfitting", "underfit", "under-fitting"],
+      "patterns": ["\\bunderfit(?:ting)?\\b"],
+      "domain": "ml_problems",
+      "confidence": 0.9,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    },
+    {
+      "id": "regularization",
+      "variants": ["regularization", "regularisation", "regularize"],
+      "patterns": ["\\bregulari[sz]ation\\b"],
+      "domain": "ml_techniques",
+      "confidence": 0.9,
+      "sources": ["hand-curated"],
+      "last_seen": "2025-10-28"
+    }
+  ]
+}

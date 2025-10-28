@@ -31,6 +31,16 @@ class MemoryCfg(BaseModel):
     index_path: str
     store_path: str
     k: int = 5
+    retrieval: dict = Field(default_factory=lambda: {
+        "k_task": 2,
+        "k_similar": 2,
+        "tfidf": {"min_cosine": 0.30},
+        "ngram": {"jaccard": 0.12}
+    })
+    reflection: dict = Field(default_factory=lambda: {
+        "temperature_next": 0.25,
+        "max_tokens_next": 160
+    })
 
 class EvalCfg(BaseModel):
     test_path: str

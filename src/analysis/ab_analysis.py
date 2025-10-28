@@ -98,7 +98,7 @@ def print_ab_result(result: ABTestResult) -> None:
     print(f"\nImprovement: {result.improvement:+.1f}%")
     
     if result.statistical_significant:
-        print("Statistical Significance: YES ✓")
+        print("Statistical Significance: YES ")
     else:
         print("Statistical Significance: NO")
     

@@ -1,0 +1,18 @@
+{
+  "experiment_id": "run_20251028_233753",
+  "strategy_name": "Memory + Multi-key + TF-IDF Fallback",
+  "student_model": "tinyllama_1.1b",
+  "teacher_model": "tinyllama_1.1b",
+  "timestamp": "2025-10-28T23:37:53.405290",
+  "student_usage": {
+    "model_name": "tinyllama_1.1b",
+    "model_type": "student",
+    "prompt_tokens": 7506,
+    "completion_tokens": 6901,
+    "total_tokens": 14407,
+    "num_calls": 84
+  },
+  "total_tokens": 14407,
+  "total_prompt_tokens": 7506,
+  "total_completion_tokens": 6901
+}

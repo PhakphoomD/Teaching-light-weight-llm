@@ -1,0 +1,18 @@
+{
+  "experiment_id": "run_20251028_234714",
+  "strategy_name": "Memory + TF-IDF Only",
+  "student_model": "tinyllama_1.1b",
+  "teacher_model": "tinyllama_1.1b",
+  "timestamp": "2025-10-28T23:47:14.338517",
+  "student_usage": {
+    "model_name": "tinyllama_1.1b",
+    "model_type": "student",
+    "prompt_tokens": 6469,
+    "completion_tokens": 6159,
+    "total_tokens": 12628,
+    "num_calls": 76
+  },
+  "total_tokens": 12628,
+  "total_prompt_tokens": 6469,
+  "total_completion_tokens": 6159
+}

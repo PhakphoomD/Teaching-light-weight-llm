@@ -1,0 +1,93 @@
+###############################################################################
+# Model Configurations
+# Defines all available student and teacher models
+###############################################################################
+
+models:
+  # =========================================================================
+  # LOCAL MODELS - Run on your machine (requires GPU/CPU)
+  # =========================================================================
+  
+  tinyllama_1.1b:
+    type: local
+    model_id: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+    device: auto  # auto, cuda, cpu
+    max_new_tokens: 128
+    temperature: 0.7
+    top_p: 0.9
+    description: "TinyLlama 1.1B - Fastest, lowest resource usage, good for quick tests"
+    display_name: "TinyLlama 1.1B"
+    
+  llama2_7b:
+    type: local
+    model_id: meta-llama/Llama-2-7b-chat-hf
+    device: auto
+    max_new_tokens: 256
+    temperature: 0.7
+    top_p: 0.9
+    description: "Llama2 7B - Medium speed and quality, good baseline model"
+    display_name: "Llama2 7B"
+    
+  llama3_8b:
+    type: local
+    model_id: meta-llama/Meta-Llama-3-8B-Instruct
+    device: auto
+    max_new_tokens: 256
+    temperature: 0.7
+    top_p: 0.9
+    description: "Llama3 8B - Best local model, higher quality responses"
+    display_name: "Llama3 8B"
+  
+  # =========================================================================
+  # API MODELS - Use cloud APIs (requires API keys)
+  # =========================================================================
+  
+  groq_llama3_70b:
+    type: api
+    provider: groq
+    model_id: llama3-70b-8192
+    max_tokens: 512
+    temperature: 0.2
+    top_p: 0.9
+    timeout_s: 20
+    description: "Groq Llama3 70B - Fast API, free tier available, excellent for teacher"
+    display_name: "Groq Llama3 70B"
+    
+  groq_llama3_8b:
+    type: api
+    provider: groq
+    model_id: llama3-8b-8192
+    max_tokens: 512
+    temperature: 0.7
+    top_p: 0.9
+    timeout_s: 20
+    description: "Groq Llama3 8B - Fast API, free tier, can be used as student"
+    display_name: "Groq Llama3 8B"
+    
+  gemini_pro:
+    type: api
+    provider: gemini
+    model_id: gemini-1.5-pro
+    max_tokens: 512
+    temperature: 0.2
+    top_p: 0.9
+    timeout_s: 20
+    description: "Gemini Pro - Powerful Google model, excellent reasoning, good for teacher"
+    display_name: "Gemini 1.5 Pro"
+    
+  gemini_flash:
+    type: api
+    provider: gemini
+    model_id: gemini-1.5-flash
+    max_tokens: 512
+    temperature: 0.7
+    top_p: 0.9
+    timeout_s: 20
+    description: "Gemini Flash - Faster, cheaper version, good for student experiments"
+    display_name: "Gemini 1.5 Flash"
+
+# =========================================================================
+# ROLE RECOMMENDATIONS
+# =========================================================================
+# Student (model being taught): TinyLlama, Llama2, Llama3, Groq 8B, Gemini Flash
+# Teacher (grading/feedback):    Groq 70B, Gemini Pro, Llama3

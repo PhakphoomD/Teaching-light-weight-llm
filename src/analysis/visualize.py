@@ -34,7 +34,7 @@ def generate_ascii_chart(
     
     for label, value in zip(labels, values):
         bar_length = int((value / max_value) * max_width) if max_value > 0 else 0
-        bar = "█" * bar_length
+        bar = "" * bar_length
         chart.append(f"{label:<15} {bar} {value:.2f}")
     
     chart.append("=" * (max_width + 20))

@@ -1,0 +1,22 @@
+{
+  "experiment": "Memory + Multi-key + TF-IDF Fallback",
+  "total_tasks": 20,
+  "passed": 5,
+  "failed": 15,
+  "success_rate": 0.25,
+  "avg_attempts": 2.55,
+  "avg_retrieval_ms": 0.2,
+  "avg_generation_ms": 18745.5,
+  "avg_total_ms": 18745.75,
+  "total_runtime_s": 636.4540631771088,
+  "total_prompt_tokens": 0,
+  "total_completion_tokens": 0,
+  "total_tokens": 0,
+  "avg_prompt_tokens": 0.0,
+  "avg_completion_tokens": 0.0,
+  "avg_total_tokens": 0.0,
+  "retrieval_precision_at_3": 0.0,
+  "canonical_coverage": 0.0,
+  "drift_to_fallback_rate": 0.0,
+  "repeat_error_rate": 0.0
+}

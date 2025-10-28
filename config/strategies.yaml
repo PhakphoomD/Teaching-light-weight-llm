@@ -1,0 +1,171 @@
+###############################################################################
+# Experiment Strategy Configurations
+# Defines all available experiment strategies with their features
+###############################################################################
+
+strategies:
+  # =========================================================================
+  # BASELINE - No Memory, No Reflection
+  # =========================================================================
+  baseline:
+    name: "Baseline (No Memory)"
+    short_name: "baseline"
+    description: "Pure model evaluation without any memory or reflection system"
+    display_name: "Baseline"
+    
+    features:
+      memory: false
+      reflection: false
+      canonical: false
+      retrieval: null
+      
+    params:
+      max_iters: 1  # Single attempt only for baseline
+      
+    notes: "Used as baseline to measure improvement from other strategies"
+
+  # =========================================================================
+  # BASELINE + REFLECTION - Self-reflection without memory
+  # =========================================================================
+  baseline_reflection:
+    name: "Baseline + Reflection"
+    short_name: "reflection"
+    description: "Self-reflection mechanism without memory storage"
+    display_name: "Baseline + Reflection"
+    
+    features:
+      memory: false
+      reflection: true
+      canonical: false
+      retrieval: null
+      
+    params:
+      max_iters: 3
+      temperature_reflection: 0.25  # Lower temp for reflection
+      max_tokens_reflection: 160
+      
+    notes: "Tests if self-reflection alone (without memory) improves performance"
+
+  # =========================================================================
+  # FULL SYSTEM - Memory + Canonical + Multi-key + TF-IDF
+  # =========================================================================
+  memory_multikey_tfidf:
+    name: "Memory + Multi-key + TF-IDF Fallback"
+    short_name: "multikey_tfidf"
+    description: "Full memory system with canonical concepts, multi-key retrieval, and TF-IDF fallback"
+    display_name: "Full System (Multi-key + TF-IDF)"
+    
+    features:
+      memory: true
+      reflection: true
+      canonical: true
+      retrieval: multikey_tfidf
+      
+    params:
+      max_iters: 3
+      k_task: 2              # Recent feedbacks per task
+      k_similar: 2           # Similar lessons from canonical intersection
+      tfidf_min_cosine: 0.30 # TF-IDF fallback threshold
+      ngram_jaccard: 0.12    # N-gram similarity threshold
+      temperature_reflection: 0.25
+      max_tokens_reflection: 160
+      
+    notes: "Most advanced strategy - uses canonical concept mapping + TF-IDF fallback"
+
+  # =========================================================================
+  # TF-IDF ONLY - Memory without canonical concepts
+  # =========================================================================
+  memory_tfidf_only:
+    name: "Memory + TF-IDF Only"
+    short_name: "tfidf"
+    description: "Memory system with TF-IDF similarity retrieval (no canonical concepts)"
+    display_name: "Memory + TF-IDF"
+    
+    features:
+      memory: true
+      reflection: true
+      canonical: false
+      retrieval: tfidf
+      
+    params:
+      max_iters: 3
+      k: 3                   # Top-K similar feedbacks
+      min_cosine: 0.30       # Minimum cosine similarity
+      temperature_reflection: 0.25
+      max_tokens_reflection: 160
+      
+    notes: "Uses TF-IDF for retrieval without canonical concept mapping"
+
+  # =========================================================================
+  # MULTI-KEY ONLY - Canonical concepts without TF-IDF fallback
+  # =========================================================================
+  memory_multikey_only:
+    name: "Memory + Multi-key Only"
+    short_name: "multikey"
+    description: "Memory with canonical concepts and multi-key retrieval (no TF-IDF fallback)"
+    display_name: "Memory + Multi-key"
+    
+    features:
+      memory: true
+      reflection: true
+      canonical: true
+      retrieval: multikey
+      
+    params:
+      max_iters: 3
+      k_task: 2              # Recent feedbacks per task
+      k_similar: 2           # Similar lessons from canonical intersection
+      temperature_reflection: 0.25
+      max_tokens_reflection: 160
+      
+    notes: "Tests pure canonical concept retrieval without TF-IDF fallback"
+
+  # =========================================================================
+  # MEMORY WITHOUT RETRIEVAL - Store but don't retrieve
+  # =========================================================================
+  memory_none:
+    name: "Memory Storage Only (No Retrieval)"
+    short_name: "memory_none"
+    description: "Stores reflections in memory but never retrieves them"
+    display_name: "Memory Storage Only"
+    
+    features:
+      memory: true
+      reflection: true
+      canonical: false
+      retrieval: none
+      
+    params:
+      max_iters: 3
+      temperature_reflection: 0.25
+      max_tokens_reflection: 160
+      
+    notes: "Control experiment - tests overhead of memory storage without benefits of retrieval"
+
+# =========================================================================
+# STRATEGY GROUPS (for easy selection)
+# =========================================================================
+strategy_groups:
+  all: 
+    - baseline
+    - baseline_reflection
+    - memory_multikey_tfidf
+    - memory_tfidf_only
+    - memory_multikey_only
+    - memory_none
+    
+  quick_comparison:
+    - baseline
+    - memory_multikey_tfidf
+    - memory_tfidf_only
+    
+  memory_ablation:
+    - baseline
+    - memory_tfidf_only
+    - memory_multikey_only
+    - memory_multikey_tfidf
+    
+  reflection_test:
+    - baseline
+    - baseline_reflection
+

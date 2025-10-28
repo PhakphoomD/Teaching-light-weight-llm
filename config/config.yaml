@@ -44,6 +44,7 @@ student:
 
 # ---------------------------------------------------------------------------
 # Memory: embedding encoder + FAISS index paths (CPU on Windows by default)
+# Phase 4 additions: retrieval strategy parameters for multi-key memory
 # ---------------------------------------------------------------------------
 memory:
   encoder: all-MiniLM-L6-v2     # 384-dim sentence-transformer (fast, robust)
@@ -51,6 +52,20 @@ memory:
   index_path: logs/memory/faiss.index   # persisted FAISS index (created if missing)
   store_path: logs/memory/store.jsonl   # raw memory entries (append-only JSONL)
   k: 5                                  # top-K contexts to retrieve per question
+  
+  #Retrieval strategy parameters
+  retrieval:
+    k_task: 2              # Number of recent feedbacks to retrieve per task
+    k_similar: 2           # Max similar lessons from kw∩err intersection
+    tfidf:
+      min_cosine: 0.30     # Minimum cosine similarity for TF-IDF fallback
+    ngram:
+      jaccard: 0.12        # Minimum Jaccard similarity for n-gram fallback
+  
+  # Phase 5: Reflection parameters
+  reflection:
+    temperature_next: 0.25    # Lower temperature for reflection attempts
+    max_tokens_next: 160      # Token limit for reflection responses
 
 # ---------------------------------------------------------------------------
 # Evaluation: what to compute after dataset build or loop runs

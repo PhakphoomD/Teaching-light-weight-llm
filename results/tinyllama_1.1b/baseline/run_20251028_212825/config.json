@@ -1,0 +1,18 @@
+{
+  "strategy": {
+    "name": "Baseline (No Memory)",
+    "short_name": "baseline",
+    "features": {
+      "memory": false,
+      "reflection": false,
+      "canonical": false,
+      "retrieval": null
+    },
+    "params": {
+      "max_iters": 1
+    }
+  },
+  "student_model": "tinyllama_1.1b",
+  "teacher_model": "tinyllama_1.1b",
+  "timestamp": "2025-10-28T21:30:24.967482"
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Canonical Concepts Schema",
+  "description": "Schema for canonical concept mapping configuration",
+  "type": "object",
+  "required": ["version", "concepts"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version (YYYY-MM-DD format)",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date"
+        },
+        "author": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "concepts": {
+      "type": "array",
+      "description": "List of canonical concepts with their variants",
+      "items": {
+        "$ref": "#/definitions/concept"
+      }
+    }
+  },
+  "definitions": {
+    "concept": {
+      "type": "object",
+      "required": ["id", "variants"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique concept identifier (snake_case)",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "variants": {
+          "type": "array",
+          "description": "List of text variants that map to this concept",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "patterns": {
+          "type": "array",
+          "description": "Optional regex patterns for matching",
+          "items": {
+            "type": "string"
+          }
+        },
+        "domain": {
+          "type": "string",
+          "description": "Domain/category of the concept",
+          "enum": ["ml", "ai", "commands", "math", "programming", "general", "optimization", "instruction", "computer_science", "ml_problems", "ml_techniques"]
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Confidence score for this mapping (0-1)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sources": {
+          "type": "array",
+          "description": "Sources of this concept mapping",
+          "items": {
+            "type": "string",
+            "enum": ["hand-curated", "logs:auto-suggest", "expert-review", "frequency-analysis"]
+          }
+        },
+        "last_seen": {
+          "type": "string",
+          "description": "Date this concept was last seen in logs",
+          "format": "date"
+        },
+        "examples": {
+          "type": "array",
+          "description": "Example usages of this concept",
+          "items": {
+            "type": "string"
+          }
+        },
+        "related": {
+          "type": "array",
+          "description": "IDs of related concepts",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

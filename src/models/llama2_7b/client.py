@@ -13,6 +13,7 @@ from src.models.llama2_7b.config import (
     DEFAULT_MAX_TOKENS,
     DEFAULT_RETRIEVAL_K
 )
+from src.core.types import ChatResult
 
 
 class Llama2Client:
@@ -39,7 +40,7 @@ class Llama2Client:
         context: str = "",
         temperature: float = DEFAULT_TEMPERATURE,
         max_tokens: int = DEFAULT_MAX_TOKENS
-    ) -> str:
+    ) -> ChatResult:
         """
         Generate answer to a question.
         
@@ -61,8 +62,7 @@ class Llama2Client:
             max_tokens=max_tokens,
             temperature=temperature
         )
-        
-        return resp.text.strip()
+        return resp
     
     def generate_reflection(
         self,
@@ -71,7 +71,7 @@ class Llama2Client:
         critique: Any,
         temperature: float = REFLECTION_TEMPERATURE,
         max_tokens: int = DEFAULT_MAX_TOKENS
-    ) -> str:
+    ) -> ChatResult:
         """
         Generate self-reflection from error details.
         
@@ -94,8 +94,7 @@ class Llama2Client:
             max_tokens=max_tokens,
             temperature=temperature
         )
-        
-        return resp.text.strip()
+        return resp
     
     def chat(
         self,

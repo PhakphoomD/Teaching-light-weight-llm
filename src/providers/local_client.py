@@ -110,10 +110,15 @@ class LocalTinyLlama(LLMClient):
             if not use_cache or self.get_cached_model() is None or self.get_cached_id() != cache_key:
                 logger.info(f"Cache miss. Loading TinyLlama: {self.model_id} onto {self.device}")
                 
+                # Use HuggingFace token from environment or cached credentials
+                import os
+                hf_token = os.getenv("HF_TOKEN") or os.getenv("HUGGING_FACE_HUB_TOKEN") or True
+                
                 tok = AutoTokenizer.from_pretrained(
                     self.model_id, 
                     use_fast=True,
-                    trust_remote_code=True
+                    trust_remote_code=True,
+                    token=hf_token
                 )
 
                 model_kwargs = {
@@ -123,7 +128,11 @@ class LocalTinyLlama(LLMClient):
                     "trust_remote_code": True,
                 }
 
-                mdl = AutoModelForCausalLM.from_pretrained(self.model_id, **model_kwargs)
+                mdl = AutoModelForCausalLM.from_pretrained(
+                    self.model_id, 
+                    token=hf_token,
+                    **model_kwargs
+                )
 
                 # Move model to CPU if needed (use standard PyTorch API)
                 if self.device == "cpu" and model_kwargs.get("device_map") is None:
@@ -253,4 +262,9 @@ class LocalTinyLlama(LLMClient):
             
         except Exception as e:
             logger.error(f"Generation failed: {str(e)}")
-            raise GenerationError(f"TinyLlama generation error: {e}") from e
+            # Return ChatResult with error instead of raising exception
+            return ChatResult(
+                text="",
+                usage=Usage(prompt_tokens=0, completion_tokens=0),
+                error=str(e)
+            )

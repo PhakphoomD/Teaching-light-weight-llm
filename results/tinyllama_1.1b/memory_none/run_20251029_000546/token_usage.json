@@ -1,0 +1,18 @@
+{
+  "experiment_id": "run_20251029_000546",
+  "strategy_name": "Memory Storage Only (No Retrieval)",
+  "student_model": "tinyllama_1.1b",
+  "teacher_model": "tinyllama_1.1b",
+  "timestamp": "2025-10-29T00:05:46.678207",
+  "student_usage": {
+    "model_name": "tinyllama_1.1b",
+    "model_type": "student",
+    "prompt_tokens": 6463,
+    "completion_tokens": 7171,
+    "total_tokens": 13634,
+    "num_calls": 82
+  },
+  "total_tokens": 13634,
+  "total_prompt_tokens": 6463,
+  "total_completion_tokens": 7171
+}

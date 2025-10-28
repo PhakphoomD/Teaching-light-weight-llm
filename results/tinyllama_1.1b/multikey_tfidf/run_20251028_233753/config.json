@@ -1,0 +1,24 @@
+{
+  "strategy": {
+    "name": "Memory + Multi-key + TF-IDF Fallback",
+    "short_name": "multikey_tfidf",
+    "features": {
+      "memory": true,
+      "reflection": true,
+      "canonical": true,
+      "retrieval": "multikey_tfidf"
+    },
+    "params": {
+      "max_iters": 3,
+      "k_task": 2,
+      "k_similar": 2,
+      "tfidf_min_cosine": 0.3,
+      "ngram_jaccard": 0.12,
+      "temperature_reflection": 0.25,
+      "max_tokens_reflection": 160
+    }
+  },
+  "student_model": "tinyllama_1.1b",
+  "teacher_model": "tinyllama_1.1b",
+  "timestamp": "2025-10-28T23:47:14.314982"
+}

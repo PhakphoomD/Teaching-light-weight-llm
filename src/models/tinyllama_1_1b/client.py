@@ -12,6 +12,7 @@ from src.models.tinyllama_1_1b.config import (
     REFLECTION_TEMPERATURE,
     DEFAULT_RETRIEVAL_K
 )
+from src.core.types import ChatResult
 
 
 class TinyLlamaClient:
@@ -38,7 +39,7 @@ class TinyLlamaClient:
         context: str = "",
         temperature: float = DEFAULT_TEMPERATURE,
         max_tokens: int = 200
-    ) -> str:
+    ) -> ChatResult:
         """
         Generate answer to a question.
         
@@ -60,8 +61,7 @@ class TinyLlamaClient:
             max_tokens=max_tokens,
             temperature=temperature
         )
-        
-        return resp.text.strip()
+        return resp
     
     def generate_reflection(
         self,
@@ -70,7 +70,7 @@ class TinyLlamaClient:
         critique: Any,
         temperature: float = REFLECTION_TEMPERATURE,
         max_tokens: int = 200
-    ) -> str:
+    ) -> ChatResult:
         """
         Generate self-reflection from error details.
         
@@ -93,8 +93,7 @@ class TinyLlamaClient:
             max_tokens=max_tokens,
             temperature=temperature
         )
-        
-        return resp.text.strip()
+        return resp
     
     def chat(
         self,

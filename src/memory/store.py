@@ -8,10 +8,11 @@ persists to a JSON file on disk.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Dict, Optional, Any, Set
 import json
 import os
+from datetime import datetime
 from threading import RLock
 from src.memory.utils import compute_rule_key, hash_feedback
 
@@ -21,6 +22,36 @@ class Feedback:
     task_id: str
     message: str
     source: str = "critic"  # who wrote this
+    
+
+@dataclass
+class FeedbackLite:
+    """Lightweight feedback structure for multi-key memory (Phase 3).
+    
+    Replaces verbose 'message' field with structured, actionable components:
+    - lesson: Concise actionable guidance (2-3 sentences)
+    - error_keys: List of canonical error types/missing concepts
+    - student_answer_short: Truncated student response for context
+    - ts: ISO timestamp for recency-based retrieval
+    - task_id: Task identifier for per-task recent retrieval
+    
+    This prevents memory bloat from storing full reflections/letters.
+    """
+    lesson: str
+    error_keys: List[str]
+    student_answer_short: str
+    ts: str = field(default_factory=lambda: datetime.now().isoformat())
+    task_id: Optional[str] = None
+    
+    
+@dataclass
+class FeedbackMetadata:
+    """Metadata for multi-key indexed feedback."""
+    score: float = 0.0
+    timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
+    concept_ids: List[str] = field(default_factory=list)
+    source: str = "self_reflection"
+    error_types: List[str] = field(default_factory=list)
 
 
 class MemoryStore:
@@ -42,27 +73,33 @@ class MemoryStore:
 
 
 class JsonMemoryStore(MemoryStore):
-    """JSON file-backed memory store with rule_key indexing.
+    """JSON file-backed memory store with multi-key indexing.
 
     Data shape:
-    {
-      "tasks": {
-        "<task_id>": [
-           {"task_id": "...", "message": "...", "source": "critic"},
-           ...
-        ],
-        ...
+      "index": {
+        "task:alpaca-001": ["entry_id_1", "entry_id_2"],
+        "keyword:gradient_descent": ["entry_id_1"],
+        "error:missing_concepts": ["entry_id_3"],
+        "format:keywords": ["entry_id_1", "entry_id_3"]
       },
-      "rules": {
-        "<rule_key>": [
-           {"task_id": "...", "message": "...", "source": "critic", "hash": "..."},
-           ...
-        ],
-        ...
+      "entries": {
+        "entry_id_1": {
+          "task_id": "alpaca-001",
+          "message": "...",
+          "source": "self_reflection",
+          "hash": "...",
+          "metadata": {
+            "score": 0.3,
+            "timestamp": "2025-10-28T14:00:00",
+            "concept_ids": ["gradient_descent"],
+            "source": "self_reflection",
+            "error_types": ["missing_concepts"]
+          }
+        }
       }
     }
     
-    The "rules" bucket enables fast retrieval by pattern (e.g., exact:ready, keyword:calculate).
+    The "index" bucket enables multi-key lookup (task:*, keyword:*, error:*, format:*).
     Deduplication via hash prevents storing identical feedback multiple times.
     Per-key cap ensures memory doesn't grow unbounded.
     """
@@ -70,14 +107,24 @@ class JsonMemoryStore(MemoryStore):
     def __init__(
         self,
         path: str = "data/memory.json",
-        cap_per_task: int = 5,
-        cap_per_rule: int = 5
+        cap_per_task: int = 3,  # Phase 3: Reduced from 5 to 3 - store only the 3 most recent attempts per task
+                                # This prevents memory bloat while retaining immediate context for reflection
+        cap_per_rule: int = 5,
+        cap_per_key: int = 10
     ) -> None:
         self.path = path
         self.cap_per_task = cap_per_task
         self.cap_per_rule = cap_per_rule
+        self.cap_per_key = cap_per_key
         self._lock = RLock()
-        self._data: Dict[str, Any] = {"tasks": {}, "rules": {}}
+        self._data: Dict[str, Any] = {
+            "tasks": {},  # by_task index: Maps task_id -> [entry_ids] for quick per-task retrieval
+                         # Used by get_task_recent() to fetch recent attempts for reflection
+            "rules": {},  # Legacy support
+            "index": {},  # Multi-key index: {key: [entry_ids]}
+            "entries": {}  # Actual feedback entries
+        }
+        self._entry_counter = 0
         self._ensure_file()
         self._load()
 
@@ -87,25 +134,49 @@ class JsonMemoryStore(MemoryStore):
             os.makedirs(folder, exist_ok=True)
         if not os.path.exists(self.path):
             with open(self.path, "w", encoding="utf-8") as f:
-                json.dump({"tasks": {}, "rules": {}}, f)
+                json.dump({
+                    "tasks": {}, 
+                    "rules": {},
+                    "index": {},
+                    "entries": {}
+                }, f)
 
     def _load(self) -> None:
         try:
             with open(self.path, "r", encoding="utf-8") as f:
                 raw = json.load(f)
-                # Handle old format (flat dict) or new format (tasks/rules)
+                # Handle old format (flat dict) or new format (tasks/rules/index/entries)
                 if isinstance(raw, dict):
                     if "tasks" in raw or "rules" in raw:
                         self._data = raw
-                        # Ensure both keys exist
+                        # Ensure all keys exist
                         self._data.setdefault("tasks", {})
                         self._data.setdefault("rules", {})
+                        self._data.setdefault("index", {})
+                        self._data.setdefault("entries", {})
                     else:
                         # Old format: migrate to new
-                        self._data = {"tasks": raw, "rules": {}}
+                        self._data = {
+                            "tasks": raw, 
+                            "rules": {},
+                            "index": {},
+                            "entries": {}
+                        }
+                
+                # Initialize entry counter from existing entries
+                if self._data.get("entries"):
+                    entry_ids = [int(eid.split("_")[1]) for eid in self._data["entries"].keys() if eid.startswith("entry_")]
+                    self._entry_counter = max(entry_ids) if entry_ids else 0
+                    
         except Exception:
             # Corrupt file; reset to empty
-            self._data = {"tasks": {}, "rules": {}}
+            self._data = {
+                "tasks": {}, 
+                "rules": {},
+                "index": {},
+                "entries": {}
+            }
+            self._entry_counter = 0
 
     def _save(self) -> None:
         tmp = self.path + ".tmp"
@@ -132,6 +203,178 @@ class JsonMemoryStore(MemoryStore):
             if limit is not None:
                 items = items[-limit:]
             return [Feedback(**it) for it in items]
+    
+    def add_feedback_multi_key(
+        self, 
+        keys: Set[str], 
+        fb: Feedback, 
+        metadata: Optional[FeedbackMetadata] = None
+    ) -> None:
+        """
+        Add feedback with multi-key indexing.
+        
+        Args:
+            keys: Set of keys (e.g., {"task:alpaca-001", "keyword:gradient_descent", "error:missing_concepts"})
+            fb: Feedback to store
+            metadata: Optional metadata (score, timestamp, concept_ids, etc.)
+        """
+        with self._lock:
+            # Generate unique entry ID
+            self._entry_counter += 1
+            entry_id = f"entry_{self._entry_counter}"
+            
+            # Compute hash for deduplication
+            fb_hash = hash_feedback(fb.message)
+            
+            # Check if this hash already exists
+            for existing_entry in self._data["entries"].values():
+                if existing_entry.get("hash") == fb_hash:
+                    # Exact duplicate; skip
+                    return
+            
+            # Create entry
+            entry = {
+                "task_id": fb.task_id,
+                "message": fb.message,
+                "source": fb.source,
+                "hash": fb_hash,
+                "metadata": {
+                    "score": metadata.score if metadata else 0.0,
+                    "timestamp": metadata.timestamp if metadata else datetime.now().isoformat(),
+                    "concept_ids": metadata.concept_ids if metadata else [],
+                    "source": metadata.source if metadata else fb.source,
+                    "error_types": metadata.error_types if metadata else []
+                }
+            }
+            
+            # Store entry
+            self._data["entries"][entry_id] = entry
+            
+            # Add to multi-key index
+            for key in keys:
+                if key not in self._data["index"]:
+                    self._data["index"][key] = []
+                
+                self._data["index"][key].append(entry_id)
+                
+                # Enforce cap per key
+                if len(self._data["index"][key]) > self.cap_per_key:
+                    # Remove oldest entry (first in list)
+                    old_entry_id = self._data["index"][key][0]
+                    self._data["index"][key] = self._data["index"][key][-self.cap_per_key:]
+                    
+                    # Check if old_entry_id is still referenced by other keys
+                    still_referenced = any(
+                        old_entry_id in entry_ids 
+                        for k, entry_ids in self._data["index"].items() 
+                        if k != key
+                    )
+                    
+                    # Delete entry if no longer referenced
+                    if not still_referenced and old_entry_id in self._data["entries"]:
+                        del self._data["entries"][old_entry_id]
+            
+            self._save()
+    
+    def get_by_multi_key(self, key: str, limit: Optional[int] = None) -> List[Feedback]:
+        """
+        Retrieve feedback by a single key from multi-key index.
+        
+        Args:
+            key: A key like "task:alpaca-001", "keyword:gradient_descent", etc.
+            limit: Max number of feedback items to return (None = all)
+            
+        Returns:
+            List of Feedback matching the key
+        """
+        with self._lock:
+            entry_ids = self._data["index"].get(key, [])
+            
+            if limit is not None:
+                entry_ids = entry_ids[-limit:]
+            
+            # Convert to Feedback objects
+            results = []
+            for entry_id in entry_ids:
+                if entry_id in self._data["entries"]:
+                    entry = self._data["entries"][entry_id]
+                    results.append(Feedback(
+                        task_id=entry["task_id"],
+                        message=entry["message"],
+                        source=entry["source"]
+                    ))
+            
+            return results
+    
+    def cleanup(
+        self, 
+        max_per_key: int = 10, 
+        quality_threshold: float = 0.7,
+        max_age_days: int = 30
+    ) -> None:
+        """
+        Cleanup memory:
+        1. Cap each key to max_per_key entries
+        2. Keep only high-quality entries (score >= threshold)
+        3. Remove entries older than max_age_days
+        
+        Args:
+            max_per_key: Maximum entries per key
+            quality_threshold: Minimum score to keep (0-1)
+            max_age_days: Maximum age in days
+        """
+        with self._lock:
+            from datetime import timedelta
+            
+            cutoff_date = datetime.now() - timedelta(days=max_age_days)
+            
+            # Collect all entry_ids to keep
+            entries_to_keep = set()
+            
+            for key, entry_ids in list(self._data["index"].items()):
+                # Filter by quality and age
+                valid_entries = []
+                
+                for entry_id in entry_ids:
+                    if entry_id not in self._data["entries"]:
+                        continue
+                    
+                    entry = self._data["entries"][entry_id]
+                    metadata = entry.get("metadata", {})
+                    
+                    # Check quality
+                    score = metadata.get("score", 0.0)
+                    if score < quality_threshold:
+                        continue
+                    
+                    # Check age
+                    timestamp_str = metadata.get("timestamp", "")
+                    try:
+                        timestamp = datetime.fromisoformat(timestamp_str)
+                        if timestamp < cutoff_date:
+                            continue
+                    except Exception:
+                        pass  # Keep if timestamp invalid
+                    
+                    valid_entries.append(entry_id)
+                
+                # Cap to max_per_key (keep most recent)
+                valid_entries = valid_entries[-max_per_key:]
+                
+                # Update index
+                if valid_entries:
+                    self._data["index"][key] = valid_entries
+                    entries_to_keep.update(valid_entries)
+                else:
+                    # Remove empty key
+                    del self._data["index"][key]
+            
+            # Remove entries not referenced by any key
+            for entry_id in list(self._data["entries"].keys()):
+                if entry_id not in entries_to_keep:
+                    del self._data["entries"][entry_id]
+            
+            self._save()
     
     def add_global_feedback(self, question: str, fb: Feedback, similarity_threshold: float = 0.8) -> None:
         """
@@ -211,9 +454,11 @@ class JsonMemoryStore(MemoryStore):
                 for it in items
             ]
     
-    def get_by_tfidf(self, question: str, limit: int = 3, threshold: float = 0.1) -> List[Feedback]:
+    def get_by_tfidf(self, question: str, limit: int = 3, threshold: Optional[float] = None) -> List[Feedback]:
         """
         Retrieve feedback using TF-IDF similarity by comparing with original questions.
+        
+        Phase 4: Uses config parameters for threshold (defaults to config.yaml value).
         
         Flow:
         1. Collect all feedbacks from contexts bucket (which stores original questions)
@@ -223,13 +468,23 @@ class JsonMemoryStore(MemoryStore):
         Args:
             question: The question text
             limit: Max number of feedback items to return
-            threshold: Minimum similarity score (0-1, default 0.1)
+            threshold: Minimum similarity score (0-1). If None, uses config.yaml value (default 0.30)
             
         Returns:
             List of most similar Feedback items based on question similarity
         """
         with self._lock:
             from src.memory.utils import compute_tfidf_similarity, hash_feedback
+            from config.ai_config import load_config
+            
+            # Get threshold from config if not provided
+            if threshold is None:
+                try:
+                    from config.ai_config import load_config
+                    cfg, _ = load_config()
+                    threshold = cfg.memory.retrieval.get("tfidf", {}).get("min_cosine", 0.30)
+                except:
+                    threshold = 0.30  # Fallback default
             
             # Ensure contexts bucket exists
             if "contexts" not in self._data:
@@ -257,12 +512,15 @@ class JsonMemoryStore(MemoryStore):
             if not feedback_pool:
                 return []
             
+            # Ensure threshold is float
+            final_threshold: float = threshold if threshold is not None else 0.30
+            
             # Compute n-gram enhanced similarity between current question and stored questions
             scored_feedbacks = compute_tfidf_similarity(
                 question, 
                 feedback_pool, 
                 limit,
-                threshold
+                final_threshold
             )
             
             # Convert to Feedback objects
