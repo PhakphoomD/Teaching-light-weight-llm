@@ -1,0 +1,1530 @@
+{
+  "timestamp": "20251117_025110",
+  "run_start": "2025-11-17T02:51:10.537173",
+  "parameters": {},
+  "questions": [
+    {
+      "question_idx": 0,
+      "question": "What is the most important thing to consider when creating an online course?",
+      "ground_truth": "The most important thing to consider when creating an online course is the learning experience of the students. It is important to ensure that course material is laid out in an easy-to-follow structure and that the curriculum is engaging and limiting distractions. Additionally, providing ample feedback and support will help ensure that students have the best possible learning environment.",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "Answer this question precisely:\nWhat is the most important thing to consider when creating an online course?\n\nAnswer:\n",
+            "output": "The most important thing to consider when creating an online course is **clearly defining your target audience and their needs**. This involves understanding who your ideal students are, what problems they face, and what they hope to achieve by taking your course. By knowing your audience, you can tailor your content, structure, and delivery to meet their needs and expectations, increasing the likelihood of a successful and engaging online course.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What is the most important thing to consider when creating an online course?\nStudent's answer: The most important thing to consider when creating an online course is **clearly defining your target audience and their needs**. This involves understanding who your ideal students are, what problems they face, and what they hope to achieve by taking your course. By knowing your audience, you can tailor your content, structure, and delivery to meet their needs and expectations, increasing the likelihood of a successful and engaging online course.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What is the most important thing to consider when creating an online course?\nReference answer: The most important thing to consider when creating an online course is the learning experience of the students. It is important to ensure that course material is laid out in an easy-to-follow structure and that the curriculum is engaging and limiting distractions. Additionally, providing ample feedback and support will help ensure that students have the best possible learning environment.\nStudent's answer: The most important thing to consider when creating an online course is **clearly defining your target audience and their needs**. This involves understanding who your ideal students are, what problems they face, and what they hope to achieve by taking your course. By knowing your audience, you can tailor your content, structure, and delivery to meet their needs and expectations, increasing the likelihood of a successful and engaging online course.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.3220338983050847,
+                "semantic_sim": 0.9126193523406982,
+                "blind_score": 0.9,
+                "comparison_score": 0.9,
+                "final": 0.8003582279156831
+              },
+              "final_score": 0.8003582279156831,
+              "passed": true,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What is the most important thing to consider when creating an online course?\nStudent's answer: The most important thing to consider when creating an online course is **clearly defining your target audience and their needs**. This involves understanding who your ideal students are, what problems they face, and what they hope to achieve by taking your course. By knowing your audience, you can tailor your content, structure, and delivery to meet their needs and expectations, increasing the likelihood of a successful and engaging online course.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What is the most important thing to consider when creating an online course?\nReference answer: The most important thing to consider when creating an online course is the learning experience of the students. It is important to ensure that course material is laid out in an easy-to-follow structure and that the curriculum is engaging and limiting distractions. Additionally, providing ample feedback and support will help ensure that students have the best possible learning environment.\nStudent's answer: The most important thing to consider when creating an online course is **clearly defining your target audience and their needs**. This involves understanding who your ideal students are, what problems they face, and what they hope to achieve by taking your course. By knowing your audience, you can tailor your content, structure, and delivery to meet their needs and expectations, increasing the likelihood of a successful and engaging online course.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 348,
+                        "completion_tokens": 4,
+                        "total_tokens": 352
+                      },
+                      "raw": {
+                        "id": "chatcmpl-04693ed7-2ab4-47c7-9df6-a96ee2f950fa",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308274,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_4387d3edbb",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 348,
+                          "total_tokens": 352,
+                          "completion_time": 0.007491419,
+                          "prompt_time": 0.019079406,
+                          "queue_time": 0.201957947,
+                          "total_time": 0.026570825
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 458,
+                        "completion_tokens": 4,
+                        "total_tokens": 462
+                      },
+                      "raw": {
+                        "id": "chatcmpl-4f49d785-e92f-4bbd-bab4-20d655a1f94c",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308274,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_297b22ece7",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 458,
+                          "total_tokens": 462,
+                          "completion_time": 0.013666437,
+                          "prompt_time": 0.022072551,
+                          "queue_time": 0.01019802,
+                          "total_time": 0.035738988
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 348,
+                    "completion_tokens": 4,
+                    "total_tokens": 352
+                  },
+                  "raw": {
+                    "id": "chatcmpl-04693ed7-2ab4-47c7-9df6-a96ee2f950fa",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308274,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_4387d3edbb",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 348,
+                      "total_tokens": 352,
+                      "completion_time": 0.007491419,
+                      "prompt_time": 0.019079406,
+                      "queue_time": 0.201957947,
+                      "total_time": 0.026570825
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 458,
+                    "completion_tokens": 4,
+                    "total_tokens": 462
+                  },
+                  "raw": {
+                    "id": "chatcmpl-4f49d785-e92f-4bbd-bab4-20d655a1f94c",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308274,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_297b22ece7",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 458,
+                      "total_tokens": 462,
+                      "completion_time": 0.013666437,
+                      "prompt_time": 0.022072551,
+                      "queue_time": 0.01019802,
+                      "total_time": 0.035738988
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.3220338983050847,
+            "semantic_sim": 0.9126193523406982,
+            "blind_score": 0.9,
+            "comparison_score": 0.9,
+            "final": 0.8003582279156831
+          },
+          "feedback": null,
+          "memory_hits": [],
+          "flags": []
+        }
+      ],
+      "final_result": {
+        "passed": true,
+        "total_rounds": 1,
+        "final_score": 0.8003582279156831,
+        "stop_reason": "PASSED"
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "question_idx": 0,
+      "question": "List three types of pre-trained models for natural language processing.",
+      "ground_truth": "Three types of pre-trained models for natural language processing are BERT, GPT-2, and Transformer-XL.",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "Answer this question precisely:\nList three types of pre-trained models for natural language processing.\n\nAnswer:\n",
+            "output": "1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nStudent's answer: 1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nReference answer: Three types of pre-trained models for natural language processing are BERT, GPT-2, and Transformer-XL.\nStudent's answer: 1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.2857142857142857,
+                "semantic_sim": 0.7162148952484131,
+                "blind_score": 0.9,
+                "comparison_score": 0.9,
+                "final": 0.8834532183408738
+              },
+              "final_score": 0.7476251523835319,
+              "passed": false,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nStudent's answer: 1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nReference answer: Three types of pre-trained models for natural language processing are BERT, GPT-2, and Transformer-XL.\nStudent's answer: 1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 386,
+                        "completion_tokens": 4,
+                        "total_tokens": 390
+                      },
+                      "raw": {
+                        "id": "chatcmpl-4391309c-ad58-405d-b556-9083176e5d38",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308276,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_e750f72ec9",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 386,
+                          "total_tokens": 390,
+                          "completion_time": 0.007423225,
+                          "prompt_time": 0.02585442,
+                          "queue_time": 0.201569963,
+                          "total_time": 0.033277645
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 455,
+                        "completion_tokens": 4,
+                        "total_tokens": 459
+                      },
+                      "raw": {
+                        "id": "chatcmpl-f3e2b470-ac1a-4356-91fc-4a12ae5035b5",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308277,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_d051da168d",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 455,
+                          "total_tokens": 459,
+                          "completion_time": 0.013611297,
+                          "prompt_time": 0.021625673,
+                          "queue_time": 0.009664625,
+                          "total_time": 0.03523697
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 386,
+                    "completion_tokens": 4,
+                    "total_tokens": 390
+                  },
+                  "raw": {
+                    "id": "chatcmpl-4391309c-ad58-405d-b556-9083176e5d38",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308276,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_e750f72ec9",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 386,
+                      "total_tokens": 390,
+                      "completion_time": 0.007423225,
+                      "prompt_time": 0.02585442,
+                      "queue_time": 0.201569963,
+                      "total_time": 0.033277645
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 455,
+                    "completion_tokens": 4,
+                    "total_tokens": 459
+                  },
+                  "raw": {
+                    "id": "chatcmpl-f3e2b470-ac1a-4356-91fc-4a12ae5035b5",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308277,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_d051da168d",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 455,
+                      "total_tokens": 459,
+                      "completion_time": 0.013611297,
+                      "prompt_time": 0.021625673,
+                      "queue_time": 0.009664625,
+                      "total_time": 0.03523697
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.2857142857142857,
+            "semantic_sim": 0.7162148952484131,
+            "blind_score": 0.9,
+            "comparison_score": 0.9,
+            "final": 0.8834532183408738
+          },
+          "feedback": null,
+          "memory_hits": [],
+          "flags": [],
+          "feedback_generation": {
+            "prompt": "You are a teacher helping a small LLM answer a question correctly.\n\n[Question]\nList three types of pre-trained models for natural language processing.\n\n[Target Answer]\nThree types of pre-trained models for natural language processing are BERT, GPT-2, and Transformer-XL.\n\n[Student's Answer]\n1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.\n\n<Analysis>\n1. Is the core meaning/content correct?\n   - If YES, Problem is FORMAT/STRUCTURE only (length, sentence form, word order)\n   - If NO, Problem is CONTENT (wrong facts, wrong concept)\n2. What EXACTLY differs between student's answer and target?\n3. What SPECIFIC instruction will fix it?\n</Analysis>\n\nIMPORTANT:\n- If content is correct but format differs → Focus on FORMAT\n- If content is wrong → Focus on CONTENT\n- Be SPECIFIC about what to add/remove/change\n\nReturn ONLY:\n\"Error: [what's wrong]. Fix: [specific action]. Format: [exact template with [placeholders]]\"\n\nFeedback:\n",
+            "response": {
+              "text": "Error: The student's answer contains incorrect models (RoBERTa and XLNet) instead of the target models (GPT-2 and Transformer-XL). Fix: Replace RoBERTa and XLNet with GPT-2 and Transformer-XL. Format: Three types of pre-trained models for natural language processing are [model1], [model2], and [model3].",
+              "usage": {
+                "prompt_tokens": 358,
+                "completion_tokens": 78,
+                "total_tokens": 436
+              },
+              "raw": {
+                "id": "chatcmpl-1890c4f1-37fa-4e72-bb82-dd96fca64303",
+                "choices": [
+                  {
+                    "finish_reason": "stop",
+                    "index": 0,
+                    "logprobs": null,
+                    "message": {
+                      "content": "Error: The student's answer contains incorrect models (RoBERTa and XLNet) instead of the target models (GPT-2 and Transformer-XL). Fix: Replace RoBERTa and XLNet with GPT-2 and Transformer-XL. Format: Three types of pre-trained models for natural language processing are [model1], [model2], and [model3].",
+                      "role": "assistant",
+                      "executed_tools": null,
+                      "function_call": null,
+                      "reasoning": null,
+                      "tool_calls": null
+                    }
+                  }
+                ],
+                "created": 1763308277,
+                "model": "llama-3.3-70b-versatile",
+                "object": "chat.completion",
+                "system_fingerprint": "fp_297b22ece7",
+                "usage": {
+                  "completion_tokens": 78,
+                  "prompt_tokens": 358,
+                  "total_tokens": 436,
+                  "completion_time": 0.196763281,
+                  "prompt_time": 0.0172315,
+                  "queue_time": 0.009956007,
+                  "total_time": 0.213994781
+                },
+                "usage_breakdown": null
+              },
+              "error": null
+            },
+            "feedback": "Error: The student's answer contains incorrect models (RoBERTa and XLNet) instead of the target models (GPT-2 and Transformer-XL). Fix: Replace RoBERTa and XLNet with GPT-2 and Transformer-XL. Format: Three types of pre-trained models for natural lan..."
+          }
+        },
+        {
+          "round": 2,
+          "mode": "REFINE",
+          "student": {
+            "input": "Answer: List three types of pre-trained models for natural language processing.\nYour previous answer: 1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. RoBERTa (Robustly Optimized BERT Pretraining Approach): An improved version of BERT that uses a different training approach and achieves better performance on various natural language processing tasks.\n\n3. XLNet (Extreme Language Modeling): A pre-trained language model developed by Google that uses a novel approach called \"permutation language modeling\" to generate contextualized representations of words in a sentence.\nGuidance: Error: The student's answer contains incorrect models (RoBERTa and XLNet) instead of the target models (GPT-2 and Transformer-XL). Fix: Replace RoBERTa and XLNet with GPT-2 and Transformer-XL. Format: Three types of pre-trained models for natural lan...\n\nAnswer:\n",
+            "output": "Three types of pre-trained models for natural language processing are:\n\n1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. GPT-2 (Generative Pre-trained Transformer 2): A pre-trained language model developed by OpenAI that uses a transformer architecture to generate coherent and context-specific text.\n\n3. Transformer-XL: A pre-trained language model developed by Google that uses a transformer architecture with a longer-range dependency and a segment-level recurrence to generate contextualized representations of words in a sentence.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nStudent's answer: Three types of pre-trained models for natural language processing are:\n\n1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. GPT-2 (Generative Pre-trained Transformer 2): A pre-trained language model developed by OpenAI that uses a transformer architecture to generate coherent and context-specific text.\n\n3. Transformer-XL: A pre-trained language model developed by Google that uses a transformer architecture with a longer-range dependency and a segment-level recurrence to generate contextualized representations of words in a sentence.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nReference answer: Three types of pre-trained models for natural language processing are BERT, GPT-2, and Transformer-XL.\nStudent's answer: Three types of pre-trained models for natural language processing are:\n\n1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. GPT-2 (Generative Pre-trained Transformer 2): A pre-trained language model developed by OpenAI that uses a transformer architecture to generate coherent and context-specific text.\n\n3. Transformer-XL: A pre-trained language model developed by Google that uses a transformer architecture with a longer-range dependency and a segment-level recurrence to generate contextualized representations of words in a sentence.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 1.0,
+                "semantic_sim": 0.8538128733634949,
+                "blind_score": 0.9,
+                "comparison_score": 1.0,
+                "final": 0.8834532183408738
+              },
+              "final_score": 0.8834532183408738,
+              "passed": true,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nStudent's answer: Three types of pre-trained models for natural language processing are:\n\n1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. GPT-2 (Generative Pre-trained Transformer 2): A pre-trained language model developed by OpenAI that uses a transformer architecture to generate coherent and context-specific text.\n\n3. Transformer-XL: A pre-trained language model developed by Google that uses a transformer architecture with a longer-range dependency and a segment-level recurrence to generate contextualized representations of words in a sentence.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: List three types of pre-trained models for natural language processing.\nReference answer: Three types of pre-trained models for natural language processing are BERT, GPT-2, and Transformer-XL.\nStudent's answer: Three types of pre-trained models for natural language processing are:\n\n1. BERT (Bidirectional Encoder Representations from Transformers): A pre-trained language model developed by Google that uses a multi-layer bidirectional transformer encoder to generate contextualized representations of words in a sentence.\n\n2. GPT-2 (Generative Pre-trained Transformer 2): A pre-trained language model developed by OpenAI that uses a transformer architecture to generate coherent and context-specific text.\n\n3. Transformer-XL: A pre-trained language model developed by Google that uses a transformer architecture with a longer-range dependency and a segment-level recurrence to generate contextualized representations of words in a sentence.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 394,
+                        "completion_tokens": 4,
+                        "total_tokens": 398
+                      },
+                      "raw": {
+                        "id": "chatcmpl-f6356ada-f574-4df6-a66a-2702333addad",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308278,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_1151d4f23c",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 394,
+                          "total_tokens": 398,
+                          "completion_time": 0.007539087,
+                          "prompt_time": 0.024973812,
+                          "queue_time": 0.205786835,
+                          "total_time": 0.032512899
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "1.0",
+                      "usage": {
+                        "prompt_tokens": 463,
+                        "completion_tokens": 4,
+                        "total_tokens": 467
+                      },
+                      "raw": {
+                        "id": "chatcmpl-a3484d78-a0e5-464e-a309-a90213743f88",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "1.0",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308279,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_d051da168d",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 463,
+                          "total_tokens": 467,
+                          "completion_time": 0.014968075,
+                          "prompt_time": 0.02219791,
+                          "queue_time": 0.009939884,
+                          "total_time": 0.037165985
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 394,
+                    "completion_tokens": 4,
+                    "total_tokens": 398
+                  },
+                  "raw": {
+                    "id": "chatcmpl-f6356ada-f574-4df6-a66a-2702333addad",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308278,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_1151d4f23c",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 394,
+                      "total_tokens": 398,
+                      "completion_time": 0.007539087,
+                      "prompt_time": 0.024973812,
+                      "queue_time": 0.205786835,
+                      "total_time": 0.032512899
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "1.0",
+                  "usage": {
+                    "prompt_tokens": 463,
+                    "completion_tokens": 4,
+                    "total_tokens": 467
+                  },
+                  "raw": {
+                    "id": "chatcmpl-a3484d78-a0e5-464e-a309-a90213743f88",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "1.0",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308279,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_d051da168d",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 463,
+                      "total_tokens": 467,
+                      "completion_time": 0.014968075,
+                      "prompt_time": 0.02219791,
+                      "queue_time": 0.009939884,
+                      "total_time": 0.037165985
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 1.0,
+            "semantic_sim": 0.8538128733634949,
+            "blind_score": 0.9,
+            "comparison_score": 1.0,
+            "final": 0.8834532183408738
+          },
+          "feedback": "Error: The student's answer contains incorrect models (RoBERTa and XLNet) instead of the target models (GPT-2 and Transformer-XL). Fix: Replace RoBERTa and XLNet with GPT-2 and Transformer-XL. Format: Three types of pre-trained models for natural lan...",
+          "memory_hits": [],
+          "flags": []
+        }
+      ],
+      "final_result": {
+        "passed": true,
+        "total_rounds": 2,
+        "final_score": 0.8834532183408738,
+        "stop_reason": "PASSED"
+      },
+      "warnings": [
+        {
+          "timestamp": "2025-11-17T02:51:15.932631",
+          "message": "Saved successful feedback to memory (2 rounds, score=0.883)"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "question_idx": 0,
+      "question": "Find the pun in this sentence: \"A boiled egg in the morning is hard to beat.\"",
+      "ground_truth": "The pun in the sentence is that \"hard to beat\" is a play on words since a boiled egg is \"hard-boiled\".",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "Answer this question precisely:\nFind the pun in this sentence: \"A boiled egg in the morning is hard to beat.\"\n\nAnswer:\n",
+            "output": "The pun in the sentence is the word \"hard to beat.\" It has a double meaning: \n\n1. A boiled egg is hard in the sense that it's difficult to crack or break.\n2. \"Hard to beat\" is an idiom that means something is very difficult to defeat or surpass. \n\nThe pun relies on the wordplay between the literal meaning of \"hard\" (referring to the egg) and the idiomatic meaning (referring to a challenge).",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: Find the pun in this sentence: \"A boiled egg in the morning is hard to beat.\"\nStudent's answer: The pun in the sentence is the word \"hard to beat.\" It has a double meaning: \n\n1. A boiled egg is hard in the sense that it's difficult to crack or break.\n2. \"Hard to beat\" is an idiom that means something is very difficult to defeat or surpass. \n\nThe pun relies on the wordplay between the literal meaning of \"hard\" (referring to the egg) and the idiomatic meaning (referring to a challenge).\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: Find the pun in this sentence: \"A boiled egg in the morning is hard to beat.\"\nReference answer: The pun in the sentence is that \"hard to beat\" is a play on words since a boiled egg is \"hard-boiled\".\nStudent's answer: The pun in the sentence is the word \"hard to beat.\" It has a double meaning: \n\n1. A boiled egg is hard in the sense that it's difficult to crack or break.\n2. \"Hard to beat\" is an idiom that means something is very difficult to defeat or surpass. \n\nThe pun relies on the wordplay between the literal meaning of \"hard\" (referring to the egg) and the idiomatic meaning (referring to a challenge).\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.6666666666666666,
+                "semantic_sim": 0.9128866195678711,
+                "blind_score": 0.9,
+                "comparison_score": 1.0,
+                "final": 0.8648883215586345
+              },
+              "final_score": 0.8648883215586345,
+              "passed": true,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: Find the pun in this sentence: \"A boiled egg in the morning is hard to beat.\"\nStudent's answer: The pun in the sentence is the word \"hard to beat.\" It has a double meaning: \n\n1. A boiled egg is hard in the sense that it's difficult to crack or break.\n2. \"Hard to beat\" is an idiom that means something is very difficult to defeat or surpass. \n\nThe pun relies on the wordplay between the literal meaning of \"hard\" (referring to the egg) and the idiomatic meaning (referring to a challenge).\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: Find the pun in this sentence: \"A boiled egg in the morning is hard to beat.\"\nReference answer: The pun in the sentence is that \"hard to beat\" is a play on words since a boiled egg is \"hard-boiled\".\nStudent's answer: The pun in the sentence is the word \"hard to beat.\" It has a double meaning: \n\n1. A boiled egg is hard in the sense that it's difficult to crack or break.\n2. \"Hard to beat\" is an idiom that means something is very difficult to defeat or surpass. \n\nThe pun relies on the wordplay between the literal meaning of \"hard\" (referring to the egg) and the idiomatic meaning (referring to a challenge).\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 367,
+                        "completion_tokens": 4,
+                        "total_tokens": 371
+                      },
+                      "raw": {
+                        "id": "chatcmpl-6bd4708d-8d54-4ba1-a8f4-0a59bf5cb913",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308280,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_4387d3edbb",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 367,
+                          "total_tokens": 371,
+                          "completion_time": 0.007364972,
+                          "prompt_time": 0.022132905,
+                          "queue_time": 0.200108897,
+                          "total_time": 0.029497877
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "1.0",
+                      "usage": {
+                        "prompt_tokens": 439,
+                        "completion_tokens": 4,
+                        "total_tokens": 443
+                      },
+                      "raw": {
+                        "id": "chatcmpl-6dd06b8c-5a72-473a-bae3-d85baf45bc1a",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "1.0",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308281,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_297b22ece7",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 439,
+                          "total_tokens": 443,
+                          "completion_time": 0.015036321,
+                          "prompt_time": 0.021129318,
+                          "queue_time": 0.010079529,
+                          "total_time": 0.036165639
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 367,
+                    "completion_tokens": 4,
+                    "total_tokens": 371
+                  },
+                  "raw": {
+                    "id": "chatcmpl-6bd4708d-8d54-4ba1-a8f4-0a59bf5cb913",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308280,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_4387d3edbb",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 367,
+                      "total_tokens": 371,
+                      "completion_time": 0.007364972,
+                      "prompt_time": 0.022132905,
+                      "queue_time": 0.200108897,
+                      "total_time": 0.029497877
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "1.0",
+                  "usage": {
+                    "prompt_tokens": 439,
+                    "completion_tokens": 4,
+                    "total_tokens": 443
+                  },
+                  "raw": {
+                    "id": "chatcmpl-6dd06b8c-5a72-473a-bae3-d85baf45bc1a",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "1.0",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308281,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_297b22ece7",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 439,
+                      "total_tokens": 443,
+                      "completion_time": 0.015036321,
+                      "prompt_time": 0.021129318,
+                      "queue_time": 0.010079529,
+                      "total_time": 0.036165639
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.6666666666666666,
+            "semantic_sim": 0.9128866195678711,
+            "blind_score": 0.9,
+            "comparison_score": 1.0,
+            "final": 0.8648883215586345
+          },
+          "feedback": null,
+          "memory_hits": [],
+          "flags": []
+        }
+      ],
+      "final_result": {
+        "passed": true,
+        "total_rounds": 1,
+        "final_score": 0.8648883215586345,
+        "stop_reason": "PASSED"
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "question_idx": 0,
+      "question": "Is Donohue syndrome inherited ?",
+      "ground_truth": "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations. The parents of an individual with an autosomal recessive condition each carry one copy of the mutated gene, but they typically do not show signs and symptoms of the condition.",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "Answer: Is Donohue syndrome inherited ?\nYour previous answer: -\nGuidance: Error: Missing introductory phrase and sentence structure. Fix: Add \"This condition is inherited in an\" to the beginning and rephrase to match the target answer. Format: 'This condition is inherited in an [X] pattern, which means [Y]. The [Z] of an i...\n\nAnswer:\n",
+            "output": "This condition is inherited in an autosomal recessive pattern, which means that a person must inherit two copies of the mutated gene (one from each parent) to develop the condition. The parents of an individual with Donohue syndrome are typically carriers of the mutated gene, meaning they have one normal and one mutated copy.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: Is Donohue syndrome inherited ?\nStudent's answer: This condition is inherited in an autosomal recessive pattern, which means that a person must inherit two copies of the mutated gene (one from each parent) to develop the condition. The parents of an individual with Donohue syndrome are typically carriers of the mutated gene, meaning they have one normal and one mutated copy.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: Is Donohue syndrome inherited ?\nReference answer: This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations. The parents of an individual with an autosomal recessive condition each carry one copy of the mutated gene, but they typically do not show signs and symptoms of the condition.\nStudent's answer: This condition is inherited in an autosomal recessive pattern, which means that a person must inherit two copies of the mutated gene (one from each parent) to develop the condition. The parents of an individual with Donohue syndrome are typically carriers of the mutated gene, meaning they have one normal and one mutated copy.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.5490196078431373,
+                "semantic_sim": 0.7316562533378601,
+                "blind_score": 0.9,
+                "comparison_score": 1.0,
+                "final": 0.8078160241187788
+              },
+              "final_score": 0.8078160241187788,
+              "passed": true,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: Is Donohue syndrome inherited ?\nStudent's answer: This condition is inherited in an autosomal recessive pattern, which means that a person must inherit two copies of the mutated gene (one from each parent) to develop the condition. The parents of an individual with Donohue syndrome are typically carriers of the mutated gene, meaning they have one normal and one mutated copy.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: Is Donohue syndrome inherited ?\nReference answer: This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations. The parents of an individual with an autosomal recessive condition each carry one copy of the mutated gene, but they typically do not show signs and symptoms of the condition.\nStudent's answer: This condition is inherited in an autosomal recessive pattern, which means that a person must inherit two copies of the mutated gene (one from each parent) to develop the condition. The parents of an individual with Donohue syndrome are typically carriers of the mutated gene, meaning they have one normal and one mutated copy.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 323,
+                        "completion_tokens": 4,
+                        "total_tokens": 327
+                      },
+                      "raw": {
+                        "id": "chatcmpl-01ee7120-9e41-4004-8a2e-faa7cf7c0411",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308282,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_f757f4b0bf",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 323,
+                          "total_tokens": 327,
+                          "completion_time": 0.007411934,
+                          "prompt_time": 0.021368574,
+                          "queue_time": 0.203386381,
+                          "total_time": 0.028780508
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "1.0",
+                      "usage": {
+                        "prompt_tokens": 427,
+                        "completion_tokens": 4,
+                        "total_tokens": 431
+                      },
+                      "raw": {
+                        "id": "chatcmpl-40279346-c171-4812-91b7-26259bfa3931",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "1.0",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308283,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_d051da168d",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 427,
+                          "total_tokens": 431,
+                          "completion_time": 0.014899748,
+                          "prompt_time": 0.020362992,
+                          "queue_time": 0.009700323,
+                          "total_time": 0.03526274
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 323,
+                    "completion_tokens": 4,
+                    "total_tokens": 327
+                  },
+                  "raw": {
+                    "id": "chatcmpl-01ee7120-9e41-4004-8a2e-faa7cf7c0411",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308282,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_f757f4b0bf",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 323,
+                      "total_tokens": 327,
+                      "completion_time": 0.007411934,
+                      "prompt_time": 0.021368574,
+                      "queue_time": 0.203386381,
+                      "total_time": 0.028780508
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "1.0",
+                  "usage": {
+                    "prompt_tokens": 427,
+                    "completion_tokens": 4,
+                    "total_tokens": 431
+                  },
+                  "raw": {
+                    "id": "chatcmpl-40279346-c171-4812-91b7-26259bfa3931",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "1.0",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308283,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_d051da168d",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 427,
+                      "total_tokens": 431,
+                      "completion_time": 0.014899748,
+                      "prompt_time": 0.020362992,
+                      "queue_time": 0.009700323,
+                      "total_time": 0.03526274
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.5490196078431373,
+            "semantic_sim": 0.7316562533378601,
+            "blind_score": 0.9,
+            "comparison_score": 1.0,
+            "final": 0.8078160241187788
+          },
+          "feedback": "Error: Missing introductory phrase and sentence structure. Fix: Add \"This condition is inherited in an\" to the beginning and rephrase to match the target answer. Format: 'This condition is inherited in an [X] pattern, which means [Y]. The [Z] of an i...",
+          "memory_hits": [
+            {
+              "id": "661cbb4d138d7816",
+              "feedback": "Error: Missing introductory phrase and sentence structure. Fix: Add \"This condition is inherited in an\" to the beginning and rephrase to match the target answer. Format: 'This condition is inherited in an [X] pattern, which means [Y]. The [Z] of an i...",
+              "success_rate": 20.5,
+              "final_score": 0.8078160241187788,
+              "attempts": 2,
+              "similarity": 1.0
+            }
+          ],
+          "flags": []
+        }
+      ],
+      "final_result": {
+        "passed": true,
+        "total_rounds": 1,
+        "final_score": 0.8078160241187788,
+        "stop_reason": "PASSED"
+      },
+      "warnings": [
+        {
+          "timestamp": "2025-11-17T02:51:18.157248",
+          "message": "Testing memory feedback from '661cbb4d...' (similarity=1.000)"
+        },
+        {
+          "timestamp": "2025-11-17T02:51:20.087680",
+          "message": "Memory feedback from '661cbb4d...' worked! (similarity=1.000)"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "question_idx": 0,
+      "question": "How many people are affected by Roberts syndrome ?",
+      "ground_truth": "Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "Answer: How many people are affected by Roberts syndrome ?\nYour previous answer: -\nGuidance: Error: Incorrect number of reported cases. Fix: Replace 100 with 150. Format: Roberts syndrome is a rare disorder; approximately [number] affected individuals have been reported.\n\nAnswer:\n",
+            "output": "Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: How many people are affected by Roberts syndrome ?\nStudent's answer: Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: How many people are affected by Roberts syndrome ?\nReference answer: Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.\nStudent's answer: Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 1.0,
+                "rouge_l": 1.0,
+                "semantic_sim": 1.0,
+                "blind_score": 0.8,
+                "comparison_score": 1.0,
+                "final": 0.9400000000000001
+              },
+              "final_score": 0.9400000000000001,
+              "passed": true,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: How many people are affected by Roberts syndrome ?\nStudent's answer: Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: How many people are affected by Roberts syndrome ?\nReference answer: Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.\nStudent's answer: Roberts syndrome is a rare disorder; approximately 150 affected individuals have been reported.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.8",
+                      "usage": {
+                        "prompt_tokens": 277,
+                        "completion_tokens": 4,
+                        "total_tokens": 281
+                      },
+                      "raw": {
+                        "id": "chatcmpl-47eea730-5a94-43d4-98ec-4d484128ccec",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.8",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308284,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_4387d3edbb",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 277,
+                          "total_tokens": 281,
+                          "completion_time": 0.007335763,
+                          "prompt_time": 0.015281412,
+                          "queue_time": 0.205985671,
+                          "total_time": 0.022617175
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "1.0",
+                      "usage": {
+                        "prompt_tokens": 338,
+                        "completion_tokens": 4,
+                        "total_tokens": 342
+                      },
+                      "raw": {
+                        "id": "chatcmpl-53c71091-42dd-4543-8dd4-6419adb22664",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "1.0",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763308285,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_297b22ece7",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 338,
+                          "total_tokens": 342,
+                          "completion_time": 0.01508746,
+                          "prompt_time": 0.016207459,
+                          "queue_time": 0.010373204,
+                          "total_time": 0.031294919
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.8",
+                  "usage": {
+                    "prompt_tokens": 277,
+                    "completion_tokens": 4,
+                    "total_tokens": 281
+                  },
+                  "raw": {
+                    "id": "chatcmpl-47eea730-5a94-43d4-98ec-4d484128ccec",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.8",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308284,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_4387d3edbb",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 277,
+                      "total_tokens": 281,
+                      "completion_time": 0.007335763,
+                      "prompt_time": 0.015281412,
+                      "queue_time": 0.205985671,
+                      "total_time": 0.022617175
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "1.0",
+                  "usage": {
+                    "prompt_tokens": 338,
+                    "completion_tokens": 4,
+                    "total_tokens": 342
+                  },
+                  "raw": {
+                    "id": "chatcmpl-53c71091-42dd-4543-8dd4-6419adb22664",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "1.0",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763308285,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_297b22ece7",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 338,
+                      "total_tokens": 342,
+                      "completion_time": 0.01508746,
+                      "prompt_time": 0.016207459,
+                      "queue_time": 0.010373204,
+                      "total_time": 0.031294919
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 1.0,
+            "rouge_l": 1.0,
+            "semantic_sim": 1.0,
+            "blind_score": 0.8,
+            "comparison_score": 1.0,
+            "final": 0.9400000000000001
+          },
+          "feedback": "Error: Incorrect number of reported cases. Fix: Replace 100 with 150. Format: Roberts syndrome is a rare disorder; approximately [number] affected individuals have been reported.",
+          "memory_hits": [
+            {
+              "id": "46953f033f344e99",
+              "feedback": "Error: Incorrect number of reported cases. Fix: Replace 100 with 150. Format: Roberts syndrome is a rare disorder; approximately [number] affected individuals have been reported.",
+              "success_rate": 20.5,
+              "final_score": 0.9400000000000001,
+              "attempts": 2,
+              "similarity": 1.0000001192092896
+            }
+          ],
+          "flags": []
+        }
+      ],
+      "final_result": {
+        "passed": true,
+        "total_rounds": 1,
+        "final_score": 0.9400000000000001,
+        "stop_reason": "PASSED"
+      },
+      "warnings": [
+        {
+          "timestamp": "2025-11-17T02:51:20.103711",
+          "message": "Testing memory feedback from '46953f03...' (similarity=1.000)"
+        },
+        {
+          "timestamp": "2025-11-17T02:51:21.958577",
+          "message": "Memory feedback from '46953f03...' worked! (similarity=1.000)"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

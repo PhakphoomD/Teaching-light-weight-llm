@@ -1,0 +1,249 @@
+{
+  "timestamp": "20251116_004428",
+  "run_start": "2025-11-16T00:44:28.862823",
+  "parameters": {},
+  "questions": [
+    {
+      "question_idx": 0,
+      "question": "What is the capital of France?",
+      "ground_truth": "Paris",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "Answer this question precisely:\nWhat is the capital of France?\n\nAnswer:\n",
+            "output": "Paris.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What is the capital of France?\nStudent's answer: Paris.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What is the capital of France?\nReference answer: Paris\nStudent's answer: Paris.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 1.0,
+                "rouge_l": 1.0,
+                "semantic_sim": 0.9628870487213135,
+                "blind_score": 0.9,
+                "comparison_score": 1.0,
+                "final": 0.9607217621803285
+              },
+              "final_score": 0.9607217621803285,
+              "passed": true,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What is the capital of France?\nStudent's answer: Paris.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What is the capital of France?\nReference answer: Paris\nStudent's answer: Paris.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 261,
+                        "completion_tokens": 4,
+                        "total_tokens": 265
+                      },
+                      "raw": {
+                        "id": "chatcmpl-72fa08c2-ea7b-473a-9c3f-459223be7f51",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763214270,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_4387d3edbb",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 261,
+                          "total_tokens": 265,
+                          "completion_time": 0.00748477,
+                          "prompt_time": 0.014364254,
+                          "queue_time": 0.200570149,
+                          "total_time": 0.021849024
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "1.0",
+                      "usage": {
+                        "prompt_tokens": 308,
+                        "completion_tokens": 4,
+                        "total_tokens": 312
+                      },
+                      "raw": {
+                        "id": "chatcmpl-6518af87-dc46-4620-bda1-88bae1a219c4",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "1.0",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1763214271,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_eff2255fd7",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 308,
+                          "total_tokens": 312,
+                          "completion_time": 0.014688429,
+                          "prompt_time": 0.023968511,
+                          "queue_time": 0.211036912,
+                          "total_time": 0.03865694
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 261,
+                    "completion_tokens": 4,
+                    "total_tokens": 265
+                  },
+                  "raw": {
+                    "id": "chatcmpl-72fa08c2-ea7b-473a-9c3f-459223be7f51",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763214270,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_4387d3edbb",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 261,
+                      "total_tokens": 265,
+                      "completion_time": 0.00748477,
+                      "prompt_time": 0.014364254,
+                      "queue_time": 0.200570149,
+                      "total_time": 0.021849024
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "1.0",
+                  "usage": {
+                    "prompt_tokens": 308,
+                    "completion_tokens": 4,
+                    "total_tokens": 312
+                  },
+                  "raw": {
+                    "id": "chatcmpl-6518af87-dc46-4620-bda1-88bae1a219c4",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "1.0",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1763214271,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_eff2255fd7",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 308,
+                      "total_tokens": 312,
+                      "completion_time": 0.014688429,
+                      "prompt_time": 0.023968511,
+                      "queue_time": 0.211036912,
+                      "total_time": 0.03865694
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 1.0,
+            "rouge_l": 1.0,
+            "semantic_sim": 0.9628870487213135,
+            "blind_score": 0.9,
+            "comparison_score": 1.0,
+            "final": 0.9607217621803285
+          },
+          "feedback": null,
+          "memory_hits": [],
+          "flags": []
+        }
+      ],
+      "final_result": {
+        "passed": true,
+        "total_rounds": 1,
+        "final_score": 0.9607217621803285,
+        "stop_reason": "PASSED"
+      },
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}

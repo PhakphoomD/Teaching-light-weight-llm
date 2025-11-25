@@ -1,0 +1,66 @@
+# Full Experiment Configuration
+# Tests ALL features: memory, refinement, COT, early stopping, etc.
+
+name: "full_experiment"
+description: "Full system test with all plugins enabled"
+
+# Dataset
+dataset: "data/alpaca_20.jsonl"
+num_questions: 10
+
+# Models
+student_model: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+student_temperature: 0.7
+student_max_tokens: 512
+
+teacher_model: "gemini-2.0-flash-lite"
+teacher_temperature: 0.3
+teacher_max_tokens: 512
+
+# Memory (enabled)
+memory_type: "raw"
+summarise_memory: false
+memory_store_path: null
+embedding_model: "all-MiniLM-L6-v2"
+embedding_dim: 384
+k: 5
+similarity_threshold: 0.0
+
+# Chain-of-Thought (enabled)
+use_cot_teacher: true
+use_cot_student: true
+
+# Refinement (enabled)
+strategy: "memory"
+max_rounds: 5
+improvement_threshold: 0.8
+early_stopping: true
+
+# Phase 2 Parameters (enabled)
+tau: 0.85
+patience: 1
+epsilon_gain: 0.01
+hard_negative_threshold: 2
+max_semantic_rules: 3
+rule_min_quality: 0.7
+rule_min_support: 2
+rule_distill_interval: 5
+
+# Critic
+disagreement_threshold: 0.3
+
+# Output
+output_dir: "experiments/results"
+log_dir: "logs/experiments"
+save_memory: true
+save_detailed_logs: true
+
+# Performance
+batch_size: 1
+timeout_seconds: 60
+retry_on_error: true
+max_retries: 2
+
+# Metadata
+version: "3.0"
+notes: "Full system with all enhancements"

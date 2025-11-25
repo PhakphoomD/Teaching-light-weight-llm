@@ -1,0 +1,43 @@
+{
+  "timestamp": "20251118_105621",
+  "run_start": "2025-11-18T10:56:21.486045",
+  "parameters": {
+    "student_model": "llama-3.1-8b-instant",
+    "student_provider": "groq",
+    "student_temperature": 0.0,
+    "student_max_tokens": 256,
+    "teacher_model": "llama-3.3-70b-versatile",
+    "teacher_provider": "groq",
+    "teacher_temperature": 0.2,
+    "teacher_max_tokens": 256,
+    "pass_threshold": 0.8979581727010184,
+    "metric_weights": {
+      "blind_score": 0.0,
+      "comparison_score": 1.0,
+      "exact_match": 0.0,
+      "rouge_l": 0.0,
+      "semantic_sim": 0.0
+    },
+    "embedding_model": "all-MiniLM-L6-v2",
+    "similarity_threshold": 0.99,
+    "top_k": 0,
+    "max_rounds": 3,
+    "early_stopping": {
+      "enabled": true,
+      "min_improvement": 0.02,
+      "patience": 5,
+      "plateau_threshold": 0.9,
+      "start_from_round": 4
+    },
+    "repetition_detection": {
+      "consecutive_rounds": 3,
+      "enabled": true,
+      "similarity_threshold": 0.98,
+      "trigger_ground_truth": true
+    },
+    "storage_path": "c:\\Users\\ham25\\Desktop\\Teaching-light-weight-llm-based-project\\logs\\simplified\\phase4_memory_alpaca_mem_off.jsonl",
+    "index_path": "c:\\Users\\ham25\\Desktop\\Teaching-light-weight-llm-based-project\\logs\\simplified\\phase4_memory_alpaca_mem_off.index",
+    "log_path": "logs/simplified"
+  },
+  "questions": []
+}

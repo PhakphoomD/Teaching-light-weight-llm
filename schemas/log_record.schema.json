@@ -1,0 +1,227 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Refinement Round Log Record",
+  "description": "Schema for logging each refinement round in the teaching loop (Phase 7.2 spec)",
+  "type": "object",
+  "required": [
+    "round",
+    "question_id",
+    "student_answer",
+    "evaluation",
+    "timestamp"
+  ],
+  "properties": {
+    "experiment_id": {
+      "type": "string",
+      "description": "Unique identifier for the experiment run"
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Round number (1-indexed)"
+    },
+    "question_id": {
+      "type": "string",
+      "description": "Unique identifier for the question"
+    },
+    "question": {
+      "type": "string",
+      "description": "The original question text"
+    },
+    "student_answer": {
+      "type": "string",
+      "description": "Student's generated answer for this round"
+    },
+    "evaluation": {
+      "type": "string",
+      "enum": ["correct", "incorrect", "partial", "partially_correct", "unknown", "error"],
+      "description": "Teacher's evaluation verdict"
+    },
+    "teacher_verdict": {
+      "type": "string",
+      "enum": ["correct", "incorrect", "partial", "partially_correct", "unknown", "error"],
+      "description": "Alias for evaluation (backward compatibility)"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Teacher's chain-of-thought reasoning"
+    },
+    "hint": {
+      "type": "string",
+      "description": "Hint generated for next round (deprecated - use hints array)"
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of all hints accumulated for this round"
+    },
+    "context_used": {
+      "type": "boolean",
+      "description": "Whether retrieval context was used"
+    },
+    "context_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of retrieved similar examples"
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "EM": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Exact Match score"
+        },
+        "F1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "F1 score"
+        },
+        "BLEU": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "BLEU score"
+        },
+        "ROUGE": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "ROUGE-L score"
+        },
+        "ROUGE-L": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "ROUGE-L score (alias)"
+        },
+        "BERTF1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "BERTScore F1"
+        },
+        "exact_match": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Exact Match (lowercase key for backward compatibility)"
+        },
+        "f1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "F1 score (lowercase key for backward compatibility)"
+        },
+        "bleu": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "BLEU score (lowercase key for backward compatibility)"
+        },
+        "rouge_l": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "ROUGE-L (lowercase key for backward compatibility)"
+        },
+        "bert_f1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "BERTScore F1 (lowercase key for backward compatibility)"
+        }
+      },
+      "description": "Evaluation metrics (if ground truth available)"
+    },
+    "timings": {
+      "type": "object",
+      "properties": {
+        "latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total latency for this round in milliseconds"
+        },
+        "student_latency_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "teacher_latency_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "description": "Timing information for this round"
+    },
+    "progress": {
+      "type": "object",
+      "required": ["current", "total"],
+      "properties": {
+        "current": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Current round number"
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total max rounds"
+        }
+      },
+      "description": "Progress tracking"
+    },
+    "token_usage": {
+      "type": "object",
+      "required": ["total"],
+      "properties": {
+        "prompt": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Prompt tokens used"
+        },
+        "completion": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Completion tokens used"
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total tokens used"
+        },
+        "student": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Tokens used by student model"
+        },
+        "teacher": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Tokens used by teacher model"
+        }
+      },
+      "description": "Token usage for this round"
+    },
+    "latency_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total latency for this round in milliseconds (deprecated - use timings.latency_ms)"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if any"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    }
+  },
+  "additionalProperties": false
+}

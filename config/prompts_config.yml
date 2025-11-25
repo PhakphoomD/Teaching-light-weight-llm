@@ -1,0 +1,573 @@
+# Prompts Configuration
+# =====================
+# Centralized prompt templates for the simplified teaching system.
+# Only the prompts required for the current experiments are kept active.
+# All prompts support variable substitution using {variable_name}.
+
+# Student Prompts
+# ---------------
+student:
+  # First attempt prompt (no memory/feedback)
+  first_attempt: |
+    Answer this question precisely:
+    {question}
+    
+    Answer:
+  
+  # Refinement prompt (with feedback)
+  refinement: |
+    Answer: {question}
+    Your previous answer: {previous_answer}
+    Guidance: {feedback}
+    
+    Answer:
+  
+  # Refinement prompt (without feedback - fallback)
+  refinement_no_feedback: |
+    Answer this question precisely:
+    {question}
+    
+    Your previous answer: {previous_answer}
+    
+    Improve your answer:
+
+  # Last chance prompt (ground truth hint - force exact copy)
+  # Used only when loop.enable_last_chance is True. Phase 1 disables this.
+  last_chance: |
+    COPY THIS EXACTLY:
+    {ground_truth}
+
+  # Simple minimal prompts used in Phase 1.1 and analysis experiments
+  simple_minimal: |
+    Question: {question}
+
+    Answer:
+
+  simple_minimal_refine: |
+    Question: {question}
+    Previous answer: {previous_answer}
+    Feedback: {feedback}
+
+    Improved answer:
+  
+  # Structured prompts (enforces format) - "medium" student strategy
+  structured_first: |
+    Answer this question following the format shown:
+    
+    Question: {question}
+    
+    My reasoning: [think step by step]
+    Final answer: [one sentence]
+  
+  structured_refine: |
+    Question: {question}
+    Previous answer: {previous_answer}
+    What to improve: {feedback}
+    
+    My revision:
+    - What I'll change: [...]
+    - New answer: [...]
+  
+  # Self-reflective prompts (metacognitive) - "detailed" student strategy
+  reflective_first: |
+    Question: {question}
+    
+    Before answering, consider:
+    1. What type of answer is needed?
+    2. What format should I use?
+    
+    My answer:
+  
+  reflective_refine: |
+    Question: {question}
+    My previous answer: {previous_answer}
+    Feedback received: {feedback}
+    
+    Self-reflection:
+    - Why was my answer incorrect? [...]
+    - What should I change? [...]
+    
+    Revised answer:
+  
+  # NOTE: Additional student prompt variants (simple, minimal, guided, etc.)
+  # from earlier experiments have been removed here to keep the configuration
+  # focused on the three student strategies used in Phase 1:
+  # - Minimal: first_attempt / refinement
+  # - Structured: structured_first / structured_refine
+  # - Self-Reflective: reflective_first / reflective_refine
+
+
+# Teacher Feedback Prompts
+# -------------------------
+teacher:
+  # Regular Chain-of-Thought feedback (first time)
+  cot_first_time: |
+    You are a teacher helping a small LLM answer a question correctly.
+    
+    [Question]
+    {question}
+    
+    [Target Answer]
+    {ground_truth}
+    
+    [Student's Answer]
+    {student_answer}
+    
+    <Analysis>
+    1. Is the core meaning/content correct?
+       - If YES, Problem is FORMAT/STRUCTURE only (length, sentence form, word order)
+       - If NO, Problem is CONTENT (wrong facts, wrong concept)
+    2. What EXACTLY differs between student's answer and target?
+    3. What SPECIFIC instruction will fix it?
+    </Analysis>
+    
+    IMPORTANT:
+    - If content is correct but format differs → Focus on FORMAT
+    - If content is wrong → Focus on CONTENT
+    - Be SPECIFIC about what to add/remove/change
+    
+    Return ONLY:
+    "Error: [what's wrong]. Fix: [specific action]. Format: [exact template with [placeholders]]"
+    
+    Feedback:
+  
+  # Chain-of-Thought feedback (refinement, round < 4)
+  cot_refinement: |
+    You are a teacher helping a small LLM(<8B parameter model) improve its answer.
+    
+    [Question]
+    {question}
+    
+    [Target Answer]
+    {ground_truth}
+    
+    [Student's Answer]
+    {student_answer}
+    
+    [Previous Feedback]
+    {previous_feedback}
+    
+    <Analysis>
+    1. Is the core meaning/content correct? (If yes, the problem is FORMAT/STRUCTURE, not content!)
+    2. What's specifically different: Length? Sentence structure? Missing words? Word order?
+    3. Why did previous feedback not work? Was it unclear or wrong?
+    4. What EXACT change will make student_answer match the target format?
+    </Analysis>
+    
+    IMPORTANT:
+    - If content is correct but format differs → Focus on FORMAT (e.g., "Need full sentence starting with...")
+    - If content is wrong → Focus on CONTENT (e.g., "Wrong algorithm, should be X")
+    - Be SPECIFIC about what to add/remove/change
+    Return ONLY:
+    "Error: [what's wrong]. Fix: [specific action]. Format: [exact template with [placeholders]]"
+    
+    Example formats:
+    - "Error: Missing sentence structure. Fix: Wrap in full sentence. Format: 'The appropriate [X] algorithm for this problem is [Y].'"
+    
+    Feedback:
+  
+  # Difficult question prompt (round 4+, repetition detected)
+  difficult_question: |
+    CRITICAL: The student keeps giving the SAME answer. Analyze why and fix it.
+    
+    [Question]
+    {question}
+    
+    [Target Answer]
+    {ground_truth}
+    
+    [Student's Repeated Answer]
+    {student_answer}
+    
+    [Failed Feedback]
+    {previous_feedback}
+    
+    <Root Cause Analysis>
+    1. Is the CONTENT/MEANING of student's answer correct?
+       - Compare with [Target Answer] above
+       - If YES, Problem is ONLY format/structure
+       - If NO, Problem is content (wrong facts/concept)
+    2. Why is previous feedback failing?
+    3. What is the EXACT difference between student's answer and target?
+    4. What ULTRA-SPECIFIC instruction will fix it?
+    </Root Cause Analysis>
+    
+    SOLUTION RULES:
+    - Give COMPLETE template with ALL static words written out
+    - Use [brackets] ONLY for variable parts
+    - Show a concrete example to make it crystal clear
+    
+    Return ONLY:
+    "Error: [diagnosis]. Fix: [specific instruction]. Format: '[COMPLETE template]'. Example: {ground_truth}"
+    
+    IMPORTANT: Keep under 250 chars total. Be EXTREMELY SPECIFIC.
+    
+    Feedback:
+  
+  # === NEW COT VARIANTS FOR ABLATION STUDY ===
+  
+  # CoT Variant 1: Ultra-Short (maximize brevity)
+  cot_short: |
+    Target: {ground_truth}
+    Student: {student_answer}
+    
+    Error: [what's wrong]
+    Fix: [specific change]
+    Template: [show format]
+    
+    Max 60 chars.
+  
+  cot_short_refine: |
+    Target: {ground_truth}
+    Student: {student_answer}
+    Previous feedback: {previous_feedback}
+    
+    New error: [what's still wrong]
+    New fix: [different approach]
+    
+    Max 60 chars.
+  
+  # CoT Variant 2: Example-First (show correct answer first)
+  cot_example: |
+    Correct answer: {ground_truth}
+    Your answer: {student_answer}
+    
+    To match this, you need to:
+    1. [specific change]
+    2. Use format: [template]
+    
+    Keep under 80 chars.
+  
+  cot_example_refine: |
+    Correct: {ground_truth}
+    Yours: {student_answer}
+    Previous guidance: {previous_feedback}
+    
+    Still need to:
+    1. [what's missing]
+    2. Format: [template]
+    
+    Max 80 chars.
+  
+  # CoT Variant 3: Clean (no XML tags, natural language)
+  cot_clean: |
+    Compare answers:
+    Correct: {ground_truth}
+    Yours: {student_answer}
+    
+    If different, explain:
+    - Content error OR format error?
+    - What to change: [specific instruction]
+    - Format: [template with [brackets]]
+    
+    Feedback (max 100 chars):
+  
+  cot_clean_refine: |
+    Target: {ground_truth}
+    Student: {student_answer}
+    Previous feedback: {previous_feedback}
+    
+    Analysis:
+    - Did previous feedback work? If not, why?
+    - New approach: [different strategy]
+    - Format: [template]
+    
+    New feedback (max 100 chars):
+  
+  # === NON-COT VARIANTS (Direct, No Reasoning) ===
+  
+  # Direct Variant 1: Ultra-Direct (no explanation)
+  direct_simple: |
+    Correct: {ground_truth}
+    Yours: {student_answer}
+    
+    Fix: [one specific change]
+    
+    Max 40 chars.
+  
+  direct_simple_refine: |
+    Target: {ground_truth}
+    Yours: {student_answer}
+    
+    Change: [specific action]
+    
+    Max 40 chars.
+  
+  # Direct Variant 2: Template-Only (show format immediately)
+  direct_template: |
+    Your answer needs this format:
+    {ground_truth}
+    
+    Adjust yours to match.
+  
+  direct_template_refine: |
+    Expected: {ground_truth}
+    Yours: {student_answer}
+    
+    Match this format exactly.
+  
+  # Direct Variant 3: Diff-Style (show what to change)
+  direct_diff: |
+    - Remove: [what's wrong in student answer]
+    + Add: [what's in ground truth]
+    
+    Apply this change.
+  
+  direct_diff_refine: |
+    Still wrong:
+    - {student_answer}
+    + {ground_truth}
+    
+    Fix it.
+  
+  # Direct feedback (no CoT)
+  direct: |
+    Compare these answers and provide concise feedback (<150 chars):
+    
+    Question: {question}
+    Correct: {ground_truth}
+    Student: {student_answer}
+    
+    Feedback:
+  
+  # Template-based feedback (provides concrete structure)
+  template_feedback: |
+    Compare answers and provide template-based guidance.
+    
+    Question: {question}
+    Target: {ground_truth}
+    Student: {student_answer}
+    
+    If different:
+    1. Error type: content/format/structure
+    2. Template: Show format with [brackets] for variables
+    3. Example: {ground_truth}
+    
+    Keep under 100 chars.
+    
+    Feedback:
+  
+  # Socratic feedback (asks guiding questions)
+  socratic_feedback: |
+    Your answer: {student_answer}
+    
+    Consider these questions:
+    1. What format does this question need?
+    2. What information is missing or extra?
+    3. How would you restructure it?
+    
+    Revise based on these questions.
+  
+  # Legacy teacher prompts (XML-style from src/prompts/teacher.py)
+  # These are kept for backward compatibility
+  legacy_full: |
+    ROLE: TEACHER/CRITIC
+    You are an expert teacher evaluating a student's answer.
+    Your goal is to assess accuracy and provide constructive guidance.
+    
+    EVALUATION GUIDELINES:
+    1. Determine if the student's answer is CORRECT or INCORRECT
+    2. Provide clear reasoning for your evaluation (use chain-of-thought if needed)
+    3. Generate a helpful hint that guides without revealing the exact answer
+    4. Be objective, unbiased, and educational
+    
+    <QUESTION>
+    {question}
+    </QUESTION>
+    
+    <STUDENT_ANSWER>
+    {student_answer}
+    </STUDENT_ANSWER>
+    
+    <CORRECT_ANSWER>
+    (Reference for evaluation purposes)
+    {ground_truth}
+    </CORRECT_ANSWER>
+    
+    YOUR EVALUATION:
+    
+    Provide your evaluation in the following format:
+    
+    <EVALUATION>
+    State either 'correct' or 'incorrect'
+    </EVALUATION>
+    
+    <REASONING>
+    Explain your evaluation step-by-step.
+    Use chain-of-thought reasoning if helpful.
+    Compare the student's answer with the correct answer.
+    This section is for your internal processing.
+    </REASONING>
+    
+    <HINT>
+    Provide a helpful hint that guides the student.
+    DO NOT reveal the exact answer.
+    Be constructive and educational.
+    Example: 'Think about the capital city located on the Seine river'
+    </HINT>
+    
+    Begin your evaluation:
+  
+  legacy_simple: |
+    ROLE: TEACHER/CRITIC
+    Evaluate if the student's answer is correct or incorrect, then provide a helpful hint.
+    
+    <QUESTION>
+    {question}
+    </QUESTION>
+    
+    <STUDENT_ANSWER>
+    {student_answer}
+    </STUDENT_ANSWER>
+    
+    Respond using these tags:
+    <EVALUATION>correct or incorrect</EVALUATION>
+    <REASONING>Your reasoning here</REASONING>
+    <HINT>Your hint here (do not reveal the answer)</HINT>
+    
+    Begin:
+
+
+# Metrics Evaluation Prompts
+# ---------------------------
+metrics:
+  # Blind judge variants
+  blind_judge_strict: |
+    You are a STRICT evaluator. Rate WITHOUT seeing correct answer.
+    Penalize heavily for ANY format errors or imprecision.
+    
+    Question: {question}
+    Student's answer: {student_answer}
+    
+    Criteria: relevance, coherence, completeness, correctness, FORMAT
+    Scale: 1.0=perfect (exact), 0.8=good, 0.6=acceptable, 0.4=poor, 0.0=very poor
+    
+    Score:
+  
+  blind_judge_lenient: |
+    You are a LENIENT evaluator. Rate WITHOUT seeing correct answer.
+    Focus on meaning, ignore format issues.
+    
+    Question: {question}
+    Student's answer: {student_answer}
+    
+    Criteria: relevance and coherence only
+    Scale: 1.0=relevant, 0.5=partially relevant, 0.0=irrelevant
+    
+    Score:
+  
+  # Blind judge (without ground truth - unbiased quality assessment)
+  blind_judge: |
+    You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.
+    
+    Question: {question}
+    Student's answer: {student_answer}
+    
+    Evaluation criteria:
+    1. RELEVANCE: Does the answer address the question? (most important)
+    2. COHERENCE: Is it clear and well-structured?
+    3. COMPLETENESS: Does it provide sufficient information?
+    4. CORRECTNESS: Based on your knowledge, is it factually accurate?
+    
+    Rating scale (0.0 to 1.0):
+    - 1.0 = Excellent answer (relevant, coherent, complete, accurate)
+    - 0.8-0.9 = Good answer (minor issues but generally correct)
+    - 0.6-0.7 = Acceptable (relevant but incomplete or unclear)
+    - 0.4-0.5 = Poor (partially relevant or has errors)
+    - 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)
+    
+    Output ONLY a number between 0.0 and 1.0. No explanation.
+    
+    Score:
+  
+  # Comparison judge variants
+  comparison_judge_strict: |
+    You are a STRICT evaluator. Compare with reference.
+    1.0 ONLY if almost identical. Penalize format differences.
+    
+    Question: {question}
+    Reference: {ground_truth}
+    Student: {student_answer}
+    
+    Scale: 1.0=identical, 0.8=very close, 0.6=mostly right, 0.4=partially, 0.0=wrong
+    
+    Score:
+  
+  comparison_judge_lenient: |
+    You are a LENIENT evaluator. Compare with reference.
+    Focus on semantic equivalence. Ignore format completely.
+    
+    Question: {question}
+    Reference: {ground_truth}
+    Student: {student_answer}
+    
+    Scale: 0.9-1.0 if same meaning (any format), 0.0-0.4 if wrong meaning
+    
+    Score:
+  
+  # Comparison judge (with ground truth - accurate semantic comparison)
+  comparison_judge: |
+    You are an evaluator. Compare student's answer with the reference answer.
+    
+    Question: {question}
+    Reference answer: {ground_truth}
+    Student's answer: {student_answer}
+    
+    CRITICAL RULES - Focus on MEANING, not FORMAT:
+    1. If student's answer has the SAME MEANING → 0.9-1.0
+       - Different wording is OK (e.g., "dog" = "canine")
+       - Different format is OK (e.g., "Paris" = "The capital is Paris")
+       - Different order is OK (e.g., "A and B" = "B and A")
+    2. Extra information is OK if core meaning is correct
+    3. Only penalize if FACTS/MEANING are wrong or missing
+    
+    Rating scale (0.0 to 1.0):
+    - 1.0 = Same meaning, may have different words/format/order
+    - 0.9 = Same meaning with minor extra/missing details
+    - 0.7-0.8 = Mostly correct but missing important parts
+    - 0.5-0.6 = Partially correct (some right, some wrong)
+    - 0.0-0.4 = Wrong meaning or irrelevant
+    
+    Output ONLY a number between 0.0 and 1.0. No explanation.
+    
+    Score:
+
+
+# Prompt Settings
+# ----------------
+settings:
+  # Variable placeholders used across prompts
+  variables:
+    - question
+    - ground_truth
+    - student_answer
+    - previous_answer
+    - feedback
+    - previous_feedback
+  
+  # Max lengths for outputs
+  max_lengths:
+    student_answer: 256
+    teacher_feedback: 250
+    
+  # Truncation suffix
+  truncation_suffix: "..."
+  
+  # Active prompt versions (for easy switching)
+  active:
+    student_first: "first_attempt"           # Options: first_attempt, simple
+    student_refine: "refinement"             # Options: refinement, refinement_no_feedback
+    student_last_chance: "last_chance"       # Always: last_chance
+    teacher_feedback: "cot_refinement"       # Options: cot_first_time, cot_refinement, difficult_question, direct, legacy_full, legacy_simple
+    teacher_difficult: "difficult_question"  # For round 4+
+    metrics_blind: "blind_judge"             # Always: blind_judge
+    metrics_comparison: "comparison_judge"   # Always: comparison_judge
+
+
+# Notes for UI Integration
+# -------------------------
+# 1. All prompts support variable substitution with {variable_name}
+# 2. Use yaml.safe_load() to load this file
+# 3. Access prompts via: config['student']['first_attempt'].format(question="...")
+# 4. Change active prompts via: config['settings']['active']['student_first']
+# 5. For A/B testing, duplicate a prompt and modify, then switch active version

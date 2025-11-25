@@ -1,0 +1,11 @@
+{
+  "success_rate": 1.0,
+  "avg_rounds": 4.0,
+  "avg_tokens": 0.0,
+  "memory_hit_rate": 0.6666666666666666,
+  "total_questions": 3,
+  "success_count": 3,
+  "total_rounds": 12,
+  "total_time_seconds": 19.106,
+  "avg_time_per_question_ms": 6368.666666666667
+}
