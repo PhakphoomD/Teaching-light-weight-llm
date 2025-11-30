@@ -132,7 +132,7 @@ class RoundLogger:
                 'timestamp': datetime.now().isoformat(),
                 'question': question,
                 'answer': answer,
-                'scores': scores,
+                'scores': dict(scores) if scores else {},  # Copy to avoid mutation
                 'final_score': final_score,
                 'passed': passed,
                 'feedback_id': feedback_id,

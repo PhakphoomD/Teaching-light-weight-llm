@@ -49,12 +49,21 @@ import time
 import yaml
 import os
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
 from dotenv import load_dotenv
 
 # Load environment variables (API keys, etc.)
 load_dotenv()
+
+PROMPT_STRATEGY_MAP: Dict[str, Tuple[str, str]] = {
+    "minimal": ("initial_draft", "refine_with_teacher"),
+    "structured": ("structured_first", "structured_refine"),
+    "reflective": ("reflective_first", "reflective_refine"),
+    "principle": ("initial_draft", "principle_rewrite"),
+}
+
+DEFAULT_PROMPT_KEYS = ("first_attempt", "refinement")
 
 # Import core components for the teaching loop system
 from src.simplified.student import StudentClient, build_first_attempt_prompt, build_refinement_prompt
@@ -106,6 +115,7 @@ class SimplifiedTeachingLoop:
         """
         # Load configuration from YAML file
         self.config = self._load_config(config_path)
+        self.project_root = Path(__file__).resolve().parent
         
         # Initialize student model client for answer generation
         self.student = StudentClient(self.config['student'])
@@ -117,9 +127,15 @@ class SimplifiedTeachingLoop:
         # Initialize memory system for storing successful teaching strategies
         self.memory = FAISSMemory(self.config['memory'])
         
+        # Resolve logging directories so each experiment/phase keeps separate artifacts
+        self.log_dir = self._resolve_log_dir()
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+        logging_config = dict(self.config.get('logging', {}))
+        logging_config['log_path'] = str(self.log_dir)
+
         # Initialize logging and monitoring systems
-        self.logger = RoundLogger(self.config['logging'])
-        self.monitor = PerformanceMonitor(self.config['logging'])
+        self.logger = RoundLogger(logging_config)
+        self.monitor = PerformanceMonitor(logging_config)
         
         # Initialize early stopping mechanism with configurable parameters
         self.early_stopping = EarlyStopping(
@@ -130,7 +146,7 @@ class SimplifiedTeachingLoop:
         )
         
         # Initialize debug logger for detailed round-by-round analysis
-        self.debug_logger = DebugLogger(base_dir=self.config['logging'].get('log_path', 'logs/simplified') + "/debug")
+        self.debug_logger = DebugLogger(base_dir=str(self.log_dir / "debug"))
         
         # Initialize terminal UI for clean, readable console output
         self.ui = TerminalUI()
@@ -176,6 +192,40 @@ class SimplifiedTeachingLoop:
         """Load configuration from YAML file."""
         with open(config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
+
+    def _resolve_log_dir(self) -> Path:
+        """Resolve the log directory using config overrides or environment variables."""
+        logging_cfg = self.config.get('logging', {})
+
+        # Highest priority: explicit experiment directory override
+        env_dir = os.environ.get('EXPERIMENT_DIR')
+        if env_dir:
+            return self._to_absolute_path(Path(env_dir))
+
+        experiment_root = Path(logging_cfg.get('experiment_root', 'logs/experiments'))
+        phase_name = logging_cfg.get('phase') or os.environ.get('EXPERIMENT_PHASE')
+        run_name = (
+            logging_cfg.get('run_name') or
+            logging_cfg.get('experiment_name') or
+            os.environ.get('EXPERIMENT_NAME')
+        )
+
+        if phase_name:
+            target = experiment_root / phase_name
+            if run_name:
+                target = target / run_name
+            return self._to_absolute_path(target)
+
+        if run_name:
+            return self._to_absolute_path(experiment_root / run_name)
+
+        return self._to_absolute_path(Path(logging_cfg.get('log_path', 'logs/simplified')))
+
+    def _to_absolute_path(self, path_obj: Path) -> Path:
+        """Convert relative paths to project-root absolute paths."""
+        if path_obj.is_absolute():
+            return path_obj
+        return (self.project_root / path_obj).resolve()
     
     def run(self, 
             question: str, 
@@ -210,8 +260,8 @@ class SimplifiedTeachingLoop:
         assert max_rounds is not None, "max_rounds must be set"
 
         # Student prompt strategy (allows experimentation with different student prompts)
-        student_first_prompt_type = student_first_key or "first_attempt"
-        student_refine_prompt_type = student_refine_key or "refinement"
+        student_first_prompt_type = student_first_key or DEFAULT_PROMPT_KEYS[0]
+        student_refine_prompt_type = student_refine_key or DEFAULT_PROMPT_KEYS[1]
 
         # Control whether any ground-truth-based "last chance" logic is allowed
         loop_cfg = self.config.get('loop', {})
@@ -223,6 +273,7 @@ class SimplifiedTeachingLoop:
         
         # Track feedback for smart memory storage
         last_generated_feedback = None
+        last_feedback_structured: Optional[Dict[str, Any]] = None
         last_feedback_scores = None
         feedback_used_id = None  # ID of feedback from memory that was used
         
@@ -251,7 +302,17 @@ class SimplifiedTeachingLoop:
             # ==================== STEP 2: Build student prompt based on context ====================
             # Construct appropriate prompt based on round number and student progress.
             # Three prompt types: first attempt (minimal), refinement (with feedback), or last chance (with ground truth).
-            ground_truth_hint_round = self.config['loop'].get('ground_truth_hint_round', 99)
+            
+            # Last chance configuration :
+            # - enable_last_chance = True  → triggers at last 2 rounds (max_rounds - 1, max_rounds)
+            # - enable_last_chance = False → no last chance, normal teaching loop
+            #
+            # Example: max_rounds = 6
+            #   - Round 1-4: Normal teaching (FIRST/REFINE)
+            #   - Round 5-6: LAST_CHANCE with ground_truth (if enable_last_chance=True)
+            #
+            # Formula: ground_truth_hint_round = max_rounds - 1 (starts 2 rounds before end)
+            ground_truth_hint_round = max_rounds - 1  # e.g., 6-1=5, so rounds 5,6 get ground_truth
             
             # Detect if student is stuck in a repetition loop (N consecutive similar answers)
             use_ground_truth = False
@@ -325,13 +386,29 @@ class SimplifiedTeachingLoop:
                 mode = "REFINE"
                 previous_answer = history[-1]['answer']
                 # Extract feedback that was generated by the teacher in the previous round
-                feedback_text = history[-1].get('generated_feedback', None) if history else None
+                teacher_critique = None
+                teacher_improvements = None
+                principle_critique = None
+                principle_improvements = None
+                feedback_text = None
+                if last_feedback_structured:
+                    feedback_text = last_feedback_structured.get('feedback')
+                    teacher_critique = last_feedback_structured.get('critique')
+                    teacher_improvements = last_feedback_structured.get('improvements')
+                    principle_critique = last_feedback_structured.get('principle_critique')
+                    principle_improvements = last_feedback_structured.get('principle_improvements')
+                elif history:
+                    feedback_text = history[-1].get('generated_feedback', None)
                 prompt = build_refinement_prompt(
                     question,
                     previous_answer,
                     feedback_text,
                     prompt_type=student_refine_prompt_type,
                     no_feedback_prompt_type=student_refine_prompt_type,
+                    teacher_critique=teacher_critique,
+                    teacher_improvements=teacher_improvements,
+                    teacher_principle_critique=principle_critique,
+                    teacher_principle_improvements=principle_improvements,
                 )
             
             # ==================== STEP 3: Generate student answer ====================
@@ -375,10 +452,13 @@ class SimplifiedTeachingLoop:
                 feedback_used_this_round = history[-1].get('generated_feedback', None)
             
             # ==================== STEP 6: Log round ====================
+            # IMPORTANT: Copy scores dict to avoid mutation issues in history
+            scores_snapshot = dict(evaluation['scores'])
+            
             round_data = {
                 'round': round_num,
                 'answer': student_answer,
-                'scores': evaluation['scores'],
+                'scores': scores_snapshot,
                 'final_score': evaluation['final_score'],
                 'passed': passed,
                 'feedback_used': feedback_info['id'] if feedback_info else None,
@@ -495,15 +575,23 @@ class SimplifiedTeachingLoop:
             
             # Extract feedback text and debug info
             if isinstance(feedback_result, dict):
-                new_feedback = feedback_result['feedback']
+                new_feedback = feedback_result.get('feedback', '')
                 feedback_prompt = feedback_result.get('prompt', None)
                 feedback_response = feedback_result.get('response', None)
+                last_feedback_structured = feedback_result
             else:
                 new_feedback = feedback_result
                 feedback_prompt = None
                 feedback_response = None
+                last_feedback_structured = None
             
             round_data['generated_feedback'] = new_feedback
+            round_data['teacher_critique'] = (last_feedback_structured or {}).get('critique') if last_feedback_structured else None
+            round_data['teacher_improvements'] = (last_feedback_structured or {}).get('improvements') if last_feedback_structured else None
+            round_data['teacher_principle_critique'] = (last_feedback_structured or {}).get('principle_critique') if last_feedback_structured else None
+            round_data['teacher_principle_improvements'] = (last_feedback_structured or {}).get('principle_improvements') if last_feedback_structured else None
+            round_data['teacher_score'] = (last_feedback_structured or {}).get('score') if last_feedback_structured else None
+            round_data['teacher_stop_flag'] = (last_feedback_structured or {}).get('stop_flag') if last_feedback_structured else None
             
             # Update debug log with feedback generation info
             if feedback_prompt:
@@ -517,7 +605,7 @@ class SimplifiedTeachingLoop:
             # Store feedback in memory ONLY if it helps student pass
             # For now, just track the last generated feedback
             last_generated_feedback = new_feedback  # Always string now
-            last_feedback_scores = evaluation['scores']
+            last_feedback_scores = dict(evaluation['scores'])  # Copy to avoid mutation
             if feedback_info:
                 feedback_used_id = feedback_info['id']  # Track which memory feedback failed
             
@@ -559,12 +647,15 @@ class SimplifiedTeachingLoop:
                             passed_last = evaluation_last['final_score'] >= self.config['teacher']['pass_threshold']
                             round_time_last = time.time() - round_start_last
                             
+                            # IMPORTANT: Copy scores to avoid mutation issues
+                            scores_last_snapshot = dict(evaluation_last['scores'])
+                            
                             # Log last chance round
                             flags_last = ["LAST_CHANCE", "EARLY_STOP"]
                             round_data_last = {
                                 'round': round_num_last,
                                 'answer': student_answer_last,
-                                'scores': evaluation_last['scores'],
+                                'scores': scores_last_snapshot,
                                 'final_score': evaluation_last['final_score'],
                                 'passed': passed_last,
                                 'feedback_used': None,
@@ -584,7 +675,7 @@ class SimplifiedTeachingLoop:
                                 teacher_input=None,
                                 teacher_output=evaluation_last,
                                 teacher_raw_response=None,
-                                scores=evaluation_last['scores'],
+                                scores=scores_last_snapshot,
                                 feedback=None,
                                 memory_hits=[],
                                 flags=flags_last
@@ -594,7 +685,7 @@ class SimplifiedTeachingLoop:
                                 round_num=round_num_last,
                                 question=question,
                                 answer=student_answer_last,
-                                scores=evaluation_last['scores'],
+                                scores=scores_last_snapshot,
                                 passed=passed_last,
                                 feedback_id=None,
                                 time_ms=round_data_last['time_ms']
@@ -604,7 +695,7 @@ class SimplifiedTeachingLoop:
                                 self.logger.accumulate_metrics(
                                     question_id=question_id,
                                     round_num=round_num_last,
-                                    scores=evaluation_last['scores'],
+                                    scores=scores_last_snapshot,
                                     answer=student_answer_last,
                                     passed=passed_last,
                                     teacher_feedback=None
@@ -612,20 +703,20 @@ class SimplifiedTeachingLoop:
                             
                             # Check if last chance worked
                             if passed_last:
-                                # ==================== Memory Save Logic (same as PASSED) ====================
-                                # If passed in Round 2+ → means teacher's feedback from previous rounds helped
-                                # (Even though ground truth was used in LAST_CHANCE, the student learned from previous feedback)
-                                if round_num_last > 1 and last_generated_feedback:
-                                    self.memory.store(
-                                        question=question,
-                                        feedback=last_generated_feedback,
-                                        scores=last_feedback_scores if last_feedback_scores else evaluation_last['scores'],
-                                        final_score=evaluation_last['final_score'],
-                                        attempts=round_num_last
-                                    )
-                                    self.debug_logger.log_warning(
-                                        f"Saved LAST_CHANCE feedback to memory ({round_num_last} rounds, score={evaluation_last['final_score']:.3f})"
-                                    )
+                                # ==================== Memory Save Logic for LAST_CHANCE ====================
+                                # Save ground_truth as feedback! This is the "correct answer" feedback.
+                                # This helps future similar questions because student learned the answer format.
+                                ground_truth_feedback = f"The correct answer is: {ground_truth}"
+                                self.memory.store(
+                                    question=question,
+                                    feedback=ground_truth_feedback,
+                                    scores=scores_last_snapshot,
+                                    final_score=evaluation_last['final_score'],
+                                    attempts=round_num_last
+                                )
+                                self.debug_logger.log_warning(
+                                    f"Saved GROUND_TRUTH as feedback to memory ({round_num_last} rounds, score={evaluation_last['final_score']:.3f})"
+                                )
                                 
                                 self.debug_logger.end_question(
                                     passed=True,
@@ -688,9 +779,11 @@ class SimplifiedTeachingLoop:
         """Get performance statistics across all questions."""
         return self.monitor.get_report()
     
-    def save_performance_report(self, output_path: str):
+    def save_performance_report(self, output_path: Optional[str] = None):
         """Save performance report to JSON file."""
         report = self.get_performance_report()
+        if output_path is None:
+            output_path = str(self.log_dir / 'performance_report.json')
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, ensure_ascii=False)

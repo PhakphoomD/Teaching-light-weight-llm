@@ -1,0 +1,843 @@
+{
+  "timestamp": "20251129_151636",
+  "run_start": "2025-11-29T15:16:36.836412",
+  "parameters": {},
+  "questions": [
+    {
+      "question_idx": 1,
+      "question": "What are the symptoms of Woolly hair syndrome ?",
+      "ground_truth": "What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.",
+      "rounds": [
+        {
+          "round": 1,
+          "mode": "FIRST",
+          "student": {
+            "input": "You are the Student model.\n\n[Task]\nWhat are the symptoms of Woolly hair syndrome ?\n\nProduce your best possible answer to the task.\nBe clear, concise, and avoid making up facts.\n\nOutput:\nDraft:\n<your answer>\n",
+            "output": "Draft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nStudent's answer: Draft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nReference answer: What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\nStudent's answer: Draft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.14885496183206107,
+                "semantic_sim": 0.6914141774177551,
+                "blind_score": 0.85,
+                "comparison_score": 0.5,
+                "final": 0.617739040537645
+              },
+              "final_score": 0.617739040537645,
+              "passed": false,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nStudent's answer: Draft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nReference answer: What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\nStudent's answer: Draft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.85",
+                      "usage": {
+                        "prompt_tokens": 499,
+                        "completion_tokens": 4,
+                        "total_tokens": 503
+                      },
+                      "raw": {
+                        "id": "chatcmpl-9a2f78a0-89a0-4169-ba63-2f642d2defb0",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.85",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1764389801,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_6b5c123dd9",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 499,
+                          "total_tokens": 503,
+                          "completion_time": 0.007397443,
+                          "prompt_time": 0.029427679,
+                          "queue_time": 0.167837429,
+                          "total_time": 0.036825122
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "0.5",
+                      "usage": {
+                        "prompt_tokens": 902,
+                        "completion_tokens": 4,
+                        "total_tokens": 906
+                      },
+                      "raw": {
+                        "id": "chatcmpl-44098900-bbbc-4b65-b0ce-621e4db1c887",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.5",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1764389802,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_3272ea2d91",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 902,
+                          "total_tokens": 906,
+                          "completion_time": 0.013823222,
+                          "prompt_time": 0.04416817,
+                          "queue_time": 0.010181104,
+                          "total_time": 0.057991392
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.85",
+                  "usage": {
+                    "prompt_tokens": 499,
+                    "completion_tokens": 4,
+                    "total_tokens": 503
+                  },
+                  "raw": {
+                    "id": "chatcmpl-9a2f78a0-89a0-4169-ba63-2f642d2defb0",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.85",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1764389801,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_6b5c123dd9",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 499,
+                      "total_tokens": 503,
+                      "completion_time": 0.007397443,
+                      "prompt_time": 0.029427679,
+                      "queue_time": 0.167837429,
+                      "total_time": 0.036825122
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "0.5",
+                  "usage": {
+                    "prompt_tokens": 902,
+                    "completion_tokens": 4,
+                    "total_tokens": 906
+                  },
+                  "raw": {
+                    "id": "chatcmpl-44098900-bbbc-4b65-b0ce-621e4db1c887",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.5",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1764389802,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_3272ea2d91",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 902,
+                      "total_tokens": 906,
+                      "completion_time": 0.013823222,
+                      "prompt_time": 0.04416817,
+                      "queue_time": 0.010181104,
+                      "total_time": 0.057991392
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.14885496183206107,
+            "semantic_sim": 0.6914141774177551,
+            "blind_score": 0.85,
+            "comparison_score": 0.5,
+            "final": 0.617739040537645
+          },
+          "feedback": null,
+          "memory_hits": [],
+          "flags": [],
+          "feedback_generation": {
+            "prompt": "You are the Teacher model.\n \n[Task]\nWhat are the symptoms of Woolly hair syndrome ?\n\n[Target Answer]\nWhat are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\n \n[Student Answer]\nDraft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n \nYour job is to evaluate the student’s answer.\n \n1. Critique:\n  - Point out factual errors, missing reasoning steps, and unclear parts.\n  - Be concrete and concise.\n \n2. Score:\n  - Give an overall quality score from 0 to 100.\n \n3. Improvements:\n  - Provide step-by-step instructions for how the student should improve the answer.\n  - Do NOT rewrite the whole answer.\n \nOutput format:\nCritique:\n- ...\n\nImprovements:\n1) ...\n2) ...\n3) ...\n",
+            "response": {
+              "text": "Critique:\n- The student's answer does not accurately reflect the symptoms of Woolly hair syndrome as provided by the Human Phenotype Ontology. The listed symptoms, such as hair loss, hair breakage, scalp irritation, and skin conditions, are not mentioned in the provided information.\n- The student mentions that the hair is \"often described as having a woolly or tightly coiled texture,\" but this description is not entirely accurate according to the provided information, which lists \"fine hair\" and \"woolly hair\" as separate symptoms.\n- The student does not provide any information about the frequency of the symptoms, which is an important aspect of the provided data.\n- The student's answer includes speculative information about scalp irritation and skin conditions, which are not supported by the provided data.\n\nScore:\n- 40\n\nImprovements:\n1. Review the provided information from the Human Phenotype Ontology and ensure that the listed symptoms are accurate and match the data.\n2. Remove any speculative or unsupported information, such as scalp irritation and skin conditions, and focus on the symptoms that are actually listed in the provided data.\n3. Include information about the frequency of the symptoms, as provided in the data, to give a more complete understanding of the condition.",
+              "usage": {
+                "prompt_tokens": 769,
+                "completion_tokens": 251,
+                "total_tokens": 1020
+              },
+              "raw": {
+                "id": "chatcmpl-3c22364c-b4e6-495c-99e4-304b9d4211b7",
+                "choices": [
+                  {
+                    "finish_reason": "stop",
+                    "index": 0,
+                    "logprobs": null,
+                    "message": {
+                      "content": "Critique:\n- The student's answer does not accurately reflect the symptoms of Woolly hair syndrome as provided by the Human Phenotype Ontology. The listed symptoms, such as hair loss, hair breakage, scalp irritation, and skin conditions, are not mentioned in the provided information.\n- The student mentions that the hair is \"often described as having a woolly or tightly coiled texture,\" but this description is not entirely accurate according to the provided information, which lists \"fine hair\" and \"woolly hair\" as separate symptoms.\n- The student does not provide any information about the frequency of the symptoms, which is an important aspect of the provided data.\n- The student's answer includes speculative information about scalp irritation and skin conditions, which are not supported by the provided data.\n\nScore:\n- 40\n\nImprovements:\n1. Review the provided information from the Human Phenotype Ontology and ensure that the listed symptoms are accurate and match the data.\n2. Remove any speculative or unsupported information, such as scalp irritation and skin conditions, and focus on the symptoms that are actually listed in the provided data.\n3. Include information about the frequency of the symptoms, as provided in the data, to give a more complete understanding of the condition.",
+                      "role": "assistant",
+                      "executed_tools": null,
+                      "function_call": null,
+                      "reasoning": null,
+                      "tool_calls": null
+                    }
+                  }
+                ],
+                "created": 1764389802,
+                "model": "llama-3.3-70b-versatile",
+                "object": "chat.completion",
+                "system_fingerprint": "fp_45180df409",
+                "usage": {
+                  "completion_tokens": 251,
+                  "prompt_tokens": 769,
+                  "total_tokens": 1020,
+                  "completion_time": 0.745475914,
+                  "prompt_time": 0.037846745,
+                  "queue_time": 0.009983541,
+                  "total_time": 0.783322659
+                },
+                "usage_breakdown": null
+              },
+              "error": null
+            },
+            "feedback": "1. Review the provided information from the Human Phenotype Ontology and ensure that the listed symptoms are accurate and match the data.\n2. Remove any speculative or unsupported information, such as scalp irritation and skin conditions, and focus on..."
+          }
+        },
+        {
+          "round": 2,
+          "mode": "REFINE",
+          "student": {
+            "input": "You are the Student model.\n\n[Task]\nWhat are the symptoms of Woolly hair syndrome ?\n\n[Previous Answer]\nDraft:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly or tightly coiled hair**: The hair is often described as having a woolly or tightly coiled texture, which can be similar to the texture of wool.\n2. **Hair loss**: Some individuals with woolly hair syndrome may experience hair loss, particularly in the scalp.\n3. **Hair breakage**: The tightly coiled hair can be prone to breakage, leading to hair loss and uneven texture.\n4. **Scalp irritation**: The tightly coiled hair can cause irritation and inflammation on the scalp, leading to conditions such as dandruff and itchiness.\n5. **Skin conditions**: Some individuals with woolly hair syndrome may also experience skin conditions such as eczema and dermatitis.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\n[Teacher Critique]\n- The student's answer does not accurately reflect the symptoms of Woolly hair syndrome as provided by the Human Phenotype Ontology. The listed symptoms, such as hair loss, hair breakage, scalp irritation, and skin conditions, are not mentioned in the provided information.\n- The student mentions that the hair is \"often described as having a woolly or tightly coiled texture,\" but this description is not entirely accurate according to the provided information, which lists \"fine hair\" and \"woolly hair\" as separate symptoms.\n- The student does not provide any information about the frequency of the symptoms, which is an important aspect of the provided data.\n- The student's answer includes speculative information about scalp irritation and skin conditions, which are not supported by the provided data.\n\n[Teacher Improvements]\n1. Review the provided information from the Human Phenotype Ontology and ensure that the listed symptoms are accurate and match the data.\n2. Remove any speculative or unsupported information, such as scalp irritation and skin conditions, and focus on the symptoms that are actually listed in the provided data.\n3. Include information about the frequency of the symptoms, as provided in the data, to give a more complete understanding of the condition.\n\nYour job:\n- Generate a new improved answer.\n- Follow all Teacher Improvements exactly.\n- Fix every issue mentioned in the Critique.\n- Do NOT introduce unsupported information.\n\nOutput:\nRefined_Answer:\n<your improved answer>\n",
+            "output": "Refined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nStudent's answer: Refined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nReference answer: What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\nStudent's answer: Refined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.15267175572519084,
+                "semantic_sim": 0.752103865146637,
+                "blind_score": 0.85,
+                "comparison_score": 0.9,
+                "final": 0.7732931418591785
+              },
+              "final_score": 0.7732931418591785,
+              "passed": false,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nStudent's answer: Refined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nReference answer: What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\nStudent's answer: Refined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.85",
+                      "usage": {
+                        "prompt_tokens": 477,
+                        "completion_tokens": 4,
+                        "total_tokens": 481
+                      },
+                      "raw": {
+                        "id": "chatcmpl-664fcea2-3106-491d-9cbe-9d7b9c5e7c23",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.85",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1764389804,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_6b5c123dd9",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 477,
+                          "total_tokens": 481,
+                          "completion_time": 0.007507132,
+                          "prompt_time": 0.027432956,
+                          "queue_time": 0.16729156,
+                          "total_time": 0.034940088
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 880,
+                        "completion_tokens": 4,
+                        "total_tokens": 884
+                      },
+                      "raw": {
+                        "id": "chatcmpl-2f37c928-81b7-4f0d-b5d2-0147da481213",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1764389804,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_3272ea2d91",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 880,
+                          "total_tokens": 884,
+                          "completion_time": 0.006649167,
+                          "prompt_time": 0.042991467,
+                          "queue_time": 0.010001652,
+                          "total_time": 0.049640634
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.85",
+                  "usage": {
+                    "prompt_tokens": 477,
+                    "completion_tokens": 4,
+                    "total_tokens": 481
+                  },
+                  "raw": {
+                    "id": "chatcmpl-664fcea2-3106-491d-9cbe-9d7b9c5e7c23",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.85",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1764389804,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_6b5c123dd9",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 477,
+                      "total_tokens": 481,
+                      "completion_time": 0.007507132,
+                      "prompt_time": 0.027432956,
+                      "queue_time": 0.16729156,
+                      "total_time": 0.034940088
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 880,
+                    "completion_tokens": 4,
+                    "total_tokens": 884
+                  },
+                  "raw": {
+                    "id": "chatcmpl-2f37c928-81b7-4f0d-b5d2-0147da481213",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1764389804,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_3272ea2d91",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 880,
+                      "total_tokens": 884,
+                      "completion_time": 0.006649167,
+                      "prompt_time": 0.042991467,
+                      "queue_time": 0.010001652,
+                      "total_time": 0.049640634
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.15267175572519084,
+            "semantic_sim": 0.752103865146637,
+            "blind_score": 0.85,
+            "comparison_score": 0.9,
+            "final": 0.7732931418591785
+          },
+          "feedback": "1. Review the provided information from the Human Phenotype Ontology and ensure that the listed symptoms are accurate and match the data.\n2. Remove any speculative or unsupported information, such as scalp irritation and skin conditions, and focus on...",
+          "memory_hits": [],
+          "flags": [],
+          "feedback_generation": {
+            "prompt": "You are the Teacher model.\n \n[Task]\nWhat are the symptoms of Woolly hair syndrome ?\n\n[Target Answer]\nWhat are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\n \n[Student Answer]\nRefined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n \nYour job is to evaluate the student’s answer.\n \n1. Critique:\n  - Point out factual errors, missing reasoning steps, and unclear parts.\n  - Be concrete and concise.\n \n2. Score:\n  - Give an overall quality score from 0 to 100.\n \n3. Improvements:\n  - Provide step-by-step instructions for how the student should improve the answer.\n  - Do NOT rewrite the whole answer.\n \nOutput format:\nCritique:\n- ...\n\nImprovements:\n1) ...\n2) ...\n3) ...\n",
+            "response": {
+              "text": "Critique:\n- The student's answer does not fully capture the range of symptoms associated with Woolly hair syndrome as provided in the task, such as hypopigmentation of hair, slow-growing hair, and other non-hair related symptoms like abnormalities of the pupil, retinal vasculature, and more.\n- The student mentions hair loss as a possible symptom but decides not to include it due to lack of information in the provided data. However, the provided data does mention \"Abnormal hair quantity\" which could be related to hair loss and should be considered.\n- The student does not utilize the frequency information provided for the symptoms, which is an important aspect of understanding the condition.\n- The answer could benefit from a clearer structure, starting with a brief introduction to Woolly hair syndrome, followed by a detailed list of symptoms, and concluding with the importance of consulting a healthcare professional.\n\nScore:\n- 60\n\nImprovements:\n1. Include all the symptoms listed in the task, such as hypopigmentation of hair, slow-growing hair, and the non-hair related symptoms, to provide a comprehensive overview of Woolly hair syndrome.\n2. Utilize the frequency information provided for each symptom to give a clearer picture of how common each symptom is among individuals with the",
+              "usage": {
+                "prompt_tokens": 747,
+                "completion_tokens": 256,
+                "total_tokens": 1003
+              },
+              "raw": {
+                "id": "chatcmpl-1e118028-32f9-4d29-afcb-ef5e862f7e6e",
+                "choices": [
+                  {
+                    "finish_reason": "length",
+                    "index": 0,
+                    "logprobs": null,
+                    "message": {
+                      "content": "Critique:\n- The student's answer does not fully capture the range of symptoms associated with Woolly hair syndrome as provided in the task, such as hypopigmentation of hair, slow-growing hair, and other non-hair related symptoms like abnormalities of the pupil, retinal vasculature, and more.\n- The student mentions hair loss as a possible symptom but decides not to include it due to lack of information in the provided data. However, the provided data does mention \"Abnormal hair quantity\" which could be related to hair loss and should be considered.\n- The student does not utilize the frequency information provided for the symptoms, which is an important aspect of understanding the condition.\n- The answer could benefit from a clearer structure, starting with a brief introduction to Woolly hair syndrome, followed by a detailed list of symptoms, and concluding with the importance of consulting a healthcare professional.\n\nScore:\n- 60\n\nImprovements:\n1. Include all the symptoms listed in the task, such as hypopigmentation of hair, slow-growing hair, and the non-hair related symptoms, to provide a comprehensive overview of Woolly hair syndrome.\n2. Utilize the frequency information provided for each symptom to give a clearer picture of how common each symptom is among individuals with the",
+                      "role": "assistant",
+                      "executed_tools": null,
+                      "function_call": null,
+                      "reasoning": null,
+                      "tool_calls": null
+                    }
+                  }
+                ],
+                "created": 1764389805,
+                "model": "llama-3.3-70b-versatile",
+                "object": "chat.completion",
+                "system_fingerprint": "fp_45180df409",
+                "usage": {
+                  "completion_tokens": 256,
+                  "prompt_tokens": 747,
+                  "total_tokens": 1003,
+                  "completion_time": 0.864483745,
+                  "prompt_time": 0.036869501,
+                  "queue_time": 0.009938009,
+                  "total_time": 0.901353246
+                },
+                "usage_breakdown": null
+              },
+              "error": null
+            },
+            "feedback": "1. Include all the symptoms listed in the task, such as hypopigmentation of hair, slow-growing hair, and the non-hair related symptoms, to provide a comprehensive overview of Woolly hair syndrome.\n2. Utilize the frequency information provided for eac..."
+          }
+        },
+        {
+          "round": 3,
+          "mode": "REFINE",
+          "student": {
+            "input": "You are the Student model.\n\n[Task]\nWhat are the symptoms of Woolly hair syndrome ?\n\n[Previous Answer]\nRefined_Answer:\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth. The symptoms of woolly hair syndrome include:\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hair loss**: It is not specified in the provided data whether hair loss is a symptom of woolly hair syndrome, but it is mentioned as a possible symptom in some sources. However, based on the provided data, I will not include it in the list of symptoms.\n4. **Frequency of symptoms**: Unfortunately, the provided data does not specify the frequency of the symptoms, so I will not include this information in the answer.\n\nIt is essential to note that woolly hair syndrome is a rare condition, and not all individuals with the condition will experience all of these symptoms. If you suspect that you or a family member may have woolly hair syndrome, it is crucial to consult a healthcare professional for proper diagnosis and treatment.\n\n[Teacher Critique]\n- The student's answer does not fully capture the range of symptoms associated with Woolly hair syndrome as provided in the task, such as hypopigmentation of hair, slow-growing hair, and other non-hair related symptoms like abnormalities of the pupil, retinal vasculature, and more.\n- The student mentions hair loss as a possible symptom but decides not to include it due to lack of information in the provided data. However, the provided data does mention \"Abnormal hair quantity\" which could be related to hair loss and should be considered.\n- The student does not utilize the frequency information provided for the symptoms, which is an important aspect of understanding the condition.\n- The answer could benefit from a clearer structure, starting with a brief introduction to Woolly hair syndrome, followed by a detailed list of symptoms, and concluding with the importance of consulting a healthcare professional.\n\n[Teacher Improvements]\n1. Include all the symptoms listed in the task, such as hypopigmentation of hair, slow-growing hair, and the non-hair related symptoms, to provide a comprehensive overview of Woolly hair syndrome.\n2. Utilize the frequency information provided for each symptom to give a clearer picture of how common each symptom is among individuals with the\n\nYour job:\n- Generate a new improved answer.\n- Follow all Teacher Improvements exactly.\n- Fix every issue mentioned in the Critique.\n- Do NOT introduce unsupported information.\n\nOutput:\nRefined_Answer:\n<your improved answer>\n",
+            "output": "Refined_Answer:\n\n**Woolly Hair Syndrome: A Rare Genetic Disorder**\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth, as well as other non-hair related symptoms. The condition is characterized by a range of symptoms, which can vary in frequency and severity among individuals.\n\n**Symptoms of Woolly Hair Syndrome:**\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hypopigmentation of hair**: The hair may appear lighter in color than normal.\n4. **Abnormal hair quantity**: Some individuals may experience hair loss or an abnormal amount of hair growth.\n5. **Slow-growing hair**: The hair may grow at a slower rate than normal.\n6. **Non-hair related symptoms**:\n\t* **Abnormalities of the pupil**: Some individuals may experience abnormalities in the shape or size of the pupil.\n\t* **Retinal vasculature abnormalities**: There may be abnormalities in the blood vessels of the retina.",
+            "raw_response": null
+          },
+          "teacher": {
+            "input": "[blind_judge]\nYou are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nStudent's answer: Refined_Answer:\n\n**Woolly Hair Syndrome: A Rare Genetic Disorder**\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth, as well as other non-hair related symptoms. The condition is characterized by a range of symptoms, which can vary in frequency and severity among individuals.\n\n**Symptoms of Woolly Hair Syndrome:**\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hypopigmentation of hair**: The hair may appear lighter in color than normal.\n4. **Abnormal hair quantity**: Some individuals may experience hair loss or an abnormal amount of hair growth.\n5. **Slow-growing hair**: The hair may grow at a slower rate than normal.\n6. **Non-hair related symptoms**:\n\t* **Abnormalities of the pupil**: Some individuals may experience abnormalities in the shape or size of the pupil.\n\t* **Retinal vasculature abnormalities**: There may be abnormalities in the blood vessels of the retina.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n\n\n[comparison_judge]\nYou are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nReference answer: What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\nStudent's answer: Refined_Answer:\n\n**Woolly Hair Syndrome: A Rare Genetic Disorder**\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth, as well as other non-hair related symptoms. The condition is characterized by a range of symptoms, which can vary in frequency and severity among individuals.\n\n**Symptoms of Woolly Hair Syndrome:**\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hypopigmentation of hair**: The hair may appear lighter in color than normal.\n4. **Abnormal hair quantity**: Some individuals may experience hair loss or an abnormal amount of hair growth.\n5. **Slow-growing hair**: The hair may grow at a slower rate than normal.\n6. **Non-hair related symptoms**:\n\t* **Abnormalities of the pupil**: Some individuals may experience abnormalities in the shape or size of the pupil.\n\t* **Retinal vasculature abnormalities**: There may be abnormalities in the blood vessels of the retina.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n",
+            "output": {
+              "scores": {
+                "exact_match": 0.0,
+                "rouge_l": 0.14885496183206107,
+                "semantic_sim": 0.8264092803001404,
+                "blind_score": 0.85,
+                "comparison_score": 0.9,
+                "final": 0.7914878162582414
+              },
+              "final_score": 0.7914878162582414,
+              "passed": false,
+              "debug_info": {
+                "prompts": [
+                  [
+                    "blind_judge",
+                    "You are an evaluator. Rate the quality of this answer WITHOUT seeing the correct answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nStudent's answer: Refined_Answer:\n\n**Woolly Hair Syndrome: A Rare Genetic Disorder**\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth, as well as other non-hair related symptoms. The condition is characterized by a range of symptoms, which can vary in frequency and severity among individuals.\n\n**Symptoms of Woolly Hair Syndrome:**\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hypopigmentation of hair**: The hair may appear lighter in color than normal.\n4. **Abnormal hair quantity**: Some individuals may experience hair loss or an abnormal amount of hair growth.\n5. **Slow-growing hair**: The hair may grow at a slower rate than normal.\n6. **Non-hair related symptoms**:\n\t* **Abnormalities of the pupil**: Some individuals may experience abnormalities in the shape or size of the pupil.\n\t* **Retinal vasculature abnormalities**: There may be abnormalities in the blood vessels of the retina.\n\nEvaluation criteria:\n1. RELEVANCE: Does the answer address the question? (most important)\n2. COHERENCE: Is it clear and well-structured?\n3. COMPLETENESS: Does it provide sufficient information?\n4. CORRECTNESS: Based on your knowledge, is it factually accurate?\n\nRating scale (0.0 to 1.0):\n- 1.0 = Excellent answer (relevant, coherent, complete, accurate)\n- 0.8-0.9 = Good answer (minor issues but generally correct)\n- 0.6-0.7 = Acceptable (relevant but incomplete or unclear)\n- 0.4-0.5 = Poor (partially relevant or has errors)\n- 0.0-0.3 = Very poor (irrelevant, incoherent, or wrong)\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ],
+                  [
+                    "comparison_judge",
+                    "You are an evaluator. Compare student's answer with the reference answer.\n\nQuestion: What are the symptoms of Woolly hair syndrome ?\nReference answer: What are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\nStudent's answer: Refined_Answer:\n\n**Woolly Hair Syndrome: A Rare Genetic Disorder**\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth, as well as other non-hair related symptoms. The condition is characterized by a range of symptoms, which can vary in frequency and severity among individuals.\n\n**Symptoms of Woolly Hair Syndrome:**\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hypopigmentation of hair**: The hair may appear lighter in color than normal.\n4. **Abnormal hair quantity**: Some individuals may experience hair loss or an abnormal amount of hair growth.\n5. **Slow-growing hair**: The hair may grow at a slower rate than normal.\n6. **Non-hair related symptoms**:\n\t* **Abnormalities of the pupil**: Some individuals may experience abnormalities in the shape or size of the pupil.\n\t* **Retinal vasculature abnormalities**: There may be abnormalities in the blood vessels of the retina.\n\nCRITICAL RULES - Focus on MEANING, not FORMAT:\n1. If student's answer has the SAME MEANING → 0.9-1.0\n   - Different wording is OK (e.g., \"dog\" = \"canine\")\n   - Different format is OK (e.g., \"Paris\" = \"The capital is Paris\")\n   - Different order is OK (e.g., \"A and B\" = \"B and A\")\n2. Extra information is OK if core meaning is correct\n3. Only penalize if FACTS/MEANING are wrong or missing\n\nRating scale (0.0 to 1.0):\n- 1.0 = Same meaning, may have different words/format/order\n- 0.9 = Same meaning with minor extra/missing details\n- 0.7-0.8 = Mostly correct but missing important parts\n- 0.5-0.6 = Partially correct (some right, some wrong)\n- 0.0-0.4 = Wrong meaning or irrelevant\n\nOutput ONLY a number between 0.0 and 1.0. No explanation.\n\nScore:\n"
+                  ]
+                ],
+                "responses": [
+                  [
+                    "blind_judge",
+                    {
+                      "text": "0.85",
+                      "usage": {
+                        "prompt_tokens": 489,
+                        "completion_tokens": 4,
+                        "total_tokens": 493
+                      },
+                      "raw": {
+                        "id": "chatcmpl-9d88338a-743d-4a68-a85e-1a81598c3e00",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.85",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1764389806,
+                        "model": "llama-3.1-8b-instant",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_9ca2574dca",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 489,
+                          "total_tokens": 493,
+                          "completion_time": 0.008451119,
+                          "prompt_time": 0.074087868,
+                          "queue_time": 0.187064303,
+                          "total_time": 0.082538987
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ],
+                  [
+                    "comparison_judge",
+                    {
+                      "text": "0.9",
+                      "usage": {
+                        "prompt_tokens": 892,
+                        "completion_tokens": 4,
+                        "total_tokens": 896
+                      },
+                      "raw": {
+                        "id": "chatcmpl-d7bd206b-8f70-4de4-85d6-a1d4242fa2fa",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null,
+                            "message": {
+                              "content": "0.9",
+                              "role": "assistant",
+                              "executed_tools": null,
+                              "function_call": null,
+                              "reasoning": null,
+                              "tool_calls": null
+                            }
+                          }
+                        ],
+                        "created": 1764389806,
+                        "model": "llama-3.3-70b-versatile",
+                        "object": "chat.completion",
+                        "system_fingerprint": "fp_3272ea2d91",
+                        "usage": {
+                          "completion_tokens": 4,
+                          "prompt_tokens": 892,
+                          "total_tokens": 896,
+                          "completion_time": 0.006648826,
+                          "prompt_time": 0.046167875,
+                          "queue_time": 0.010039781,
+                          "total_time": 0.052816701
+                        },
+                        "usage_breakdown": null
+                      },
+                      "error": null
+                    }
+                  ]
+                ]
+              }
+            },
+            "raw_response": [
+              [
+                "blind_judge",
+                {
+                  "text": "0.85",
+                  "usage": {
+                    "prompt_tokens": 489,
+                    "completion_tokens": 4,
+                    "total_tokens": 493
+                  },
+                  "raw": {
+                    "id": "chatcmpl-9d88338a-743d-4a68-a85e-1a81598c3e00",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.85",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1764389806,
+                    "model": "llama-3.1-8b-instant",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_9ca2574dca",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 489,
+                      "total_tokens": 493,
+                      "completion_time": 0.008451119,
+                      "prompt_time": 0.074087868,
+                      "queue_time": 0.187064303,
+                      "total_time": 0.082538987
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ],
+              [
+                "comparison_judge",
+                {
+                  "text": "0.9",
+                  "usage": {
+                    "prompt_tokens": 892,
+                    "completion_tokens": 4,
+                    "total_tokens": 896
+                  },
+                  "raw": {
+                    "id": "chatcmpl-d7bd206b-8f70-4de4-85d6-a1d4242fa2fa",
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "index": 0,
+                        "logprobs": null,
+                        "message": {
+                          "content": "0.9",
+                          "role": "assistant",
+                          "executed_tools": null,
+                          "function_call": null,
+                          "reasoning": null,
+                          "tool_calls": null
+                        }
+                      }
+                    ],
+                    "created": 1764389806,
+                    "model": "llama-3.3-70b-versatile",
+                    "object": "chat.completion",
+                    "system_fingerprint": "fp_3272ea2d91",
+                    "usage": {
+                      "completion_tokens": 4,
+                      "prompt_tokens": 892,
+                      "total_tokens": 896,
+                      "completion_time": 0.006648826,
+                      "prompt_time": 0.046167875,
+                      "queue_time": 0.010039781,
+                      "total_time": 0.052816701
+                    },
+                    "usage_breakdown": null
+                  },
+                  "error": null
+                }
+              ]
+            ]
+          },
+          "scores": {
+            "exact_match": 0.0,
+            "rouge_l": 0.14885496183206107,
+            "semantic_sim": 0.8264092803001404,
+            "blind_score": 0.85,
+            "comparison_score": 0.9,
+            "final": 0.7914878162582414
+          },
+          "feedback": "1. Include all the symptoms listed in the task, such as hypopigmentation of hair, slow-growing hair, and the non-hair related symptoms, to provide a comprehensive overview of Woolly hair syndrome.\n2. Utilize the frequency information provided for eac...",
+          "memory_hits": [],
+          "flags": [],
+          "feedback_generation": {
+            "prompt": "You are the Teacher model.\n \n[Task]\nWhat are the symptoms of Woolly hair syndrome ?\n\n[Target Answer]\nWhat are the signs and symptoms of Woolly hair syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Woolly hair syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Fine hair 90% Woolly hair 90% Hypopigmentation of hair 50% Slow-growing hair 50% Abnormal hair quantity 7.5% Abnormality of the pupil 7.5% Abnormality of the retinal vasculature 7.5% Aplasia/Hypoplasia of the eyebrow 7.5% Cataract 7.5% Strabismus 7.5% The Human Phenotype Ontology (HPO) has collected information on how often a sign or symptom occurs in a condition. Much of this information comes from Orphanet, a European rare disease database. The frequency of a sign or symptom is usually listed as a rough estimate of the percentage of patients who have that feature. The frequency may also be listed as a fraction. The first number of the fraction is how many people had the symptom, and the second number is the total number of people who were examined in one study. For example, a frequency of 25/25 means that in a study of 25 people all patients were found to have that symptom. Because these frequencies are based on a specific study, the fractions may be different if another group of patients are examined. Sometimes, no information on frequency is available. In these cases, the sign or symptom may be rare or common.\n \n[Student Answer]\nRefined_Answer:\n\n**Woolly Hair Syndrome: A Rare Genetic Disorder**\n\nWoolly hair syndrome is a rare genetic disorder that affects the hair texture and growth, as well as other non-hair related symptoms. The condition is characterized by a range of symptoms, which can vary in frequency and severity among individuals.\n\n**Symptoms of Woolly Hair Syndrome:**\n\n1. **Woolly hair**: The hair is often described as having a woolly texture.\n2. **Fine hair**: The hair is also often described as fine.\n3. **Hypopigmentation of hair**: The hair may appear lighter in color than normal.\n4. **Abnormal hair quantity**: Some individuals may experience hair loss or an abnormal amount of hair growth.\n5. **Slow-growing hair**: The hair may grow at a slower rate than normal.\n6. **Non-hair related symptoms**:\n\t* **Abnormalities of the pupil**: Some individuals may experience abnormalities in the shape or size of the pupil.\n\t* **Retinal vasculature abnormalities**: There may be abnormalities in the blood vessels of the retina.\n \nYour job is to evaluate the student’s answer.\n \n1. Critique:\n  - Point out factual errors, missing reasoning steps, and unclear parts.\n  - Be concrete and concise.\n \n2. Score:\n  - Give an overall quality score from 0 to 100.\n \n3. Improvements:\n  - Provide step-by-step instructions for how the student should improve the answer.\n  - Do NOT rewrite the whole answer.\n \nOutput format:\nCritique:\n- ...\n\nImprovements:\n1) ...\n2) ...\n3) ...\n",
+            "response": {
+              "text": "Critique:\n- The student's answer does not provide the exact frequencies of the symptoms as mentioned in the task, which are essential for a comprehensive understanding of Woolly Hair Syndrome.\n- The student's answer lacks some symptoms mentioned in the task, such as cataract, strabismus, and aplasia/hypoplasia of the eyebrow.\n- The student's answer does not clearly explain the source of the information, which is the Human Phenotype Ontology, and how the frequencies of the symptoms are determined.\n\nScore:\n- 60\n\nImprovements:\n1. Include all the symptoms mentioned in the task, such as cataract, strabismus, and aplasia/hypoplasia of the eyebrow, to provide a complete overview of Woolly Hair Syndrome.\n2. Provide the exact frequencies of the symptoms as mentioned in the task, and explain what these frequencies represent, to give a clearer understanding of the condition.\n3. Clearly state the source of the information, which is the Human Phenotype Ontology, and explain how the frequencies of the symptoms are determined, to add credibility to the answer and provide context for the reader.",
+              "usage": {
+                "prompt_tokens": 759,
+                "completion_tokens": 233,
+                "total_tokens": 992
+              },
+              "raw": {
+                "id": "chatcmpl-40a5ee7d-4bcb-4108-b8d8-1352a51c4acd",
+                "choices": [
+                  {
+                    "finish_reason": "stop",
+                    "index": 0,
+                    "logprobs": null,
+                    "message": {
+                      "content": "Critique:\n- The student's answer does not provide the exact frequencies of the symptoms as mentioned in the task, which are essential for a comprehensive understanding of Woolly Hair Syndrome.\n- The student's answer lacks some symptoms mentioned in the task, such as cataract, strabismus, and aplasia/hypoplasia of the eyebrow.\n- The student's answer does not clearly explain the source of the information, which is the Human Phenotype Ontology, and how the frequencies of the symptoms are determined.\n\nScore:\n- 60\n\nImprovements:\n1. Include all the symptoms mentioned in the task, such as cataract, strabismus, and aplasia/hypoplasia of the eyebrow, to provide a complete overview of Woolly Hair Syndrome.\n2. Provide the exact frequencies of the symptoms as mentioned in the task, and explain what these frequencies represent, to give a clearer understanding of the condition.\n3. Clearly state the source of the information, which is the Human Phenotype Ontology, and explain how the frequencies of the symptoms are determined, to add credibility to the answer and provide context for the reader.",
+                      "role": "assistant",
+                      "executed_tools": null,
+                      "function_call": null,
+                      "reasoning": null,
+                      "tool_calls": null
+                    }
+                  }
+                ],
+                "created": 1764389807,
+                "model": "llama-3.3-70b-versatile",
+                "object": "chat.completion",
+                "system_fingerprint": "fp_3272ea2d91",
+                "usage": {
+                  "completion_tokens": 233,
+                  "prompt_tokens": 759,
+                  "total_tokens": 992,
+                  "completion_time": 0.753045591,
+                  "prompt_time": 0.039026829,
+                  "queue_time": 0.00983613,
+                  "total_time": 0.79207242
+                },
+                "usage_breakdown": null
+              },
+              "error": null
+            },
+            "feedback": "1. Include all the symptoms mentioned in the task, such as cataract, strabismus, and aplasia/hypoplasia of the eyebrow, to provide a complete overview of Woolly Hair Syndrome.\n2. Provide the exact frequencies of the symptoms as mentioned in the task,..."
+          }
+        }
+      ],
+      "final_result": {
+        "passed": false,
+        "total_rounds": 3,
+        "final_score": 0.7914878162582414,
+        "stop_reason": "MAX_ROUNDS"
+      },
+      "warnings": [
+        {
+          "timestamp": "2025-11-29T15:16:46.092408",
+          "message": "Saved failed attempt to memory (3 rounds, score=0.791)"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

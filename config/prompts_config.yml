@@ -7,6 +7,71 @@
 # Student Prompts
 # ---------------
 student:
+  # Initial draft prompt (Orca-style first attempt)
+  initial_draft: |
+    You are the Student model.
+    
+    [Task]
+    {question}
+    
+    Produce your best possible answer to the task.
+    Be clear, concise, and avoid making up facts.
+    
+    Output:
+    Draft:
+    <your answer>
+
+  # Refinement prompt after receiving teacher critique/improvements
+  refine_with_teacher: |
+    You are the Student model.
+    
+    [Task]
+    {question}
+    
+    [Previous Answer]
+    {previous_answer}
+    
+    [Teacher Critique]
+    {teacher_critique}
+    
+    [Teacher Improvements]
+    {teacher_improvements}
+    
+    Your job:
+    - Generate a new improved answer.
+    - Follow all Teacher Improvements exactly.
+    - Fix every issue mentioned in the Critique.
+    - Do NOT introduce unsupported information.
+    
+    Output:
+    Refined_Answer:
+    <your improved answer>
+
+  # Principle rewrite prompt (Constitutional AI style)
+  principle_rewrite: |
+    You are the Student model .
+    
+    [Task]
+    {question}
+    
+    [Previous Answer]
+    {previous_answer}
+    
+    [Teacher Principle_Critique]
+    {teacher_principle_critique}
+    
+    [Teacher Principle_Improvements]
+    {teacher_principle_improvements}
+    
+    Your job:
+    - Rewrite the answer so it follows every principle and improvement.
+    - Keep the answer helpful, accurate, and concise.
+    - Remove any content flagged as problematic.
+    
+    Output:
+    Rewritten_Answer:
+    <your rewritten answer>
+
   # First attempt prompt (no memory/feedback)
   first_attempt: |
     Answer this question precisely:
@@ -100,6 +165,109 @@ student:
 # Teacher Feedback Prompts
 # -------------------------
 teacher:
+  # Orca-style critique + score + improvements
+  orca_critique: |
+   You are the Teacher model.
+    
+   [Task]
+   {question}
+
+   [Target Answer]
+   {ground_truth}
+    
+   [Student Answer]
+   {student_answer}
+    
+   Your job is to evaluate the student’s answer.
+    
+   1. Critique:
+     - Point out factual errors, missing reasoning steps, and unclear parts.
+     - Be concrete and concise.
+    
+   2. Score:
+     - Give an overall quality score from 0 to 100.
+    
+   3. Improvements:
+     - Provide step-by-step instructions for how the student should improve the answer.
+     - Do NOT rewrite the whole answer.
+    
+   Output format:
+   Critique:
+   - ...
+
+   Improvements:
+   1) ...
+   2) ...
+   3) ...
+
+  # Principle-based critique (Constitutional AI style)
+  principle_critique: |
+   You are the Teacher model.
+   You evaluate answers according to the following principles:
+   {principles_text}
+    
+   [Task]
+   {question}
+    
+   [Target Answer]
+   {ground_truth}
+
+   [Student Answer]
+   {student_answer}
+    
+   Your tasks:
+    
+   1. Principle_Critique:
+     - Explain where and how the student’s answer violates or follows the principles.
+     - Mention specific sentences or ideas.
+    
+   2. Principle_Improvements:
+     - Suggest concrete changes so that the answer fully follows the principles
+      while staying helpful and accurate.
+    
+   Output format:
+    
+   Principle_Critique:
+   - ...
+    
+   Principle_Improvements:
+   1) ...
+   2) ...
+   3) ...
+
+  # Stop / Continue decision prompt
+  stop_decision: |
+   You are the Teacher model.
+    
+   [Task]
+   {question}
+    
+   [Student Answer]
+   {student_answer}
+    
+   Your tasks:
+    
+   1. Brief_Critique:
+     - In at most 5 bullet points, summarize the main remaining problems, if any.
+    
+   2. Score:
+     - Give a score from 0 to 100 based on correctness, clarity, completeness, and safety.
+    
+   3. Stopping_Decision:
+     - If the answer is already very good (score ≥ 90 and no major errors), set StopFlag = STOP.
+     - Otherwise set StopFlag = CONTINUE.
+    
+   Output format:
+    
+   Brief_Critique:
+   - ...
+    
+   Score:
+   <number>
+    
+   StopFlag:
+   <STOP or CONTINUE>
+
   # Regular Chain-of-Thought feedback (first time)
   cot_first_time: |
     You are a teacher helping a small LLM answer a question correctly.
@@ -544,6 +712,11 @@ settings:
     - previous_answer
     - feedback
     - previous_feedback
+    - teacher_critique
+    - teacher_improvements
+    - teacher_principle_critique
+    - teacher_principle_improvements
+    - principles_text
   
   # Max lengths for outputs
   max_lengths:
@@ -555,10 +728,10 @@ settings:
   
   # Active prompt versions (for easy switching)
   active:
-    student_first: "first_attempt"           # Options: first_attempt, simple
-    student_refine: "refinement"             # Options: refinement, refinement_no_feedback
+    student_first: "initial_draft"           # Options: initial_draft, first_attempt
+    student_refine: "refine_with_teacher"    # Options: refine_with_teacher, refinement
     student_last_chance: "last_chance"       # Always: last_chance
-    teacher_feedback: "cot_refinement"       # Options: cot_first_time, cot_refinement, difficult_question, direct, legacy_full, legacy_simple
+    teacher_feedback: "orca_critique"        # Options: orca_critique, cot_refinement, template_feedback
     teacher_difficult: "difficult_question"  # For round 4+
     metrics_blind: "blind_judge"             # Always: blind_judge
     metrics_comparison: "comparison_judge"   # Always: comparison_judge

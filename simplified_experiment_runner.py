@@ -14,8 +14,9 @@ Usage:
 import sys
 import json
 import argparse
+import os
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 # Add project root to path
 project_root = Path(__file__).parent
@@ -78,7 +79,10 @@ def load_questions(dataset_path: str, num_questions: int = -1) -> List[Dict[str,
 
 
 def run_test(config_path: str = "config/simplified_config.yml",
-             num_questions: int = 10):
+             num_questions: int = 10,
+             log_dir_override: Optional[str] = None,
+             phase: Optional[str] = None,
+             run_name: Optional[str] = None):
     """
     Run batch testing experiment on the simplified teaching loop system.
     
@@ -92,13 +96,38 @@ def run_test(config_path: str = "config/simplified_config.yml",
     Args:
         config_path: Path to YAML configuration file containing system parameters
         num_questions: Maximum number of questions to process from dataset
+        log_dir_override: Full path for experiment output (highest priority)
+        phase: Phase-specific folder inside logs/experiments
+        run_name: Run-specific folder inside the phase directory
     """
+    # ===== ENVIRONMENT OVERRIDES =====
+    # Allow per-phase/per-run logging without editing config
+    env_overrides = {}
+
+    def _set_env(var: str, value: Optional[str]):
+        if not value:
+            return
+        env_overrides[var] = os.environ.get(var)
+        os.environ[var] = value
+
+    def _restore_env():
+        for var, prior in env_overrides.items():
+            if prior is None:
+                os.environ.pop(var, None)
+            else:
+                os.environ[var] = prior
+
+    _set_env('EXPERIMENT_DIR', log_dir_override)
+    _set_env('EXPERIMENT_PHASE', phase)
+    _set_env('EXPERIMENT_NAME', run_name)
+
     # ===== SYSTEM INITIALIZATION =====
     # Create teaching loop instance with all components (student, teacher, memory, metrics)
     try:
         loop = SimplifiedTeachingLoop(config_path=config_path)
     except Exception as e:
         print(f"[FAIL] Failed to initialize loop: {e}")
+        _restore_env()
         return
     
     # ===== DATASET LOADING =====
@@ -108,6 +137,7 @@ def run_test(config_path: str = "config/simplified_config.yml",
     
     if not questions:
         print("[FAIL] No questions to test")
+        _restore_env()
         return
     
     # ===== EXPERIMENT HEADER =====
@@ -246,11 +276,14 @@ def run_test(config_path: str = "config/simplified_config.yml",
     
     # ===== SAVE PERFORMANCE REPORT =====
     # Export comprehensive results to JSON for detailed analysis
-    output_path = "logs/simplified/test_results.json"
-    loop.save_performance_report(output_path)
+    output_path = Path(loop.log_dir) / "test_results.json"
+    loop.save_performance_report(str(output_path))
     
     print(f"[OK] Performance report saved to: {output_path}")
     print(f"[OK] Debug log saved to: {loop.debug_logger.get_log_path()}\n")
+
+    # ===== CLEANUP ENVIRONMENT =====
+    _restore_env()
 
 
 def compare_with_old_system():
@@ -286,6 +319,21 @@ def main():
         help='Number of questions to test'
     )
     parser.add_argument(
+        '--phase',
+        type=str,
+        help='Phase identifier (creates logs/experiments/<phase>/...)'
+    )
+    parser.add_argument(
+        '--run-name',
+        type=str,
+        help='Run name inside the phase directory (e.g., alpaca_mem_on)'
+    )
+    parser.add_argument(
+        '--log-dir',
+        type=str,
+        help='Full override for experiment output directory'
+    )
+    parser.add_argument(
         '--compare',
         action='store_true',
         help='Compare with old system results'
@@ -296,7 +344,10 @@ def main():
     # Run test
     run_test(
         config_path=args.config,
-        num_questions=args.questions
+        num_questions=args.questions,
+        log_dir_override=args.log_dir,
+        phase=args.phase,
+        run_name=args.run_name
     )
     
     # Optional comparison

@@ -1,0 +1,66 @@
+student:
+  model: llama-3.1-8b-instant
+  provider: groq
+  temperature: 0.2
+  max_tokens: 256
+  timeout: 30
+teacher:
+  model: llama-3.3-70b-versatile
+  provider: groq
+  temperature: 0.2
+  max_tokens: 256
+  pass_threshold: 0.75
+  debug: false
+  hybrid_scoring:
+    enabled: true
+    blind_judge:
+      model: llama-3.1-8b-instant
+      provider: groq
+      weight: 0.2
+    comparison_judge:
+      model: llama-3.3-70b-versatile
+      provider: groq
+      weight: 0.4
+  metrics:
+    weights:
+      blind_score: 0.3
+      comparison_score: 0.35
+      semantic_sim: 0.25
+      rouge_l: 0.1
+  feedback:
+    max_length: 250
+    use_cot: true
+    avoid_examples: false
+  feedback_style: orca
+  first_prompt: orca_critique
+  refine_prompt: orca_critique
+memory:
+  embedding_model: all-MiniLM-L6-v2
+  similarity_threshold: 0.75
+  top_k: 3
+  min_success_rate: 0.0
+  storage_path: C:\Users\ham25\Desktop\Teaching-light-weight-llm-based-project\logs\experiments\phase3\shared_phase3.jsonl
+  index_path: C:\Users\ham25\Desktop\Teaching-light-weight-llm-based-project\logs\experiments\phase3\shared_phase3.index
+loop:
+  max_rounds: 10
+  enable_last_chance: false
+  ground_truth_hint_round: 99
+  early_stopping:
+    enabled: true
+    patience: 5
+    min_improvement: 0.02
+    plateau_threshold: 0.9
+    start_from_round: 4
+  repetition_detection:
+    enabled: true
+    similarity_threshold: 0.98
+    consecutive_rounds: 3
+    trigger_ground_truth: false
+logging:
+  debug: false
+  save_rounds: false
+  log_path: logs/simplified
+  flat_log_enabled: false
+dataset:
+  path: data/alpaca_20.jsonl
+  num_questions: -1

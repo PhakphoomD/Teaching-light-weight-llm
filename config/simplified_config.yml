@@ -46,10 +46,10 @@ teacher:
   metrics:
     weights:
       blind_score: 0.3        # Blind judge (unbiased, no ground truth) - equal weight!
-      comparison_score: 0.3   # Comparison judge (with ground truth) - equal weight!
+      comparison_score: 0.35   # Comparison judge (with ground truth) - equal weight!
       semantic_sim: 0.25       # Embedding similarity
       rouge_l: 0.10            # Longest common subsequence
-      exact_match: 0.05        # Perfect match bonus
+      # exact_match: 0.05        # Perfect match bonus
   
   # Feedback generation config
   feedback:
@@ -73,6 +73,7 @@ memory:
 # ------------------
 loop:
   max_rounds: 10  # Maximum refinement rounds
+  enable_last_chance: false  # Disable last chance ground truth hint (set False for fair experiments)
   ground_truth_hint_round: 99  # Disabled - will be triggered by repetition detection instead
   
   # Early stopping config
@@ -88,7 +89,7 @@ loop:
     enabled: true
     similarity_threshold: 0.98  # If similarity >= 0.98 (increased from 0.95 - must be nearly identical)
     consecutive_rounds: 3  # Check last 3 rounds (increased from 2 - need sustained repetition)
-    trigger_ground_truth: true  # Give ground truth hint as "last chance" when detected  
+    trigger_ground_truth: false  # Disabled - no ground truth leak even on repetition  
 
 # Logging Configuration
 # ---------------------
@@ -96,6 +97,11 @@ logging:
   debug: true  # Enable debug output
   save_rounds: true  # Save round details to JSONL
   log_path: "logs/simplified"
+  # Optional: set experiment-specific folders without editing code
+  # experiment_root: "logs/experiments"   # Base directory for phases/runs
+  # phase: "phase4_final_validation"      # Creates logs/experiments/<phase>/
+  # run_name: "alpaca_mem_on"             # Subfolder inside the phase
+  # (Environment overrides: EXPERIMENT_DIR, EXPERIMENT_PHASE, EXPERIMENT_NAME)
 
 # Dataset Configuration (optional)
 # --------------------------------

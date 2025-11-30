@@ -70,9 +70,26 @@ class TeacherFeedback:
             'max_length': 200,
             'use_cot': True
         })
+        self.principles_text = self.feedback_config.get(
+            'principles_text',
+            'truthfulness, harmlessness, fairness, conciseness'
+        )
         
         # Feedback style (NEW: for Phase 1 experiments)
-        self.feedback_style = config.get('feedback_style', 'cot')
+        self.feedback_style = (config.get('feedback_style') or 'cot').lower()
+        
+        # NEW: Configurable prompt names (allows overriding from notebook config)
+        # Default prompts per feedback_style
+        default_prompts = {
+            'orca': {'first': 'orca_critique', 'refine': 'orca_critique'},
+            'principle': {'first': 'principle_critique', 'refine': 'principle_critique'},
+            'cot': {'first': 'cot_first_time', 'refine': 'cot_refinement'},
+        }
+        style_defaults = default_prompts.get(self.feedback_style, default_prompts['cot'])
+        
+        # Allow config to override prompt names
+        self.first_prompt = config.get('first_prompt') or style_defaults['first']
+        self.refine_prompt = config.get('refine_prompt') or style_defaults['refine']
         
         # Debug mode
         self.debug = config.get('debug', False)
@@ -118,31 +135,49 @@ class TeacherFeedback:
             If return_debug=True: Dict with 'feedback', 'prompt', 'response'
         """
         # Select prompt based on feedback style
-        if self.feedback_style == 'template':
-            # Template-based feedback (concrete structure with placeholders)
+        # NEW: Use configurable prompt names from self.first_prompt / self.refine_prompt
+        structured_parser = None
+        
+        # Determine which prompt to use (first round vs refinement)
+        is_first_round = (round_num == 1 or not previous_feedback)
+        prompt_name = self.first_prompt if is_first_round else self.refine_prompt
+        
+        # Build prompt using prompt_loader with the configured prompt name
+        prompt = self._build_generic_prompt(
+            prompt_name=prompt_name,
+            question=question,
+            student_answer=student_answer,
+            ground_truth=ground_truth,
+            previous_feedback=previous_feedback,
+        )
+        
+        # Select parser based on feedback style
+        if self.feedback_style == 'orca':
+            structured_parser = self._parse_orca_feedback
+        elif self.feedback_style == 'principle':
+            structured_parser = self._parse_principle_feedback
+        elif self.feedback_style == 'stop_decision':
+            prompt = self._build_stop_decision_prompt(question, student_answer)
+            structured_parser = self._parse_stop_decision_feedback
+        elif self.feedback_style == 'template':
             prompt = self._build_template_feedback_prompt(
                 question, student_answer, ground_truth
             )
         elif self.feedback_style == 'socratic':
-            # Socratic feedback (guiding questions)
             prompt = self._build_socratic_feedback_prompt(
                 question, student_answer, ground_truth
             )
-        else:  # 'cot' or 'analytical' (default)
-            # Chain-of-thought feedback with reasoning
+        elif self.feedback_style == 'cot':
             if self.feedback_config.get('use_cot', True):
-                # Round 4+: Use special CoT for difficult questions
                 if round_num >= 4 and previous_feedback:
                     prompt = self._build_difficult_question_cot_prompt(
                         question, student_answer, ground_truth, previous_feedback
                     )
                 else:
-                    # Regular CoT
                     prompt = self._build_cot_feedback_prompt(
                         question, student_answer, ground_truth, previous_feedback
                     )
             else:
-                # Direct feedback generation
                 prompt = self._build_direct_feedback_prompt(
                     question, student_answer, ground_truth
                 )
@@ -169,10 +204,18 @@ class TeacherFeedback:
                     return {'feedback': fallback, 'prompt': prompt, 'response': None}
                 return fallback
             
-            feedback = (response.text or "").strip()
-            
-            # Extract feedback from CoT response if needed
-            feedback = self._extract_feedback(feedback)
+            raw_text = (response.text or "").strip()
+            if structured_parser:
+                parsed = structured_parser(raw_text)
+            else:
+                parsed = {
+                    'feedback': self._extract_feedback(raw_text),
+                    'critique': None,
+                    'improvements': None,
+                    'score': None,
+                    'stop_flag': None,
+                }
+            feedback = parsed.get('feedback') or self._extract_feedback(raw_text)
             
             if self.debug:
                 print(f"  DEBUG: Teacher raw feedback (before truncate): '{feedback}'")
@@ -184,16 +227,40 @@ class TeacherFeedback:
                     print(f"  DEBUG: Truncating from {len(feedback)} to {max_len} chars")
                 feedback = feedback[:max_len] + "..."
             
+            result_payload = {
+                'feedback': feedback,
+                'critique': parsed.get('critique'),
+                'improvements': parsed.get('improvements'),
+                'score': parsed.get('score'),
+                'stop_flag': parsed.get('stop_flag'),
+                'principle_critique': parsed.get('principle_critique'),
+                'principle_improvements': parsed.get('principle_improvements'),
+                'prompt': prompt,
+                'response': response,
+                'raw': raw_text,
+            }
             if return_debug:
-                return {'feedback': feedback, 'prompt': prompt, 'response': response}
-            return feedback
+                return result_payload
+            return result_payload['feedback']
             
         except Exception as e:
             if self.debug:
                 print(f"  Feedback generation exception: {e}")
             fallback = self._fallback_feedback(student_answer, ground_truth)
+            result_payload = {
+                'feedback': fallback,
+                'critique': None,
+                'improvements': None,
+                'score': None,
+                'stop_flag': None,
+                'principle_critique': None,
+                'principle_improvements': None,
+                'prompt': prompt,
+                'response': None,
+                'raw': None,
+            }
             if return_debug:
-                return {'feedback': fallback, 'prompt': prompt, 'response': None}
+                return result_payload
             return fallback
     
     def _build_difficult_question_cot_prompt(self,
@@ -244,6 +311,38 @@ class TeacherFeedback:
                 ground_truth=ground_truth
             )
     
+    def _build_generic_prompt(self,
+                              prompt_name: str,
+                              question: str,
+                              student_answer: str,
+                              ground_truth: str,
+                              previous_feedback: Optional[str] = None) -> str:
+        """
+        Build prompt using any prompt template from prompts_config.yml.
+        
+        This allows config to specify which prompt to use instead of hardcoding.
+        All available variables are passed; the template uses what it needs.
+        
+        Args:
+            prompt_name: Name of the prompt in prompts_config.yml (e.g., 'orca_critique')
+            question: The question
+            student_answer: Student's answer
+            ground_truth: Correct answer
+            previous_feedback: Previous feedback (if refining)
+            
+        Returns:
+            Formatted prompt string
+        """
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            prompt_name,
+            question=question,
+            student_answer=student_answer,
+            ground_truth=ground_truth,
+            previous_feedback=previous_feedback or "",
+            principles_text=self.principles_text,
+        )
+
     def _build_direct_feedback_prompt(self,
                                      question: str,
                                      student_answer: str,
@@ -255,6 +354,79 @@ class TeacherFeedback:
             question=question,
             student_answer=student_answer,
             ground_truth=ground_truth
+        )
+
+    def _build_orca_feedback_prompt(self, question: str, student_answer: str) -> str:
+        """LEGACY: Orca feedback without ground_truth (kept for backward compatibility)."""
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'orca_critique',
+            question=question,
+            student_answer=student_answer,
+        )
+
+    def _build_orca_first_time_prompt(self, question: str, student_answer: str, ground_truth: str) -> str:
+        """NEW: Orca feedback for first round WITH ground_truth."""
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'orca_first_time',
+            question=question,
+            student_answer=student_answer,
+            ground_truth=ground_truth,
+        )
+
+    def _build_orca_refinement_prompt(self, question: str, student_answer: str, 
+                                      ground_truth: str, previous_feedback: str) -> str:
+        """NEW: Orca feedback for refinement rounds WITH ground_truth and previous_feedback."""
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'orca_refinement',
+            question=question,
+            student_answer=student_answer,
+            ground_truth=ground_truth,
+            previous_feedback=previous_feedback or "",
+        )
+
+    def _build_principle_feedback_prompt(self, question: str, student_answer: str) -> str:
+        """LEGACY: Principle feedback without ground_truth (kept for backward compatibility)."""
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'principle_critique',
+            question=question,
+            student_answer=student_answer,
+            principles_text=self.principles_text,
+        )
+
+    def _build_principle_first_time_prompt(self, question: str, student_answer: str, ground_truth: str) -> str:
+        """NEW: Principle feedback for first round WITH ground_truth."""
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'principle_first_time',
+            question=question,
+            student_answer=student_answer,
+            ground_truth=ground_truth,
+            principles_text=self.principles_text,
+        )
+
+    def _build_principle_refinement_prompt(self, question: str, student_answer: str,
+                                           ground_truth: str, previous_feedback: str) -> str:
+        """NEW: Principle feedback for refinement rounds WITH ground_truth and previous_feedback."""
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'principle_refinement',
+            question=question,
+            student_answer=student_answer,
+            ground_truth=ground_truth,
+            previous_feedback=previous_feedback or "",
+            principles_text=self.principles_text,
+        )
+
+    def _build_stop_decision_prompt(self, question: str, student_answer: str) -> str:
+        loader = get_prompt_loader()
+        return loader.get_teacher_prompt(
+            'stop_decision',
+            question=question,
+            student_answer=student_answer,
         )
     
     def _build_template_feedback_prompt(self,
@@ -329,3 +501,78 @@ class TeacherFeedback:
             Basic feedback
         """
         return f"Your answer is incorrect. Think more carefully about the question."
+
+    # -------- Parsing helpers for structured prompts --------
+
+    def _extract_block(self, text: str, start_marker: str, end_marker: Optional[str] = None) -> str:
+        if not text or start_marker not in text:
+            return ""
+        start = text.find(start_marker)
+        if start == -1:
+            return ""
+        start += len(start_marker)
+        remainder = text[start:]
+        if end_marker:
+            end = remainder.find(end_marker)
+            if end != -1:
+                remainder = remainder[:end]
+        return remainder.strip()
+
+    def _safe_float(self, value: Optional[str]) -> Optional[float]:
+        if not value:
+            return None
+        match = re.search(r"-?\d+(?:\.\d+)?", value)
+        if not match:
+            return None
+        try:
+            return float(match.group(0))
+        except ValueError:
+            return None
+
+    def _parse_orca_feedback(self, text: str) -> Dict[str, Any]:
+        critique = self._extract_block(text, "Critique:", "Score:")
+        score_raw = self._extract_block(text, "Score:", "Improvements:")
+        improvements = self._extract_block(text, "Improvements:", None)
+        score = self._safe_float(score_raw)
+        summary = improvements or critique or text
+        return {
+            'critique': critique,
+            'improvements': improvements,
+            'score': score,
+            'feedback': summary.strip() if isinstance(summary, str) else summary,
+            'stop_flag': None,
+            'principle_critique': None,
+            'principle_improvements': None,
+        }
+
+    def _parse_principle_feedback(self, text: str) -> Dict[str, Any]:
+        critique = self._extract_block(text, "Principle_Critique:", "Principle_Improvements:")
+        improvements = self._extract_block(text, "Principle_Improvements:", None)
+        summary = improvements or critique or text
+        return {
+            'critique': None,
+            'improvements': None,
+            'score': None,
+            'feedback': summary.strip() if isinstance(summary, str) else summary,
+            'stop_flag': None,
+            'principle_critique': critique,
+            'principle_improvements': improvements,
+        }
+
+    def _parse_stop_decision_feedback(self, text: str) -> Dict[str, Any]:
+        critique = self._extract_block(text, "Brief_Critique:", "Score:")
+        score_raw = self._extract_block(text, "Score:", "StopFlag:")
+        stop_flag = self._extract_block(text, "StopFlag:", None).upper()
+        score = self._safe_float(score_raw)
+        if stop_flag not in {"STOP", "CONTINUE"}:
+            stop_flag = None
+        summary = critique or text
+        return {
+            'critique': critique,
+            'improvements': None,
+            'score': score,
+            'feedback': summary.strip() if isinstance(summary, str) else summary,
+            'stop_flag': stop_flag,
+            'principle_critique': None,
+            'principle_improvements': None,
+        }

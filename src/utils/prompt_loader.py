@@ -35,6 +35,13 @@ Usage:
 import yaml
 from pathlib import Path
 from typing import Dict, Any, Optional
+from string import Formatter
+
+
+class SafeDict(dict):
+    """Dict that returns empty string for missing keys during format."""
+    def __missing__(self, key):
+        return ""
 
 
 class PromptLoader:
@@ -121,7 +128,8 @@ class PromptLoader:
         if not template:
             raise ValueError(f"Unknown teacher prompt type: {prompt_type}")
         
-        return template.format(**kwargs)
+        # Use SafeDict to ignore extra kwargs that aren't in the template
+        return template.format_map(SafeDict(**kwargs))
     
     def get_metrics_prompt(self,
                           prompt_type: str,

@@ -64,6 +64,10 @@ def build_refinement_prompt(
     feedback: Optional[str] = None,
     prompt_type: str = "refinement",
     no_feedback_prompt_type: str = "refinement_no_feedback",
+    teacher_critique: Optional[str] = None,
+    teacher_improvements: Optional[str] = None,
+    teacher_principle_critique: Optional[str] = None,
+    teacher_principle_improvements: Optional[str] = None,
 ) -> str:
     """
     Build prompt for refinement with optional feedback.
@@ -103,20 +107,25 @@ def build_refinement_prompt(
         Answer:
     """
     loader = get_loader()
+    template_args = {
+        "question": question,
+        "previous_answer": previous_answer,
+        "feedback": feedback or "",
+        "teacher_critique": teacher_critique or "",
+        "teacher_improvements": teacher_improvements or "",
+        "teacher_principle_critique": teacher_principle_critique or "",
+        "teacher_principle_improvements": teacher_principle_improvements or "",
+    }
     if feedback and feedback.strip():
         return loader.get_student_prompt(
             prompt_type,
-            question=question,
-            previous_answer=previous_answer,
-            feedback=feedback,
+            **template_args,
         )
-    else:
-        # No feedback available, use fallback
-        return loader.get_student_prompt(
-            no_feedback_prompt_type,
-            question=question,
-            previous_answer=previous_answer,
-        )
+    # No feedback available, use fallback
+    return loader.get_student_prompt(
+        no_feedback_prompt_type,
+        **template_args,
+    )
 
 
 class StudentClient:

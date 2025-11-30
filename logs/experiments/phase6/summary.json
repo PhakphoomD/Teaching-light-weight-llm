@@ -1,0 +1,25 @@
+{
+  "experiment_id": "Phase6-GroundTruthMemory",
+  "phase": "phase6",
+  "timestamp": "2025-11-30T01:02:09.133168",
+  "hypothesis": "Training via Memory can replace Fine-tuning",
+  "p6a_no_memory": {
+    "pass_rate": 0.75,
+    "avg_rounds": 3.4,
+    "semantic_similarity": 0.8024014919996262,
+    "total_tokens": 92915
+  },
+  "p6b_with_ground_truth": {
+    "pass_rate": 0.9,
+    "avg_rounds": 2.95,
+    "semantic_similarity": 0.7899597585201263,
+    "memory_hit_rate": 0.05,
+    "total_tokens": 74267
+  },
+  "improvements": {
+    "pass_rate_delta": 0.15000000000000002,
+    "rounds_saved": 0.44999999999999973,
+    "semantic_delta": -0.012441733479499839
+  },
+  "conclusion": "confirmed"
+}

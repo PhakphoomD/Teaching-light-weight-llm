@@ -23,7 +23,7 @@ class DebugLogger:
         Args:
             base_dir: Base directory for debug logs
         """
-        self.base_dir = Path(base_dir)
+        self.base_dir = self._resolve_base_dir(Path(base_dir))
         self.base_dir.mkdir(parents=True, exist_ok=True)
         
         # Create timestamped filename
@@ -41,6 +41,13 @@ class DebugLogger:
         }
         
         self._current_question = None
+
+    def _resolve_base_dir(self, target: Path) -> Path:
+        """Resolve the base directory relative to project root if needed."""
+        if target.is_absolute():
+            return target
+        project_root = Path(__file__).resolve().parents[2]
+        return (project_root / target).resolve()
     
     def log_parameters(self, config: Dict[str, Any]):
         """
@@ -141,7 +148,7 @@ class DebugLogger:
                 "output": teacher_output,
                 "raw_response": teacher_raw_response
             },
-            "scores": scores,
+            "scores": dict(scores) if scores else {},  # Copy to avoid mutation
             "feedback": feedback,
             "memory_hits": memory_hits,
             "flags": flags
@@ -275,11 +282,20 @@ class DebugLogger:
                 "flags": round_data.get("flags", []),
             }
 
+            # Custom JSON encoder to handle non-serializable objects (e.g., ChatResult)
+            def default_serializer(obj):
+                if hasattr(obj, '__dict__'):
+                    return {k: v for k, v in obj.__dict__.items() if not k.startswith('_')}
+                if isinstance(obj, list):
+                    return [default_serializer(item) for item in obj]
+                return str(obj)
+            
             with open(self.flat_log_file, "a", encoding="utf-8") as f:
-                json.dump(record, f, ensure_ascii=False)
+                json.dump(record, f, ensure_ascii=False, default=default_serializer)
                 f.write("\n")
         except Exception as e:
-            print(f"[DEBUG_LOGGER] Failed to append flat log: {e}")
+            # Silently ignore serialization errors to avoid cluttering output
+            pass
     
     def _save(self):
         """Save current log data to file"""
