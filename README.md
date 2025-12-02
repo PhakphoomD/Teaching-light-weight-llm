@@ -477,6 +477,10 @@ Teaching-light-weight-llm/
 |   |   |-- memory.py                   # FAISS memory system
 |   |   |-- early_stopping.py           # Convergence detection
 |   |   |-- logger.py                   # Round-by-round logging
+|   |   |-- logger_manager.py           # Log file management
+|   |   |-- console_logger.py           # Console output formatting
+|   |   |-- debug_logger.py             # Debug logging utilities
+|   |   |-- terminal_ui.py              # Terminal UI display
 |   |   +-- monitor.py                  # Performance tracking
 |   |
 |   |-- providers/                      # LLM API clients
@@ -498,18 +502,15 @@ Teaching-light-weight-llm/
 |   |-- alpaca_100.jsonl                # General instruction dataset
 |   +-- medical_by_source/              # Domain-specific datasets
 |
-|-- models/
-|   +-- Llama-3.1-8B-Instruct/          # Local model (optional)
-|       |-- LICENSE                     # Meta Llama 3.1 Community License
-|       +-- README.md
+|-- models/                              # Local models (not tracked in git)
+|   +-- Llama-3.1-8B-Instruct/          # Download separately if needed
 |
 |-- notebooks/
 |   +-- experiment_redesigned.ipynb     # Analysis and visualization
 |
 |-- logs/
 |   |-- experiments/                    # Phase results
-|   |-- memory/                         # FAISS index and store
-|   +-- simplified/                     # Run logs
+|   +-- simplified/                     # Run logs (debug/ excluded from git)
 |
 +-- docs/
     +-- PROJECT_OVERVIEW_AND_RESULTS.md # Detailed experimental analysis
