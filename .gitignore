@@ -211,3 +211,17 @@ __marimo__/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# ============================================
+# Project-specific ignores
+# ============================================
+
+# Local LLM models (Llama, etc.) - require license agreement
+models/
+
+# FAISS index and memory files (generated during runtime)
+logs/simplified/faiss.*
+logs/simplified/memory.jsonl
+
+# API keys and secrets
+.env
