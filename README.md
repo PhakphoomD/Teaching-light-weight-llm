@@ -642,7 +642,7 @@ Copyright (c) Meta Platforms, Inc. All Rights Reserved.
 ```bibtex
 @software{teaching_loop_2025,
   title   = {Teaching Loop for Lightweight LLMs},
-  author  = {Kosakiri},
+  author  = {Phakphoom Deesuwan},
   year    = {2025},
   url     = {https://github.com/Kosakiri/Teaching-light-weight-llm},
   note    = {Built with Llama}
