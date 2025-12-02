@@ -683,17 +683,13 @@ Exchange Rate: 1 USD = 1.53 AUD
 ### File Structure
 
 ```
-logs/experiments/
-    phase0/                    # Warmup memory pool
-    phase1/                    # Memory vs No Memory
-    phase2/                    # Feedback style comparison
-    phase3/                    # Hyperparameter grid search
-    phase4/                    # Cross-domain analysis
-    phase5/                    # Full validation (100Q)
-    phase6/                    # Ground Truth Memory
-        P6A-NoMemory/
-        P6B-DiffQ-GTMemory/
-        P6C-SameQ-GTMemory/
+logs/
+    experiments/               # Phase results (tracked in git)
+        phase0/                # Warmup memory pool
+        phase1/                # Memory vs No Memory
+        phase2/                # Feedback style comparison
+    simplified/                # Run logs
+        debug/                 # Debug logs (excluded from git)
 ```
 
 ### Reproducibility
