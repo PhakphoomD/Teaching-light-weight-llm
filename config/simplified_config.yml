@@ -21,8 +21,9 @@ student:
 teacher:
   model: "llama-3.3-70b-versatile"  # Groq Llama 3.3 70B (RPM=30, TPM=12K)
   provider: "groq"
-  temperature: 0.2
+  temperature: 0.3
   max_tokens: 256
+  feedback_style: "orca"
   pass_threshold: 0.8  # Score threshold to pass (0-1)
   debug: false  # Set to true to enable debug prints (teacher scoring, feedback generation)
   
@@ -45,8 +46,8 @@ teacher:
   # Balanced: Blind judge (unbiased) = Comparison judge (accurate) for fair evaluation
   metrics:
     weights:
-      blind_score: 0.3        # Blind judge (unbiased, no ground truth) - equal weight!
-      comparison_score: 0.35   # Comparison judge (with ground truth) - equal weight!
+      blind_score: 0.3        # Blind judge (unbiased, no ground truth) 
+      comparison_score: 0.35   # Comparison judge (with ground truth)
       semantic_sim: 0.25       # Embedding similarity
       rouge_l: 0.10            # Longest common subsequence
       # exact_match: 0.05        # Perfect match bonus
@@ -61,8 +62,8 @@ teacher:
 # --------------------
 memory:
   embedding_model: "all-MiniLM-L6-v2"
-  similarity_threshold: 0.85  # Min similarity to retrieve (0-1) - Stricter for better quality
-  top_k: 5  # Number of candidates to retrieve
+  similarity_threshold: 0.75
+  top_k: 3
   min_success_rate: 0.0  # Min success rate to use feedback (0.0 = use all feedback)
   
   # Storage paths
