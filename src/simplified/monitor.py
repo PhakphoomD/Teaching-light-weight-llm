@@ -87,8 +87,8 @@ class PerformanceMonitor:
             # Accumulate time
             self.stats['total_time_ms'] += round_data.get('time_ms', 0)
             
-            # Note: token counting would require access to model responses
-            # For now, we can estimate or leave as TODO
+            # Token counting requires access to model responses
+            # Current implementation tracks time-based metrics only
     
     def get_report(self) -> Dict[str, Any]:
         """

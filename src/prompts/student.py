@@ -97,14 +97,8 @@ def build_student_prompt(
             "",
         ])
     
-    # Add experience from memory only if available (keep minimal)
-    # TEMPORARILY DISABLED: TinyLlama gets confused by context from other questions
-    # if context and not previous_answer:
-    #     # Only show context on first attempt, not during refinement
-    #     prompt_parts.extend([
-    #         f"Related information: {context}",
-    #         "",
-    #     ])
+    # Memory context injection disabled for current model architecture
+    # Context from similar questions may cause interference with answer generation
     
     # Add the question (simple format)
     prompt_parts.extend([
