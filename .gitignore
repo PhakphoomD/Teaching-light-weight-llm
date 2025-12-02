@@ -219,9 +219,18 @@ __pycache__/
 # Local LLM models (Llama, etc.) - require license agreement
 models/
 
+# Debug logs (large files, keep locally only)
+logs/simplified/debug/
+
+# Generated analysis files
+logs/analysis/
+
 # FAISS index and memory files (generated during runtime)
 logs/simplified/faiss.*
 logs/simplified/memory.jsonl
+
+# Legacy code (deprecated)
+src/simplified/legacy/
 
 # API keys and secrets
 .env
