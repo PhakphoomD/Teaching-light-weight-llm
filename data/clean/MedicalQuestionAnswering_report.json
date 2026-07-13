@@ -1,0 +1,42 @@
+{
+  "input": "data\\medical_by_source\\MedicalQuestionAnswering.jsonl",
+  "output": "data\\clean\\MedicalQuestionAnswering_clean.jsonl",
+  "before": {
+    "n": 1982,
+    "noise_rate": 0.0045,
+    "double_qmark_questions": 19,
+    "templated_question_pct": 56.3,
+    "dup_answers": 2,
+    "median_words": 117,
+    "mean_words": 116.2,
+    "max_words": 357,
+    "pct_lt20w": 2.0,
+    "pct_gt250w": 2.4
+  },
+  "after": {
+    "n": 1940,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 0,
+    "domains": {
+      "general": 1940
+    },
+    "median_words": 118,
+    "mean_words": 118.3,
+    "max_words": 357,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 2.5
+  },
+  "dropped": {
+    "short_answer": 40
+  },
+  "dropped_exact_dup": 2,
+  "template_marked": 0,
+  "top_flags": {
+    "long_answer": 48,
+    "fixed_multi_qmark": 19,
+    "stripped_referral_url_tail": 4,
+    "stripped_phone_referral": 4,
+    "stripped_bare_url": 3
+  }
+}

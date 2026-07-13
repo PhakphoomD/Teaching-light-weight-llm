@@ -1,0 +1,37 @@
+{
+  "input": "data\\medical_by_source\\Heart_Lung_and_BloodQA.jsonl",
+  "output": "data\\clean\\Heart_Lung_and_Blood_clean.jsonl",
+  "before": {
+    "n": 246,
+    "noise_rate": 0.0,
+    "double_qmark_questions": 66,
+    "templated_question_pct": 80.5,
+    "dup_answers": 0,
+    "median_words": 174,
+    "mean_words": 181.8,
+    "max_words": 340,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 22.8
+  },
+  "after": {
+    "n": 246,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 0,
+    "domains": {
+      "heart_lung_blood": 246
+    },
+    "median_words": 174,
+    "mean_words": 181.8,
+    "max_words": 340,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 22.8
+  },
+  "dropped": {},
+  "dropped_exact_dup": 0,
+  "template_marked": 0,
+  "top_flags": {
+    "fixed_multi_qmark": 66,
+    "long_answer": 56
+  }
+}

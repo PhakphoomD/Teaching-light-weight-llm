@@ -1,0 +1,49 @@
+# Dataset cleaning rules — transparent & auditable. Tune HERE, not in code.
+# Backed by A1 analysis + rubric.md. Regex are Python re, applied case-insensitive.
+version: "0.1"
+seed: 42
+
+# --- Domain relabeling: fix mislabels + normalize names (schema.md) ---
+domain_relabel:
+  growth_hormone_receptorQA: genetics          # GHR = Genetics Home Reference, NOT growth hormone receptor
+  Genetic_and_Rare_DiseasesQA: genetics_rare
+  CancerQA: cancer
+  Diabetes_and_Digestive_and_Kidney_DiseasesQA: diabetes
+  Disease_Control_and_PreventionQA: disease_control
+  Heart_Lung_and_BloodQA: heart_lung_blood
+  MedicalQuestionAnswering: general
+
+# --- Question fixes ---
+question:
+  collapse_multi_qmark: true        # "X ? ?" / "X??" -> "X?"
+
+# --- Answer boilerplate strippers (applied in order). ---
+# Conservative: remove non-answer scaffolding, keep medical content. answer_raw is always preserved.
+answer_boilerplate:
+  - name: hpo_frequency_block
+    pattern: 'The Human Phenotype Ontology.*$'          # HPO table + attribution runs to the tail
+  - name: referral_url_tail
+    pattern: '\(?\s*(for more information|to learn more|for more details|visit|see)\b[^)]*?https?://\S+\)?'
+  - name: bare_url
+    pattern: 'https?://\S+'
+  - name: phone_referral
+    pattern: '\b1-?800-?[0-9a-z-]+'
+  - name: espanol_tail
+    pattern: '\b(en\s+espa[nñ]ol|spanish version)\b.*$'
+
+toggles:
+  strip_key_points: true            # true: remove leading "Key Points -" scaffold (keep the bullets' content)
+  keep_long_answers: true           # true: keep long answers (good for RAG), only flag them. false: (reserved)
+  max_words_soft: 250               # answers longer than this get flag "long_answer"
+
+# --- Validation / filtering ---
+filter:
+  min_answer_words: 20
+  min_question_chars: 10
+  drop_empty: true
+
+# --- Deduplication ---
+dedup:
+  exact_answer: true                # drop records whose cleaned answer exactly duplicates an earlier one (keep first)
+  mark_template_min_group: 5        # a cleaned answer shared by >=N different questions -> is_template=true
+  # near_dup_cosine: 0.90           # Stage 2 (needs embeddings)

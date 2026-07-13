@@ -1,0 +1,41 @@
+{
+  "input": "data\\medical_by_source\\Diabetes_and_Digestive_and_Kidney_DiseasesQA.jsonl",
+  "output": "data\\clean\\Diabetes_and_Digestive_and_Kidney_Diseases_clean.jsonl",
+  "before": {
+    "n": 656,
+    "noise_rate": 0.0137,
+    "double_qmark_questions": 32,
+    "templated_question_pct": 70.6,
+    "dup_answers": 3,
+    "median_words": 118,
+    "mean_words": 137.1,
+    "max_words": 346,
+    "pct_lt20w": 3.4,
+    "pct_gt250w": 12.0
+  },
+  "after": {
+    "n": 631,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 0,
+    "domains": {
+      "diabetes": 631
+    },
+    "median_words": 124,
+    "mean_words": 141.4,
+    "max_words": 346,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 12.5
+  },
+  "dropped": {
+    "short_answer": 22
+  },
+  "dropped_exact_dup": 3,
+  "template_marked": 0,
+  "top_flags": {
+    "long_answer": 79,
+    "fixed_multi_qmark": 32,
+    "stripped_phone_referral": 8,
+    "stripped_bare_url": 2
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe:*)",
+      "PowerShell(git status:*)",
+      "PowerShell(git diff:*)",
+      "PowerShell(git log:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.env)",
+      "Edit(./data/Medical_Q&A/**)",
+      "Edit(./data/medical_by_source/**)",
+      "Edit(./logs/experiments/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe",
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.py"],
+            "timeout": 15,
+            "statusMessage": "Constitution guard (§0.5 / immutable data)"
+          }
+        ]
+      }
+    ]
+  }
+}

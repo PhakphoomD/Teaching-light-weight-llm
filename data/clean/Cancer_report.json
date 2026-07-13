@@ -1,0 +1,40 @@
+{
+  "input": "data\\medical_by_source\\CancerQA.jsonl",
+  "output": "data\\clean\\Cancer_clean.jsonl",
+  "before": {
+    "n": 370,
+    "noise_rate": 0.1622,
+    "double_qmark_questions": 65,
+    "templated_question_pct": 60.5,
+    "dup_answers": 26,
+    "median_words": 129,
+    "mean_words": 150.9,
+    "max_words": 363,
+    "pct_lt20w": 2.4,
+    "pct_gt250w": 11.9
+  },
+  "after": {
+    "n": 336,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 1,
+    "domains": {
+      "cancer": 336
+    },
+    "median_words": 125,
+    "mean_words": 146.7,
+    "max_words": 363,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 12.8
+  },
+  "dropped": {
+    "short_answer": 9
+  },
+  "dropped_exact_dup": 25,
+  "template_marked": 1,
+  "top_flags": {
+    "fixed_multi_qmark": 64,
+    "stripped_key_points": 60,
+    "long_answer": 44
+  }
+}

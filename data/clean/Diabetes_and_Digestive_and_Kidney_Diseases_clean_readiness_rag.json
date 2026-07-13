@@ -1,0 +1,43 @@
+{
+  "dataset": "Diabetes_and_Digestive_and_Kidney_Diseases_clean",
+  "n": 631,
+  "target": "rag",
+  "dimensions": {
+    "structural": {
+      "score": 100.0,
+      "band": "green"
+    },
+    "cleanliness": {
+      "score": 100.0,
+      "band": "green"
+    },
+    "uniqueness": {
+      "score": 97.3,
+      "band": "green"
+    },
+    "complexity": {
+      "score": 100.0,
+      "band": "green"
+    },
+    "diversity": {
+      "score": 72.6,
+      "band": "green"
+    },
+    "answerability": {
+      "score": 99.6,
+      "band": "green"
+    },
+    "quality": {
+      "score": 76.7,
+      "band": "green"
+    }
+  },
+  "volume": {
+    "n": 631,
+    "band": "green"
+  },
+  "overall": 93.4,
+  "verdict": "READY",
+  "quality_judge": "groq",
+  "fixes": []
+}

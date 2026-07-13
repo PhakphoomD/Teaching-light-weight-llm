@@ -1,0 +1,45 @@
+{
+  "dataset": "Diabetes_and_Digestive_and_Kidney_Diseases_clean",
+  "n": 631,
+  "target": "lora",
+  "dimensions": {
+    "structural": {
+      "score": 100.0,
+      "band": "green"
+    },
+    "cleanliness": {
+      "score": 100.0,
+      "band": "green"
+    },
+    "uniqueness": {
+      "score": 97.3,
+      "band": "green"
+    },
+    "complexity": {
+      "score": 100.0,
+      "band": "green"
+    },
+    "diversity": {
+      "score": 72.6,
+      "band": "green"
+    },
+    "answerability": {
+      "score": 99.6,
+      "band": "green"
+    },
+    "quality": {
+      "score": 76.7,
+      "band": "green"
+    }
+  },
+  "volume": {
+    "n": 631,
+    "band": "yellow"
+  },
+  "overall": 89.5,
+  "verdict": "READY",
+  "quality_judge": "groq",
+  "fixes": [
+    "volume yellow (n=631) — need >= 1000 for lora"
+  ]
+}

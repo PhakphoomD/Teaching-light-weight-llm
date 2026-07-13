@@ -1,0 +1,42 @@
+{
+  "input": "data\\medical_by_source\\Genetic_and_Rare_DiseasesQA.jsonl",
+  "output": "data\\clean\\Genetic_and_Rare_Diseases_clean.jsonl",
+  "before": {
+    "n": 4511,
+    "noise_rate": 0.3281,
+    "double_qmark_questions": 0,
+    "templated_question_pct": 100.0,
+    "dup_answers": 50,
+    "median_words": 140,
+    "mean_words": 163.6,
+    "max_words": 337,
+    "pct_lt20w": 0.6,
+    "pct_gt250w": 23.1
+  },
+  "after": {
+    "n": 3031,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 4,
+    "domains": {
+      "genetics_rare": 3031
+    },
+    "median_words": 108,
+    "mean_words": 115.4,
+    "max_words": 337,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 2.3
+  },
+  "dropped": {
+    "short_answer": 1430
+  },
+  "dropped_exact_dup": 50,
+  "template_marked": 4,
+  "top_flags": {
+    "long_answer": 70,
+    "stripped_hpo_frequency_block": 38,
+    "stripped_bare_url": 35,
+    "stripped_referral_url_tail": 7,
+    "stripped_phone_referral": 1
+  }
+}

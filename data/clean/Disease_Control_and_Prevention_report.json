@@ -1,0 +1,39 @@
+{
+  "input": "data\\medical_by_source\\Disease_Control_and_PreventionQA.jsonl",
+  "output": "data\\clean\\Disease_Control_and_Prevention_clean.jsonl",
+  "before": {
+    "n": 211,
+    "noise_rate": 0.0,
+    "double_qmark_questions": 31,
+    "templated_question_pct": 70.6,
+    "dup_answers": 1,
+    "median_words": 100,
+    "mean_words": 118.9,
+    "max_words": 321,
+    "pct_lt20w": 2.8,
+    "pct_gt250w": 8.1
+  },
+  "after": {
+    "n": 205,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 0,
+    "domains": {
+      "disease_control": 205
+    },
+    "median_words": 105,
+    "mean_words": 122.2,
+    "max_words": 321,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 8.3
+  },
+  "dropped": {
+    "short_answer": 6
+  },
+  "dropped_exact_dup": 0,
+  "template_marked": 0,
+  "top_flags": {
+    "fixed_multi_qmark": 31,
+    "long_answer": 17
+  }
+}

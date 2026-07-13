@@ -1,0 +1,38 @@
+{
+  "input": "data\\medical_by_source\\growth_hormone_receptorQA.jsonl",
+  "output": "data\\clean\\growth_hormone_receptor_clean.jsonl",
+  "before": {
+    "n": 4452,
+    "noise_rate": 0.0,
+    "double_qmark_questions": 0,
+    "templated_question_pct": 78.4,
+    "dup_answers": 404,
+    "median_words": 70,
+    "mean_words": 102.3,
+    "max_words": 327,
+    "pct_lt20w": 9.3,
+    "pct_gt250w": 6.2
+  },
+  "after": {
+    "n": 3635,
+    "noise_rate": 0.0,
+    "dup_answers": 0,
+    "template_records": 5,
+    "domains": {
+      "genetics": 3635
+    },
+    "median_words": 93,
+    "mean_words": 118.2,
+    "max_words": 327,
+    "pct_lt20w": 0.0,
+    "pct_gt250w": 7.6
+  },
+  "dropped": {
+    "short_answer": 415
+  },
+  "dropped_exact_dup": 402,
+  "template_marked": 5,
+  "top_flags": {
+    "long_answer": 275
+  }
+}
