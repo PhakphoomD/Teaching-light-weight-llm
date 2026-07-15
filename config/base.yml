@@ -1,0 +1,71 @@
+# config/base.yml — Config Contract v1: single source of ALL defaults (ADR-016).
+# Values below hardcode the P1 gate answers (ADR-022); experiments/*.yml override
+# only their diffs; EXPERIMENT_* env vars override last. Loaded/validated by
+# src/tlw/config (T2.1). Legacy bugs from config/simplified_config.yml are FIXED
+# here, not ported (see notes inline).
+
+# A — student under test: qwen2.5:7b-instruct local (ADR-022 (a)).
+# temperature 0.3 per EVAL_SPEC §4.1 (temp 0 would collapse the seed dimension).
+student:
+  provider: local
+  model: qwen2.5:7b-instruct
+  temperature: 0.3
+  max_tokens: 256
+  timeout: 60
+
+# B — teacher / feedback generator: Groq qwen3-32b (ADR-019; may see GT only in
+# arm D, §0.2 legal use). Deterministic feedback: temperature 0.0 (EVAL_SPEC §6).
+teacher:
+  provider: groq
+  model: qwen/qwen3-32b
+  temperature: 0.0
+  max_tokens: 256
+  timeout: 60
+
+# C — preset NAMES resolved by the PresetRegistry (T2.2/T2.4; catalog ADR-020).
+# minimal = primary student pair; orca = teacher style (ADR-022 (f)).
+preset:
+  student: minimal
+  teacher: orca
+
+# D — memory. Headline default = none for ALL arms (ADR-022 (c)); the C'/D'
+# memory-on ablation overrides type: faiss in its experiment file (V8 guards
+# arms A/B). Tripwire thresholds per ADR-018/022 (e). min_success_rate 0.30 per
+# Memory v2 contract §3 (legacy 0.0 "use all feedback" was part of the leak).
+memory:
+  type: none
+  embedding: minilm
+  top_k: 3
+  similarity_threshold: 0.75
+  min_success_rate: 0.30
+  max_episodes: 1000
+  gt_substring_shingle: 12
+  gt_similarity_max: 0.80
+
+# E — loop params. seed and arm are the EXPERIMENT'S IDENTITY and are therefore
+# deliberately NOT defaulted here: every experiment file must set them
+# (params.seed enforced by V4, §0.3; params.arm by the REQUIRED check).
+# max_rounds 3 per EVAL_SPEC §2 (legacy 10 was pre-renovation).
+params:
+  max_rounds: 3
+  early_stopping:
+    enabled: false
+
+# F — eval. Thresholds live HERE, never under teacher (V5 — fixes the
+# simplified_config.yml:27 misplacement). Judge = local llama3.1:8b, blind-only,
+# temp 0, family ≠ Qwen student (ADR-022 (b)(d), V2). pass_threshold 0.75 =
+# the 0-4 judge scale's PASS-at-≥3 boundary normalized to 0-1 (EVAL_SPEC §3.2).
+# Headline weight = blind correctness only; reference_match stays a diagnostic
+# column, never merged (ADR-019) — fixes the legacy 70%-GT-exposed weight mix.
+eval:
+  judge:
+    provider: local
+    model: llama3.1:8b
+    temperature: 0.0
+    max_tokens: 256
+    timeout: 60
+  mode: blind
+  pass_threshold: 0.75
+  metrics:
+    weights:
+      blind_score: 1.0

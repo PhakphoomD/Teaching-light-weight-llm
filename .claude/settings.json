@@ -19,6 +19,9 @@
       "Read(./.env)",
       "Read(./.env.*)",
       "Edit(./.env)",
+      "Edit(./.env.*)",
+      "Write(./.env)",
+      "Write(./.env.*)",
       "Edit(./data/Medical_Q&A/**)",
       "Edit(./data/medical_by_source/**)",
       "Edit(./logs/experiments/**)"

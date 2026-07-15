@@ -1,0 +1,24 @@
+# experiments/trackA_full_armB_diabetes.yml
+# FULL-RUN arm B (self-refine) — fast-judge design, hub 2026-07-15.
+# Diffs from config/base.yml — see trackA_full_armA_diabetes.yml header for full
+# rationale (student=local qwen2.5:3b, judge=Groq llama-3.1-8b-instant, pass
+# bar score>=4). Arm B never calls the teacher (student self-critiques).
+# params.seed supplied per-run via EXPERIMENT_PARAMS_SEED (not hardcoded here).
+#
+# Run:
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_full_armB_diabetes.yml `
+#     --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: B

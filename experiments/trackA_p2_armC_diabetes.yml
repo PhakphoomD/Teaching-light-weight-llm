@@ -1,0 +1,14 @@
+# experiments/trackA_p2_armC_diabetes.yml
+# Arm C — blind-teacher (the treatment): an independent teacher (Groq
+# qwen/qwen3-32b, base.yml) gives feedback WITHOUT seeing GT. Diffs from
+# config/base.yml only. Headline memory.type stays base.yml's 'none'
+# (ADR-022 (c) — memory-off for ALL headline arms; the memory-on C' ablation
+# is a SEPARATE experiment file, e.g. trackA_p2_armCprime_diabetes.yml with
+# memory.type: faiss, not built by T2.6).
+#
+# Run:
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_p2_armC_diabetes.yml
+
+params:
+  arm: C
+  seed: 42

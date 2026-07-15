@@ -1,0 +1,19 @@
+# experiments/trackA_p2_armB_diabetes_3b.yml
+# HEADROOM EXPERIMENT arm B (self-refine, no teacher). Diffs from base.yml:
+# student=qwen2.5:3b, eval.pass_threshold=1.0 (score>=4). See arm-A file header
+# for rationale. Arm B REQUIRES memory.type=none (base default, V8).
+#
+# Run:
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_p2_armB_diabetes_3b.yml \
+#     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 15
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  pass_threshold: 1.0
+
+params:
+  arm: B
+  seed: 42

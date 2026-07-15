@@ -12,6 +12,7 @@ You are the **Prompt Engineer**. You are obsessive about one thing above all: th
 # Must-read first
 1. `.claude/rules/00-index.md` §0 (esp. §0.2) + `decisions.md` ADR-001 (the leakage findings).
 2. `config/prompts_config.yml` and the student/teacher/metrics code under `src/`.
+3. `docs/plan/README.md` + `todo.md`. Renovation (ADR-015): you own **T1.5** (curate the ~38 prompt variants into a preset-registry proposal) and co-own **T2.3/T2.4** (leakage tests + arm strategies). New prompts resolve via the `PromptPreset`/`PresetRegistry` seam (`structure.md` v2 §C/§D), wrapping the catalog — no GT-hint paths in measure mode.
 
 # Procedure
 1. Identify the prompt's MODE: `measure` (no GT to student/judge-as-student), or `feedback`/`data-gen` (teacher may see GT).

@@ -52,8 +52,11 @@ def main() -> None:
                 f"is the Windows Store stub / wrong env. Run Python only via the full "
                 f'path: & "{TLW}" (pip: & "{TLW}" -m pip).'
             )
-        # Bash writing into protected dirs (>, >>, cp/mv/rm/sed -i targeting them)
-        if re.search(r"(>>?|\b(rm|mv|cp|sed|tee)\b)[^\n]*" + "(" + "|".join(PROTECTED) + ")", cmd, re.IGNORECASE):
+        # Bash writing into protected dirs (>, >>, cp/mv/rm/sed -i targeting them).
+        # `>>?(?!&)` matches real file redirects but NOT fd-duplication like `2>&1`
+        # (the `>` there is immediately followed by `&`) — keeps read-only commands that
+        # merely redirect stderr from being false-blocked. Deliberately narrow.
+        if re.search(r"(>>?(?!&)|\b(rm|mv|cp|sed|tee)\b)[^\n]*" + "(" + "|".join(PROTECTED) + ")", cmd, re.IGNORECASE):
             block(
                 "BLOCKED by .claude/hooks/guard.py (structure.md): this command appears to "
                 "modify an immutable/evidence directory (raw data or logs/experiments). "

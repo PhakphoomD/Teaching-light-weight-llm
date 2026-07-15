@@ -1,0 +1,45 @@
+# experiments/trackA_full_armA_diabetes.yml
+# FULL-RUN arm A (baseline) — fast-judge design, hub 2026-07-15.
+#
+# Diffs from config/base.yml:
+#   student            : local qwen2.5:3b   (mandatory floor — Groq has no small
+#                         Qwen; a bigger student erases headroom, hub note; kept
+#                         local so the free/fast Ollama student never competes
+#                         with the judge for the 8GB GPU — see next line)
+#   eval.judge         : Groq llama-3.1-8b-instant (moved OFF the local GPU so
+#                         the 3B student never judge-cohosts -> ~2-3x faster
+#                         local wall-clock; family = Llama != Qwen student, §0.2/V2 OK)
+#   eval.pass_threshold: 1.0 (score>=4 "correct AND complete" — the T2.7
+#                         headroom-pilot bar that produced a non-degenerate
+#                         result: baseline ~67-73%, not the old ceiling-effect 100%)
+#   params.arm         : A
+# teacher stays base default (Groq qwen/qwen3-32b) though arm A never calls it.
+# memory stays base default (none) — headline is memory-off for all arms (ADR-022 (c)).
+#
+# params.seed is DELIBERATELY NOT set here — it is the run's identity and is
+# supplied per invocation via EXPERIMENT_PARAMS_SEED (schema.md Layering rule 4),
+# so the SAME file drives all 3 pre-registered seeds {13, 42, 123} (EVAL_SPEC §4.1).
+#
+# Run one seed on the real heldout set (never --data ..._train.jsonl for this):
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_full_armA_diabetes.yml `
+#     --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
+#
+# Smoke (mechanics only — TRAIN split, tiny --limit, never heldout, §0.2):
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_full_armA_diabetes.yml `
+#     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 4 `
+#     --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: A

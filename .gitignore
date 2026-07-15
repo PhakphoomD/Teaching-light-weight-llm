@@ -229,6 +229,12 @@ logs/analysis/
 logs/simplified/faiss.*
 logs/simplified/memory.jsonl
 
+# New-core run outputs (T2.6) — generated per run under runs/<run_id>/
+# (rounds.jsonl, summary.jsonl, config_used.json, memory/); reproducible from
+# the experiment config + seed + git commit recorded inside summary.jsonl, so
+# outputs stay local, not committed (mirrors logs/simplified/* above).
+runs/
+
 # Legacy code (deprecated)
 src/simplified/legacy/
 

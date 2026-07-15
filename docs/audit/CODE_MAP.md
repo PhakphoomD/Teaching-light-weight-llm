@@ -1,5 +1,15 @@
 # CODE_MAP — As-Built Audit (T0.1)
 
+> **⚠️ POST-T2.9 DEMOLITION (2026-07-16): the tables below are HISTORICAL (pre-demolition).**
+> T2.9 deleted the frozen legacy core + all 5 confirmed-DEAD files: `simplified_teaching_loop.py`,
+> `simplified_experiment_runner.py`, `src/simplified/*`, `src/prompts/*`, `src/eval/*` (incl.
+> `metrics.py`, orphaned once its legacy callers went), `config/simplified_config.yml`. The prompt
+> catalog was archived → `config/archive/prompts_config_legacy.yml`. The live codebase is now the
+> `src/tlw/` config-driven core (+ `src/core/`, `src/providers/`) with 239 passing tests. Still present
+> but dead/exploratory: `src/utils/prompt_loader.py`, `notebooks/experiment.ipynb` (retire in P3). A
+> full re-audit against structure.md v2 is a P3 housekeeping follow-up. Everything below reflects the
+> 2026-07-13 pre-renovation tree and is kept for provenance only.
+
 **Generated:** 2026-07-13 · **Owner:** housekeeping · **Scope:** all tracked source, config, schema files
 
 **Executive Summary:** 43 tracked Python/config files catalogued. Core codebase is **1,202 lines (simplified_* + active src/)** organized around two entrypoints (experiment_runner.py, teaching_loop.py). **5 dead files** identified (0 importers, not entrypoints). **Name clash** verified but managed (src/eval/metrics.py vs src/simplified/metrics.py). **Tools directory untracked** (repo status flags as `??`) — exemplary code not under version control, misaligned with ADR-009 structure target.

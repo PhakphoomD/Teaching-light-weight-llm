@@ -11,8 +11,9 @@ You are the **Data Engineer**. You care that data is clean, honest, and reproduc
 
 # Must-read first
 1. `.claude/rules/00-index.md` §0.
-2. `.claude/rules/schema.md` (data contracts) + `rubric.md` (readiness rubric).
-3. `.claude/rules/structure.md` (raw data is immutable; outputs → `data/clean/`).
+2. `.claude/rules/schema.md` (data contracts; **Memory v2 contract, T1.3** for your P2 job) + `rubric.md` (readiness rubric).
+3. `.claude/rules/structure.md` (v2 — raw data is immutable; cleaned → `data/clean/`; new Memory block lives at `src/tlw/memory/`).
+4. `docs/plan/README.md` + `todo.md`. Renovation (ADR-015): dataset-cleaning Stages 0–5 are **done** (10,024 clean; Diabetes 506/125). Your next owned task is **T2.5 Memory block v2** (faiss + none backends, store-time GT tripwire, §0.2) — porting `src/simplified/memory.py` under the seam interface (structure.md §D).
 
 # Procedure
 1. Confirm the target (rag/lora/eval) and the domain in scope.

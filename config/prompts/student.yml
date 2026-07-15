@@ -1,0 +1,85 @@
+# Student-bound presets — ADR-020 survivor set + T2.4 arm-B skeleton.
+# Ported (verbatim template text) from config/prompts_config.yml (read-only
+# source, never edited): first_attempt -> minimal.first, refinement ->
+# minimal.refine (PROMPT_CATALOG.md S4/S5). student.selfrefine.critique fills
+# the T1.5 §5b skeleton (arm B, self-refine — new wording, no prior variant).
+#
+# GT-FREE: no {ground_truth} placeholder appears anywhere in this file.
+# student.last_chance (LEAKAGE_CENSUS L1) is deliberately NOT ported — it is
+# quarantined and must never be a registry key (ADR-020 §7).
+
+minimal:
+  # GT-FREE — PROMPT_CATALOG S4 (config/prompts_config.yml:76-80)
+  first: |
+    Answer this question precisely:
+    {question}
+
+    Answer:
+
+  # GT-FREE — PROMPT_CATALOG S5 (config/prompts_config.yml:83-88)
+  refine: |
+    Answer: {question}
+    Your previous answer: {previous_answer}
+    Guidance: {feedback}
+
+    Answer:
+
+selfrefine:
+  # GT-FREE — PROMPT_CATALOG.md §5b skeleton (arm B, self-refine critique step)
+  critique: |
+    Question: {question}
+    Your answer: {previous_answer}
+    List the specific weaknesses in your answer (missing facts, unclear parts, wrong claims).
+    Do not rewrite it yet — only critique.
+    Weaknesses:
+
+# T2.7 GATE-(f) DATA ONLY — ported (verbatim tone, adapted signature) from
+# config/prompts_config.yml `student.initial_draft` (S1, :11-21) and
+# `student.refine_with_teacher` (S2, :25-48) — PROMPT_CATALOG.md §6 "the
+# structured orca-paired pair". ADAPTED: the source `refine_with_teacher`
+# consumes two separate fields, {teacher_critique} + {teacher_improvements};
+# T2.4's loop v2 (src/tlw/loop/strategies.py::_TeacherArm.run) always calls
+# render("refine", ..., feedback=<one combined string>) — a single {feedback}
+# slot, never the two structured fields. So `refine` below folds both source
+# sections into one {feedback} block instead of two placeholders, to make
+# this preset callable through the real T2.4 call signature (PROMPT_CATALOG
+# §6's own assumption). Registered under PRESET_REGISTRY key "orca_student"
+# (NOT "orca" — that name is already taken by teacher.orca, presets.py) so
+# `preset.student: orca_student` can be selected per-experiment (T2.7 pilot
+# only; not the ADR-022(f) default, which stays "minimal" pending the pilot
+# verdict). GT-FREE: no {ground_truth} placeholder anywhere in this style.
+orca:
+  first: |
+    You are the Student model.
+
+    [Task]
+    {question}
+
+    Produce your best possible answer to the task.
+    Be clear, concise, and avoid making up facts.
+
+    Output:
+    Draft:
+    <your answer>
+
+  refine: |
+    You are the Student model.
+
+    [Task]
+    {question}
+
+    [Previous Answer]
+    {previous_answer}
+
+    [Teacher Feedback]
+    {feedback}
+
+    Your job:
+    - Generate a new improved answer.
+    - Follow the Teacher Feedback exactly.
+    - Fix every issue mentioned in it.
+    - Do NOT introduce unsupported information.
+
+    Output:
+    Refined_Answer:
+    <your improved answer>

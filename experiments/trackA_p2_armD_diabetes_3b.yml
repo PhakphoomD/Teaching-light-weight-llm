@@ -1,0 +1,20 @@
+# experiments/trackA_p2_armD_diabetes_3b.yml
+# HEADROOM EXPERIMENT arm D (sighted teacher = LEAKAGE CEILING, not a result).
+# Diffs from base.yml: student=qwen2.5:3b, eval.pass_threshold=1.0 (score>=4).
+# Teacher sees GT in arm D (its prompt only, §0.2 legal) — this arm marks the
+# upper bound, reported as a ceiling never as an achievement. See arm-A header.
+#
+# Run:
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_p2_armD_diabetes_3b.yml \
+#     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 15
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  pass_threshold: 1.0
+
+params:
+  arm: D
+  seed: 42

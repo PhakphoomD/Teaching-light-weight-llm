@@ -1,0 +1,26 @@
+# experiments/trackA_p2_armA_diabetes_3b.yml
+# HEADROOM EXPERIMENT (2026-07-14, hub-approved). Two diffs from base.yml:
+#   student -> qwen2.5:3b     (product floor, ADR-015; smaller model)
+#   eval.pass_threshold -> 1.0 (score>=4 "correct AND complete", not just >=3
+#                               "correct") — restores baseline headroom so the
+#                               loop has something to improve. See T2.7 pilot
+#                               finding: at >=3 the baseline passes 100% (no
+#                               room); at >=4 it drops to ~67%.
+# Judge stays llama3.1:8b (Qwen student != Llama judge, §0.2/V2 unchanged),
+# free + local. NOT a formal supersession of ADR-022 yet — that waits on this
+# experiment showing C-B is real.
+#
+# Run:
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_p2_armA_diabetes_3b.yml \
+#     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 15
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  pass_threshold: 1.0   # score >= 4 (normalized 4/4)
+
+params:
+  arm: A
+  seed: 42

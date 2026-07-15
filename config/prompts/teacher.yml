@@ -1,0 +1,86 @@
+# Teacher-bound presets — ADR-020 survivor set + T2.4 arm-C skeleton.
+# `orca.sighted` is ported (verbatim template text) from config/prompts_config.yml
+# `teacher.orca_critique` (T1 in PROMPT_CATALOG.md, config/prompts_config.yml:169-201)
+# — the Phase-2 winner (pass_rate 0.90, logs/experiments/phase2/summary.jsonl:3).
+# `orca.blind` fills the T1.5 §5a skeleton (arm C): orca_critique with the
+# `[Target Answer] {ground_truth}` block removed.
+#
+# `orca.sighted` legally shows GT to the TEACHER ONLY (§0.2) — never ported
+# forward into a student-bound prompt (enforced structurally by
+# src/tlw/loop/core.py:assert_gt_free on every student-bound render).
+# teacher.difficult_question (LEAKAGE_CENSUS L7 — instructs the teacher to
+# ECHO GT into its returned text) is deliberately NOT ported and is
+# quarantined; must never be a registry key (ADR-020 §7).
+
+orca:
+  # GT-VISIBLE: teacher-only — arm D (sighted-teacher, EVAL_SPEC §1).
+  # {ground_truth} appears ONLY inside this teacher-only template; the
+  # teacher's RETURNED feedback text still passes the student-bound
+  # leakage guard before it can reach the student (EVAL_SPEC §1, loop/core.py).
+  sighted: |
+    You are the Teacher model.
+
+    [Task]
+    {question}
+
+    [Target Answer]
+    {ground_truth}
+
+    [Student Answer]
+    {student_answer}
+
+    Your job is to evaluate the student's answer.
+
+    1. Critique:
+      - Point out factual errors, missing reasoning steps, and unclear parts.
+      - Be concrete and concise.
+
+    2. Score:
+      - Give an overall quality score from 0 to 100.
+
+    3. Improvements:
+      - Provide step-by-step instructions for how the student should improve the answer.
+      - Do NOT rewrite the whole answer.
+
+    Output format:
+    Critique:
+    - ...
+
+    Improvements:
+    1) ...
+    2) ...
+    3) ...
+
+  # GT-FREE — arm C (blind-teacher, the treatment, EVAL_SPEC §0/§1). Derived
+  # from `sighted` above minus the [Target Answer] block (PROMPT_CATALOG §5a).
+  # invariant: this template MUST NOT contain {ground_truth} anywhere.
+  blind: |
+    You are the Teacher model.
+
+    [Task]
+    {question}
+
+    [Student Answer]
+    {student_answer}
+
+    Evaluate using your own knowledge (no reference answer is provided).
+
+    1. Critique:
+      - Point out factual errors, missing reasoning steps, and unclear parts.
+      - Be concrete and concise.
+
+    2. Score:
+      - Give an overall quality score from 0 to 100.
+
+    3. Improvements:
+      - Provide step-by-step instructions for how the student should improve the answer.
+      - Do NOT rewrite the whole answer.
+
+    Output format:
+    Critique:
+    - ...
+
+    Improvements:
+    1) ...
+    2) ...
+    3) ...
