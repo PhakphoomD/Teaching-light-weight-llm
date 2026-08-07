@@ -23,9 +23,14 @@ Specialists live in `.claude/agents/` (roster + ownership in `.claude/rules/agen
 - Dataset: MedQuAD (NIH, CC BY). Raw CSVs in `data/Medical_Q&A/` are immutable.
 
 ## Key commands (always the full-path python — §0.5)
-- Clean dataset: `& "C:\Users\ham25\.conda\envs\tlw\python.exe" -m tools.dataset.cli --all` (or invoke the `run-pipeline` skill)
-- Run experiment: `& "C:\Users\ham25\.conda\envs\tlw\python.exe" simplified_experiment_runner.py --questions N`
-- Prepare data (legacy): `& "C:\Users\ham25\.conda\envs\tlw\python.exe" scripts/prepare_medical_dataset.py`
+Shorthand below: `PY` = `C:\Users\ham25\.conda\envs\tlw\python.exe`.
+- Run an experiment: `$env:EXPERIMENT_PARAMS_SEED="42"; & PY run.py --config experiments/teaching-loop/1-baseline.yml`
+  (the seed is the run's identity and comes from the environment, so one config drives all its seeds)
+- Reproduce a headline: `& PY -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B --comparison B-A`
+- WixQA analyses: `& PY scripts/wixqa_analyze.py` · `& PY scripts/wixqa_dose_analyze.py`
+- Tests: `& PY -m pytest tests/ -q`
+- Clean dataset: `& PY -m tools.dataset.cli --all` (or invoke the `run-pipeline` skill)
+- Rebuild what a clone lacks: `& PY scripts/dataset/fetch_wixqa.py` · `& PY -m tools.rag.cli`
 
 ## Enforcement & skills (ADR-012)
 - `.claude/settings.json` — permission rules (deny edits to raw data, `logs/experiments/`, `.env`) + registers the guard hook.
