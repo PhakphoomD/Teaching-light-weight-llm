@@ -1,6 +1,25 @@
 # Teaching Loop for Lightweight LLMs
 
-An iterative teaching system that improves accuracy of small, budget-friendly language models (Llama 3.1 8B) through structured feedback and memory-based learning. Achieves **83% pass rate** on medical Q&A (up from 25% baseline) without fine-tuning.
+A research project on **what actually makes a small local LLM better at a specialised domain** —
+and what only *looks* like it does. Starting from an iterative teacher–student loop, the project was
+rebuilt to remove ground-truth leakage from its own evaluation, then used to measure each proposed
+improvement honestly: the teaching loop, RAG, and LoRA fine-tuning.
+
+**Headline findings (all measured on held-out data with 95% CIs — see [Key Results](#key-results)):**
+
+- An independent **teacher in the loop adds nothing** (+0.003, p = 1.00). Plain **self-refinement**
+  is the part that worked (+0.091).
+- **RAG helps only when the model genuinely lacks the knowledge** — no effect on a saturated
+  medical-QA testbed, **+0.152** on a real product knowledge base.
+- **How retrieved text is delivered into the prompt mattered more than which retriever produced it**
+  (+0.130 from a prompt-construction fix, versus +0.025 from a better retriever).
+- **Naive LoRA fine-tuning on reference answers hurt** (−0.292).
+
+> ⚠️ **On the older "25% → 83% → 100%" claim.** Earlier versions of this repo reported those numbers.
+> The project's own audit showed they were an artefact of ground-truth leakage and a
+> similarity-based metric, not real learning. They are retired: see
+> [docs/archive/PROJECT_OVERVIEW_AND_RESULTS.md](docs/archive/PROJECT_OVERVIEW_AND_RESULTS.md)
+> for the record and the correction. Reporting this honestly is the point of the rebuild.
 
 ---
 
@@ -24,162 +43,173 @@ An iterative teaching system that improves accuracy of small, budget-friendly la
 
 ### The Problem
 
-Small language models (8B parameters) are cost-efficient but often produce inaccurate answers on domain-specific tasks. Traditional solutions require expensive fine-tuning or using larger models.
+Small local language models (3–8B) are cheap and private, but weaker on specialised domains. The
+usual proposals — teach them with a bigger model, give them RAG, fine-tune them — are widely
+assumed to work. **This project measured whether they actually do, for a small business that wants
+one local model deep in one domain.**
 
-### Our Solution
+### The original hypothesis, and what happened to it
 
-An **iterative teaching loop** that:
+The project began as an *iterative teaching loop*: a large teacher model critiques the small
+student's answer, successful teaching episodes are stored in FAISS memory, and the student improves
+over rounds. Early results looked excellent (25% → 83% → 100%).
 
-1. Uses a larger teacher model (70B) to provide structured feedback
-2. Stores successful teaching episodes in semantic memory (FAISS)
-3. Retrieves relevant examples to guide future answers
-4. Achieves high accuracy without modifying model weights
+**They did not survive audit.** The teacher was shown the reference answer every round, memory was
+storing reference answers and retrieving them later, and the score measured *similarity to a
+reference* rather than correctness. The system was, in effect, being graded on how well it copied an
+answer key it had been given.
 
-### Core Philosophy
+So the project was rebuilt around one rule: **make leakage structurally impossible, then re-measure
+everything.** The judge never sees the reference; a run aborts if ground truth reaches a student
+prompt; every headline number is a held-out, multi-seed effect with a confidence interval.
 
-- **Minimal Prompts**: Small models perform best with focused, concise instructions
-- **Hybrid Evaluation**: Combines deterministic metrics with LLM-based judges
-- **Smart Memory**: FAISS-based retrieval with success-rate ranking
-- **Deterministic Student**: Temperature = 0.0 is critical for memory effectiveness
-- **ORCA Feedback**: Critique-based feedback outperforms Chain-of-Thought
+### What the rebuild found
+
+| proposed lever | verdict |
+|---|---|
+| Teacher-in-the-loop | ❌ adds nothing (+0.003, p = 1.00) — **dropped** |
+| Self-refinement | ✅ real on its own (+0.091) … but ❌ adds nothing once RAG is in place |
+| Memory of past episodes | ❌ was the main leakage path; redesigned to store *coaching notes, never answers* |
+| RAG | ⚠️ **conditional** — nothing when the model already knows the domain, +0.152 when it does not |
+| Grounding (how retrieved text enters the prompt) | ✅ **the biggest lever found** (+0.130), and free |
+| LoRA fine-tuning on reference answers | ❌ actively harmful (−0.292) |
+
+### Principles the project runs on
+
+- **Honesty over optics** — every reported number must match its source log; negative results are
+  reported as plainly as positive ones (most of the findings above are negative).
+- **No ground-truth leakage in evaluation** — enforced in code, not by convention.
+- **Reproducible** — seeded, single-command, with the resolved config recorded next to every run.
+- **Evidence-backed** — claims cite a file, a line, or a command that was actually run.
+- **Cheap checks before expensive ones** — offline metrics and pilots gate every costly run.
 
 ---
 
 ## Key Results
 
-| Configuration            | Pass Rate | Improvement | Cost per 100Q |
-|--------------------------|-----------|-------------|---------------|
-| Baseline (no teaching)   | 25%       | -           | $0.10 AUD     |
-| Optimized Teaching Loop  | 83%       | +58%        | $0.23 AUD     |
-| Ground Truth Memory      | 100%      | +75%        | $0.04 AUD     |
+Every number below is computed from a committed run log, on held-out questions, with a
+pre-registered statistic (paired cluster bootstrap 95% CI + exact McNemar). Full reports are linked
+in the last column.
 
-### Research Questions Answered
+### 1. Does the teaching loop work? (MedQuAD, 125 held-out × 3 seeds, student `qwen2.5:3b`)
 
-| RQ  | Question                                          | Finding                                    |
-|-----|---------------------------------------------------|--------------------------------------------|
-| RQ1 | Does teaching loop improve accuracy?              | Yes, +58% pass rate (25% to 83%)           |
-| RQ2 | What feedback style works best?                   | ORCA (critique-based) > CoT > Principle    |
-| RQ3 | Does memory help?                                 | Yes, when Student Temperature = 0.0        |
-| RQ4 | What is the cost-quality trade-off?               | 4x tokens for 3x accuracy improvement      |
+| Arm | Pass rate | Effect | Verdict | Report |
+|---|---|---|---|---|
+| A — single pass (baseline) | 0.821 | — | | [TRACK_A_RESULTS](docs/TRACK_A_RESULTS.md) |
+| B — self-refinement | 0.912 | **B−A = +0.091** [+0.051, +0.133], p < 0.0001 | ✅ **real** | |
+| C — independent teacher | 0.915 | **C−B = +0.003** [−0.021, +0.029], p = 1.00 | ❌ **adds nothing** | |
+| D — teacher sees the answer | 0.940 | *labelled leakage ceiling, not a result* | ⚠️ | |
+
+**Conclusion:** the value was in the model critiquing its own answer, not in the teacher. The
+teacher-in-the-loop was dropped from the product.
+
+### 2. Does RAG help? (two testbeds, deliberately)
+
+| Testbed | Why it was chosen | 3B baseline | +RAG | Effect | Report |
+|---|---|---|---|---|---|
+| **MedQuAD** (medical QA) | the model already knows this | 0.821 | 0.816 | **−0.005** [−0.067, +0.056] → **no effect** | [RAG_RESULTS](docs/RAG_RESULTS.md) |
+| **WixQA** (real product knowledge base) | the model has *no* knowledge of it | 0.163 | 0.315 | **+0.152** [+0.090, +0.213], p = 5e-11 | [WIXQA_RESULTS](docs/WIXQA_RESULTS.md) |
+
+**Conclusion — the law this project set out to prove:** *RAG helps if and only if the retrieved text
+actually contains the answer.* Demonstrated as a **dose-response**: raising retrieval hit-rate
+0.55 → 0.665 raised the pass rate along a predicted line, while the payoff *given* a correct
+retrieval stayed pinned (0.400 → 0.411) — the retriever changes **how often** the answer is found,
+not the value of finding it.
+
+### 3. What actually moved the needle on WixQA
+
+| System | Pass rate | What changed |
+|---|---|---|
+| no RAG | 0.163 | — |
+| + RAG (MiniLM, whole article) | 0.315 | retrieval added |
+| + best retriever (BGE + chunking) | 0.340 | **+0.025** — better retrieval |
+| **+ grounding repair** | **0.470** | **+0.130** [+0.072, +0.188], p = 3.5e-08 — *only the prompt construction changed* |
+| + self-refinement on top | 0.470 | **+0.000** — no additional benefit |
+
+**Conclusion:** the biggest single win was **delivery** — we were truncating retrieved articles at
+900 characters, so the student saw only ~25% of the article and ~36% of the answer's content. Fixing
+*how much and which part* of the retrieved text reaches the prompt was worth **5× more** than
+upgrading the retriever, and costs nothing at inference time.
+
+### 4. Does LoRA fine-tuning help? (QLoRA 4-bit on the 3B, held-out 125)
+
+**No: −0.292** [−0.360, −0.224]. The fine-tune successfully transferred the reference *style* — and
+that style was terser than the evaluation's completeness bar, so answers got ~30–45% shorter and
+failed. → [PRODUCT_RESULTS](docs/PRODUCT_RESULTS.md)
+
+### 5. The recurring pattern across all three interventions
+
+RAG passages, wider context, and self-refinement each **helped answers that were deficient and taxed
+answers that were already adequate.** Where a selective policy was simulated it was clearly positive
+(oracle +0.099 for RAG, +0.038 for refinement) — but the small model could not decide *for itself*
+when to apply it (it called its own answer "complete" 59% of the time, including when wrong).
+**The missing component is a reliable gate, not a better intervention.**
 
 ---
 
 ## System Architecture
 
-### High-Level Flow
+One run is one YAML file resolved through six registries. Behaviour changes by editing
+configuration, never by editing the core — that is the whole point of the design (ADR-016/017).
 
 ```
-+-----------------------------------------------------------------------------------+
-|                        Teaching Loop System Architecture                          |
-+-----------------------------------------------------------------------------------+
-
-                              +-------------------+
-                              |   Input Question  |
-                              |   + Ground Truth  |
-                              +---------+---------+
-                                        |
-                                        v
-                              +-------------------+
-                              |  Initialize Loop  |
-                              |  round = 1        |
-                              +---------+---------+
-                                        |
-                                        v
-                         +-----------------------------+
-                         |   Memory Search (Round 1)   |
-                         |   FAISS semantic retrieval  |
-                         +-------------+---------------+
-                                       |
-                    +------------------+------------------+
-                    |                                     |
-                    v                                     v
-          +------------------+                  +------------------+
-          | Memory Hit Found |                  |   No Memory Hit  |
-          | (similarity > T) |                  |                  |
-          +--------+---------+                  +--------+---------+
-                   |                                     |
-                   v                                     v
-     +------------------------+             +------------------------+
-     | Build Prompt with      |             | Build First-Attempt    |
-     | Retrieved Feedback     |             | Minimal Prompt         |
-     +------------------------+             +------------------------+
-                   |                                     |
-                   +------------------+------------------+
-                                      |
-                                      v
-                         +------------------------+
-                         |    Student Model       |
-                         |    Generate Answer     |
-                         |    (Llama 3.1 8B)      |
-                         +-----------+------------+
+experiments/<study>/<condition>.yml           run.py --config <that file>
+        |                                            |
+        +--> config/base.yml (defaults) -------------+
+                     |
+                     v
+        +------------------------------------------------------------------+
+        |  src/tlw/runner.py  — the composition root                        |
+        |  resolves six slots, each through a registry:                     |
+        |                                                                   |
+        |   A student   -> ProviderRegistry   (local Ollama / Groq)         |
+        |   B teacher   -> ProviderRegistry   (may see the reference)       |
+        |   C preset    -> PresetRegistry     (prompt templates)            |
+        |   D memory    -> MemoryRegistry     (none | faiss | rag)          |
+        |   E params    -> StrategyRegistry   (arm A/B/C/D, rounds, seed)   |
+        |   F eval      -> Judge              (blind or reference-comparing)|
+        +----------------------------+--------------------------------------+
                                      |
                                      v
-                         +------------------------+
-                         |   Hybrid Evaluation    |
-                         | - Semantic Similarity  |
-                         | - ROUGE-L Score        |
-                         | - Blind Judge (LLM)    |
-                         | - Comparison Judge     |
-                         +-----------+------------+
+        +------------------------------------------------------------------+
+        |  src/tlw/loop/  — the arm runs its rounds                          |
+        |   round 1: (optional RAG grounding) -> student answers -> judge    |
+        |   round N: critique/feedback -> student rewrites -> judge          |
+        |   assert_gt_free() aborts if the reference ever reaches a prompt   |
+        +----------------------------+--------------------------------------+
                                      |
                                      v
-                         +------------------------+
-                         |  Compute Final Score   |
-                         |  (Weighted Average)    |
-                         +-----------+------------+
+              runs/<study>/<condition>__seed<N>__<ts>/
+                  summary.jsonl · rounds.jsonl · config_used.json
                                      |
-                    +----------------+----------------+
-                    |                                 |
-                    v                                 v
-          +------------------+              +------------------+
-          | Score >= 0.80    |              | Score < 0.80     |
-          | (Pass Threshold) |              | (Needs Improve)  |
-          +--------+---------+              +--------+---------+
-                   |                                 |
-                   v                                 v
-          +------------------+              +------------------+
-          |     SUCCESS      |              | Check Stopping   |
-          | - Update Memory  |              | - Max rounds?    |
-          | - Return Result  |              | - Plateau?       |
-          +------------------+              +--------+---------+
-                                                     |
-                                    +----------------+----------------+
-                                    |                                 |
-                                    v                                 v
-                          +------------------+              +------------------+
-                          |  Continue Loop   |              |   Stop (Fail)    |
-                          +--------+---------+              +------------------+
-                                   |
-                                   v
-                          +------------------+
-                          |  Teacher Model   |
-                          |  Generate ORCA   |
-                          |  Feedback (70B)  |
-                          +--------+---------+
-                                   |
-                                   v
-                          +------------------+
-                          | Build Refinement |
-                          | Prompt + Feedback|
-                          +--------+---------+
-                                   |
-                                   +-------> (Loop back to Student Model)
+                                     v
+              src/tlw/analysis/  ->  paired bootstrap CI + McNemar  ->  reports/
 ```
 
-### Key Components
+### The four arms
 
-| Component              | File                                 | Responsibility                           |
-|------------------------|--------------------------------------|------------------------------------------|
-| Teaching Loop          | `simplified_teaching_loop.py`        | Main orchestrator, iteration control     |
-| Experiment Runner      | `simplified_experiment_runner.py`    | Batch execution, result aggregation      |
-| Student Client         | `src/simplified/student.py`          | Prompt building, student LLM calls       |
-| Teacher Feedback       | `src/simplified/teacher_feedback.py` | ORCA/CoT feedback generation             |
-| Metrics Evaluator      | `src/simplified/metrics.py`          | Hybrid scoring system                    |
-| Memory System          | `src/simplified/memory.py`           | FAISS indexing and retrieval             |
-| Early Stopping         | `src/simplified/early_stopping.py`   | Plateau/repetition detection             |
-| LLM Providers          | `src/providers/*.py`                 | Groq, Gemini, OpenAI, Local              |
+| Arm | What feeds the next round | Measures |
+|---|---|---|
+| **A** baseline | nothing — single pass | the floor |
+| **B** self-refine | the student's own critique | whether iterating helps at all |
+| **C** blind teacher | an independent model, **without** the reference | whether a *teacher* adds anything over B |
+| **D** sighted teacher | a teacher **with** the reference | a labelled leakage ceiling — never reported as a result |
 
----
+`C − B` is the pre-registered headline: it isolates the teacher from the act of iterating.
+
+### Key components
+
+| Component | Where | Responsibility |
+|---|---|---|
+| Composition root | `src/tlw/runner.py` | config → six slots → run → write artifacts |
+| Config loader | `src/tlw/config/` | layered merge + fail-loud validation (V1–V8) |
+| Registries | `src/tlw/registries.py` | one resolver per swappable seam |
+| Arm strategies | `src/tlw/loop/strategies.py` | A/B/C/D; no ground-truth path exists in any of them |
+| Leakage guard | `src/tlw/loop/core.py` | `assert_gt_free` — aborts the run if the reference leaks |
+| Memory | `src/tlw/memory/` | `none` / `faiss` (notes, GT-tripwired) / `rag` (corpus) |
+| Evaluation | `src/tlw/evaluation/` | judge + diagnostics kept structurally separate |
+| Analysis | `src/tlw/analysis/` | bootstrap CI, McNemar, Wilson — the pre-registered stats |
+| Providers | `src/providers/` + `src/tlw/providers.py` | Groq, Gemini, and Ollama registered as `local` |
 
 ## Installation
 
@@ -272,265 +302,131 @@ python -c "import torch; import transformers; import groq; print('Installation O
 
 ## Configuration
 
-### Main Configuration File
-
-`config/simplified_config.yml`
+**One run = one config file = six slots**, each resolved through a registry. `config/base.yml` holds
+every default — it is the only place a default lives, so a comment can never disagree with a value.
+An experiment file contains *only the diffs*, which is what makes its intent readable at a glance.
 
 ```yaml
-# Student Model Configuration
-student:
-  model: "llama-3.1-8b-instant"
-  provider: "groq"
-  temperature: 0.0          # CRITICAL: Must be 0.0 for memory effectiveness
-  max_tokens: 256
-  timeout: 30
-
-# Teacher Model Configuration
-teacher:
-  model: "llama-3.3-70b-versatile"
-  provider: "groq"
-  temperature: 0.3          # Allows creative feedback generation
-  max_tokens: 256
-  pass_threshold: 0.80      # Optimal balance of quality and convergence
-  feedback_style: "orca"    # Best performing style
-
-  # Hybrid Scoring Weights
-  metrics:
-    weights:
-      blind_score: 0.25       # LLM judge without ground truth
-      comparison_score: 0.35  # LLM judge with ground truth
-      semantic_sim: 0.25      # Embedding similarity
-      rouge_l: 0.10           # ROUGE-L score
-      exact_match: 0.05       # Perfect match bonus
-
-# Memory Configuration
-memory:
-  embedding_model: "all-MiniLM-L6-v2"
-  top_k: 5
-  similarity_threshold: 0.7
-  min_success_rate: 0.5
-  storage_path: "logs/memory/store.jsonl"
-  index_path: "logs/memory/faiss.index"
-
-# Loop Configuration
-loop:
-  max_rounds: 5
-  early_stopping:
-    enabled: true
-    patience: 2
-    min_improvement: 0.05
-    start_from_round: 2
+# experiments/rag-medquad/small-model-with-rag.yml — only what differs from base.yml
+student: { provider: local, model: qwen2.5:3b }         # A — the model under test
+memory:  { type: rag, corpus_path: indexes/medquad-diabetes-train, top_k: 3 }   # D — retrieval
+params:  { arm: A, max_rounds: 1 }                      # E — seed comes from the environment
+eval:
+  judge: { provider: groq, model: llama-3.1-8b-instant } # F — Llama judge ≠ Qwen student (§0.2)
+  pass_threshold: 1.0
 ```
 
-### Optimal Hyperparameters (Discovered via Experiments)
+`params.seed` is deliberately **not** in a multi-seed config: the seed is the run's identity, supplied
+per invocation via `EXPERIMENT_PARAMS_SEED`, so one file drives all pre-registered seeds.
 
-| Parameter             | Value | Rationale                                    |
-|-----------------------|-------|----------------------------------------------|
-| Student Temperature   | 0.0   | Enables memory effectiveness (95% hit rate)  |
-| Pass Threshold        | 0.80  | Balances quality and convergence             |
-| Teacher Temperature   | 0.3   | Creative but focused feedback                |
-| Feedback Style        | ORCA  | +10% pass rate vs Chain-of-Thought           |
-| Max Rounds            | 5     | Sufficient for most questions                |
+### The validation that runs at load (fail-loud, never silent)
 
----
+| Rule | What it prevents |
+|---|---|
+| **V1** weights sum to 1.0 | silently mis-scaled metrics |
+| **V2** judge family ≠ student family | a model grading itself (§0.2) |
+| **V3** unknown keys rejected | a typo'd key vanishing instead of failing |
+| **V4** seed mandatory | an unreproducible run (§0.3) |
+| **V5** thresholds only under `eval` | config drift |
+| **V6** memory-store denylist | re-loading a ground-truth-seeded store |
+| **V7** enums and ranges | an invalid arm or provider reaching the runner |
+| **V8** arm A/B requires non-accumulating memory | a "baseline" that quietly learns across questions |
+
+Full contract: [`.claude/rules/schema.md`](.claude/rules/schema.md).
 
 ## Usage
 
-### Quick Start
+### Run one experiment
 
 ```bash
-# Run with 10 questions (quick test)
-python simplified_experiment_runner.py --questions 10
-
-# Run with 100 questions (full validation)
-python simplified_experiment_runner.py --questions 100
-
-# Run with custom config
-python simplified_experiment_runner.py --config config/my_config.yml --questions 50
+# the seed is the run's identity, so one config drives all pre-registered seeds
+EXPERIMENT_PARAMS_SEED=42 python run.py --config experiments/teaching-loop/1-baseline.yml
 ```
 
-### Python API
+Add `--limit 4 --data data/clean/<...>_train.jsonl` for a mechanics-only smoke run — never point a
+smoke run at the held-out split.
 
-```python
-from simplified_teaching_loop import SimplifiedTeachingLoop
+### Reproduce a published number
 
-# Initialize the teaching loop
-loop = SimplifiedTeachingLoop(config_path="config/simplified_config.yml")
-
-# Run on a single question
-result = loop.run(
-    question="What is the treatment for Type 2 diabetes?",
-    ground_truth="Lifestyle changes, metformin, and monitoring blood glucose.",
-    max_rounds=5
-)
-
-# Check results
-print(f"Success: {result['success']}")
-print(f"Final Answer: {result['final_answer']}")
-print(f"Rounds Used: {result['num_rounds']}")
-print(f"Final Score: {result['final_score']:.3f}")
-
-# Access round-by-round history
-for round_data in result['history']:
-    print(f"Round {round_data['round']}: Score {round_data['final_score']:.3f}")
-```
-
-### Batch Processing
-
-```python
-from simplified_experiment_runner import run_experiment
-
-# Run batch experiment
-results = run_experiment(
-    config_path="config/simplified_config.yml",
-    dataset_path="data/medical_100.jsonl",
-    num_questions=50,
-    mode="champion_mem_on"
-)
-
-# Aggregate metrics
-print(f"Pass Rate: {results['pass_rate']:.1%}")
-print(f"Average Rounds: {results['avg_rounds']:.2f}")
-print(f"Memory Hit Rate: {results['memory_hit_rate']:.1%}")
-```
-
-### Command-Line Options
+Every headline recomputes from the committed logs, offline, with no API key:
 
 ```bash
-python simplified_experiment_runner.py [OPTIONS]
+# the loop ablation: teacher +0.003 (nothing), self-refine +0.091 (real)
+python -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B --comparison B-A
 
-Options:
-  --config PATH       Path to config file (default: config/simplified_config.yml)
-  --questions N       Number of questions to test (default: 10)
-  --mode MODE         Experiment mode: baseline, champion_mem_on, champion_mem_off
-  --dataset PATH      Path to dataset file (JSONL format)
-  --help              Show help message
+# RAG where the model already knows the domain: no effect
+python -m src.tlw.analysis --runs-dir runs/rag-medquad --rag
+
+# RAG where it does not: +0.152, and the dose-response proof
+python scripts/wixqa_analyze.py
+python scripts/wixqa_dose_analyze.py
 ```
 
-### Example Output
+### Rebuild the artifacts a clone does not have
 
-```
-================================================================================
-Simplified Teaching Loop
-================================================================================
-Dataset: data/medical_100.jsonl (10 questions)
-Student Model:  groq/llama-3.1-8b-instant
-Teacher Model:  groq/llama-3.3-70b-versatile
-Pass Threshold: 0.80
-Max Rounds: 5
-================================================================================
-
-Processing: [====================] 10/10 (100%)
-
-Question 1/10 | Result: [PASS] | Score: 0.92 | Rounds: 2 | Memory: HIT
-
-  Question:     What is the treatment for Type 2 diabetes?
-  Ground Truth: Lifestyle changes, metformin, and monitoring blood glucose.
-
-  Round | Mode   | Answer                           | Score | Status
-  ------|--------|----------------------------------|-------|--------
-  1     | MEMORY | Lifestyle changes and metformin  | 0.78  | FAIL
-  2     | REFINE | Lifestyle changes, metformin...  | 0.92  | PASS
-
-================================================================================
-FINAL SUMMARY
-================================================================================
-Success Rate:     90.0% (9/10)
-Average Rounds:   2.30
-Memory Hit Rate:  40.0%
-Total Time:       45.2s
-
-Average Metrics:
-  Semantic Similarity:  0.891
-  ROUGE-L:              0.823
-  Blind Judge:          0.812
-  Comparison Judge:     0.845
-  Final Score:          0.834
-================================================================================
+```bash
+python scripts/dataset/fetch_wixqa.py        # third-party data (gitignored)
+python -m tools.rag.cli                      # search indexes -> indexes/
+python -m tools.dataset.cli --all            # clean + split MedQuAD
 ```
 
----
+### Tests
+
+```bash
+python -m pytest tests/ -q
+```
 
 ## Project Structure
 
 ```
-Teaching-light-weight-llm/
-|
-|-- README.md                           # This file
-|-- requirements.txt                    # Python dependencies
-|-- environment.yml                     # Conda environment
-|-- .env.example                        # API key template
-|
-|-- simplified_teaching_loop.py         # Main orchestrator
-|-- simplified_experiment_runner.py     # Batch experiment runner
-|
-|-- config/
-|   |-- simplified_config.yml           # Main system configuration
-|   |-- prompts_config.yml              # Centralized prompt templates
-|   +-- experiments/                    # Phase-specific configs
-|
-|-- src/
-|   |-- simplified/                     # Core teaching loop components
-|   |   |-- student.py                  # Student model client
-|   |   |-- teacher_feedback.py         # Teacher feedback generation
-|   |   |-- metrics.py                  # Hybrid evaluation system
-|   |   |-- memory.py                   # FAISS memory system
-|   |   |-- early_stopping.py           # Convergence detection
-|   |   |-- logger.py                   # Round-by-round logging
-|   |   |-- logger_manager.py           # Log file management
-|   |   |-- console_logger.py           # Console output formatting
-|   |   |-- debug_logger.py             # Debug logging utilities
-|   |   |-- terminal_ui.py              # Terminal UI display
-|   |   +-- monitor.py                  # Performance tracking
-|   |
-|   |-- providers/                      # LLM API clients
-|   |   |-- factory.py                  # Provider registry
-|   |   |-- groq_client.py              # Groq API
-|   |   |-- gemini_client.py            # Google Gemini API
-|   |   +-- local_client.py             # Local HuggingFace inference
-|   |
-|   |-- core/                           # Core infrastructure
-|   |   |-- client.py                   # LLMClient base class
-|   |   |-- types.py                    # Type definitions
-|   |   +-- tokens.py                   # Token estimation
-|   |
-|   +-- utils/
-|       +-- prompt_loader.py            # Prompt template management
-|
-|-- data/
-|   |-- medical_mixed_100.jsonl         # Main medical dataset
-|   |-- alpaca_100.jsonl                # General instruction dataset
-|   +-- medical_by_source/              # Domain-specific datasets
-|
-|-- models/                              # Local models (not tracked in git)
-|   +-- Llama-3.1-8B-Instruct/          # Download separately if needed
-|
-|-- notebooks/
-|   +-- experiment_redesigned.ipynb     # Analysis and visualization
-|
-|-- logs/
-|   |-- experiments/                    # Phase results
-|   +-- simplified/                     # Run logs (debug/ excluded from git)
-|
-+-- docs/
-    +-- PROJECT_OVERVIEW_AND_RESULTS.md # Detailed experimental analysis
+config/         authored configuration — base.yml holds every default
+experiments/    one YAML per run condition, grouped by study
+data/           INPUTS ONLY (raw is immutable; external/ is third-party; legacy/ is pre-renovation)
+indexes/        built search indexes — gitignored, rebuildable
+src/            library code — core/ providers/ tlw/(config memory prompts evaluation loop analysis)
+scripts/        thin drivers; each imports from src/ or tools/
+tools/          reusable CLI utilities — dataset cleaner/assessor, RAG index builder
+tests/          mirrors src/ and tools/
+runs/           experiment artifacts, grouped by the question each study answers
+reports/        the small, committed, human-readable evidence behind every number
+docs/           narrative — start at docs/README.md
+logs/           pre-renovation experiment evidence — immutable
+models/         LoRA adapters and base weights — gitignored
 ```
 
----
+The full annotated tree, the rule for where a new file goes, and the tracking policy live in
+[`.claude/rules/structure.md`](.claude/rules/structure.md).
+
+**Two conventions worth knowing before you add anything:**
+
+1. **Source and artifacts never share a directory.** Anything a command regenerates goes under
+   `runs/`, `indexes/`, `models/` (gitignored) or `reports/` (tracked, small).
+2. **Names read as English.** The path carries a short human label — `runs/rag-wixqa/4-rag-wider-context/` —
+   and the exact condition lives in a `manifest.json` beside the run, never encoded in the filename.
 
 ## Experimental Phases
 
-| Phase | Purpose                    | Key Finding                                    |
-|-------|----------------------------|------------------------------------------------|
-| 0     | Warmup Memory Pool         | Created 13 teaching episodes for memory        |
-| 1     | Memory vs No Memory        | +5% with memory (not yet optimized)            |
-| 2     | Feedback Style             | ORCA > CoT > Principle                         |
-| 3     | Hyperparameter Tuning      | ST=0.0 is critical for memory effectiveness    |
-| 4     | Cross-Domain               | Domain-specific memory works best              |
-| 5     | Full Validation (100Q)     | 25% to 83% improvement                         |
-| 6     | Ground Truth Memory        | 100% with pre-stored answers ("Training via Memory") |
+### Phase 1 — the original exploration (2025, superseded)
 
-See [PROJECT_OVERVIEW_AND_RESULTS.md](docs/PROJECT_OVERVIEW_AND_RESULTS.md) for detailed analysis.
+Phases 0–6 explored feedback styles, memory and hyper-parameters, and reported "25% → 83% → 100%".
+An audit then found the evaluation itself was compromised: the teacher saw the reference answer every
+round, memory stored reference answers, and the metric scored *similarity to a noisy reference*
+rather than correctness. **Those numbers are retired** — kept, with the full correction, in
+[docs/archive/PROJECT_OVERVIEW_AND_RESULTS.md](docs/archive/PROJECT_OVERVIEW_AND_RESULTS.md).
+
+### Phase 2 — honest rebuild (Track A)
+
+The evaluation was rebuilt so leakage is structurally impossible (the judge never sees the reference;
+a run aborts if ground truth reaches a student prompt), then the loop was re-measured on held-out
+data across 3 seeds. Result: **self-refinement is real (+0.091), the teacher adds nothing (+0.003)**.
+→ [TRACK_A_RESULTS.md](docs/TRACK_A_RESULTS.md)
+
+### Phase 3 — the product levers (Track B)
+
+RAG and LoRA measured under the same protocol, on two deliberately different testbeds, ending in a
+dose-response proof of *when* RAG works and a study of how retrieved text should be delivered.
+→ [RAG_RESULTS.md](docs/RAG_RESULTS.md) · [WIXQA_RESULTS.md](docs/WIXQA_RESULTS.md) ·
+[PRODUCT_RESULTS.md](docs/PRODUCT_RESULTS.md) · **unified write-up: [RAG_LAW.md](docs/RAG_LAW.md)**
 
 ---
 
@@ -549,70 +445,48 @@ See [PROJECT_OVERVIEW_AND_RESULTS.md](docs/PROJECT_OVERVIEW_AND_RESULTS.md) for 
 |----------------|-----------|--------------|------------|
 | Full Experiment| 290       | 920K         | $0.50      |
 
-### Projection: 1,000 Questions
+### What the current system costs to run
 
-| Configuration  | Pass Rate | Passed/1000 | Est. Cost (AUD) |
-|----------------|-----------|-------------|-----------------|
-| Baseline       | 66%       | 660         | $1.48           |
-| Optimized      | 83%       | 830         | $2.29           |
-| GT Memory      | 100%      | 1000        | $0.38           |
+The measured configuration runs the **student and the retriever entirely locally** (Ollama +
+FAISS on an RTX 4060), so the only cloud cost is the evaluation judge:
+
+| Component | Where it runs | Cost |
+|---|---|---|
+| Student (`qwen2.5:3b`) | local (Ollama) | free |
+| Retrieval (BGE embeddings + FAISS) | local, index built once offline | free |
+| Grounding repair (wider, chunk-centred window) | prompt construction only | free — **no extra inference** |
+| Evaluation judge (`llama-3.1-8b-instant`) | Groq free tier | free, but capped at 500K tokens/day org-wide — the binding constraint on how fast experiments finish |
+
+Self-refinement was measured as roughly **3× the inference cost** for **no measurable gain**, so it
+is not part of the recommended configuration.
 
 ---
 
 ## Troubleshooting
 
-### API Rate Limits
+**Groq returns `429 Too Many Requests`.** The free tier's daily token cap is org-wide and is the
+binding constraint on how fast an evaluation finishes. The judging scripts are built for it: they
+self-pace, persist every score immediately, stop cleanly on the daily cap and resume idempotently.
+Re-run the same command after the reset — nothing is lost and nothing is double-charged.
 
-**Problem:** `429 Too Many Requests`
-
-**Solution:**
 ```bash
-# Reduce batch size
-python simplified_experiment_runner.py --questions 5
-
-# Or switch to local model
-# Edit config/simplified_config.yml:
-# student:
-#   provider: "local"
+HF_HUB_OFFLINE=1 python scripts/wixqa_judge.py --glob 'runs/rag-wixqa/*/seed*.jsonl'
 ```
 
-### Poor Performance
+Never substitute a different judge mid-experiment to get around the cap — a mixed judge confounds
+every comparison in that arm.
 
-**Problem:** Low pass rate or too many rounds
+**The embedding model hangs for ~60 s.** `sentence-transformers` tries to reach huggingface.co first.
+Set `HF_HUB_OFFLINE=1` for any command that embeds.
 
-**Check these settings:**
-```yaml
-student:
-  temperature: 0.0  # Must be 0.0, NOT 0.3 or higher
+**A run aborts with a leakage error.** That is the guard working: `assert_gt_free` found the reference
+answer inside a student-bound prompt. Do not disable it — find the path that leaked.
 
-teacher:
-  pass_threshold: 0.80  # Not too high (0.85) or low (0.75)
-```
+**`ModuleNotFoundError: No module named 'src'`.** Run from the repo root, or via `python -m`. Tests
+resolve this through `pytest.ini` (`pythonpath = .`).
 
-### Memory Not Working
-
-**Problem:** Memory hit rate is 0%
-
-**Solution:**
-```bash
-# Reset memory index
-rm logs/memory/faiss.index logs/memory/faiss.ids
-
-# Verify student temperature is 0.0
-grep "temperature" config/simplified_config.yml
-```
-
-### Out of Memory
-
-**Problem:** CUDA out of memory
-
-**Solution:**
-```bash
-# Use API-based models instead of local
-# Edit config to use provider: "groq"
-```
-
----
+**The GPU is busy.** The 8 GB card cannot host the student and a local judge at once. Use a cloud
+judge, or wait — the run scripts are resumable.
 
 ## License
 

@@ -1,0 +1,19 @@
+============================================================================
+Stage-1 grounding comparison: chunk2400 vs head900
+paired on 600 (question,seed) cells; 600 judged in BOTH
+============================================================================
+  chunk2400    prompt 6187 chars avg
+
+  reference-coverage (continuous, judge-free, n=600):
+    head900=0.361  chunk2400=0.403   delta=+0.042 [+0.032, +0.053]  <-- CI excludes 0
+    answer length: 152 -> 144 words
+    extraction ratio (answer-cov / context-cov): head900 88%  ->  chunk2400 61%
+
+  pass@>=3:  head900=0.340 [0.303,0.379]   chunk2400=0.470 [0.430,0.510]
+    delta=+0.130 [+0.072, +0.188]  McNemar p=3.52e-08 (fixed 139 / broke 61)
+
+  pass@>=4:  head900=0.007 [0.003,0.017]   chunk2400=0.007 [0.003,0.017]
+    delta=+0.000 [-0.005, +0.005]  McNemar p=1 (fixed 1 / broke 1)
+
+  mean judge score: 1.98 -> 2.18
+  catastrophe rate (score<=1): 0.298 -> 0.232

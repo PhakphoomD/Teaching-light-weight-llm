@@ -1,168 +1,193 @@
-# Canonical Repo Structure (v2 — ADR-017)
+# Canonical Repo Structure (v3 — ADR-034)
 
-Source of truth for **housekeeping** and for every P2/P3 build task. Layout follows ML
-project best practices (cookiecutter-data-science + Real Python `src` layout, ADR-009) and
-adds the **target architecture** the renovation (ADR-015) builds into: a new config-driven
-core (`src/tlw/`) that grows **beside** the frozen legacy (`src/simplified/`) until T2.9.
-
-Legend: **(exists)** = present today · **(planned — create when first needed)** = agreed
-target, do NOT flag as missing junk · **(frozen legacy)** = keep working, do not extend,
-demolished in T2.9.
+Source of truth for **housekeeping** and for every build task. Generated from the executed tree on
+2026-08-07, not from a plan — v2 had drifted into describing paths that no longer existed while
+omitting ~14 that did, and every audit compared against that wrong map. **If this file and the repo
+disagree, this file is the bug.**
 
 ---
 
-## §A Design principles (why the tree looks like this)
+## §A Design principles
 
-1. **Change-readiness = clean seams + config, not building everything now** (ADR-015). Every
-   swappable thing (student / teacher / preset / memory / arm / judge — the six slots of the
-   Config Contract, `schema.md` "Experiment Config Contract v1") sits behind an **interface**
-   resolved through a **registry**. You change behaviour by editing YAML, never by surgery.
-2. **One responsibility per module.** The new core splits the 843-line monolith
-   (`simplified_teaching_loop.py`, MESSY per CODE_MAP.md:25, run() spans lines 214–742) into
-   blocks that each own one concern and communicate only through the seam interfaces.
-3. **Strangler migration** (ADR-015, ADR-017). New blocks are written under `src/tlw/`; the
-   legacy loop keeps running unchanged until the new blocks are proven (T2.7), then the DEAD +
-   legacy files are deleted in one demolition pass (T2.9). No big-bang moves mid-flight.
-4. **Reuse the exemplars.** `src/providers/factory.py` (EXEMPLAR, CODE_MAP.md:65) is the
-   registry pattern every new registry copies; `src/core/client.py` is the ModelClient seam,
-   already implemented — the new core imports these in place, it does not rewrite them.
+1. **Source and artifacts never share a directory.** Anything a command regenerates lives under an
+   artifact root (`runs/`, `indexes/`, `models/`) or the derived-evidence root (`reports/`). Nothing
+   an experiment produces is written next to code.
+2. **Group by the question answered, not by the order things ran.** `runs/rag-wixqa/` says what it
+   is; `runs_wixqa/` said only when it happened.
+3. **Names read as English.** The path carries a short human label; the exact experimental condition
+   lives in a `manifest.json` beside the run. Words, not codes (`wider-context`, not `chunk2400`).
+   Hyphens for directories, underscores for `.py` (PEP 8 — a rule the reader already knows).
+   **Ordinals only where step N+1 genuinely contains step N** (a ladder), never for a factorial.
+4. **The dependency arrow points one way:** `scripts/` → `src/`/`tools/`, never sideways.
+5. **Change behaviour by editing configuration, not code.** Six slots, each resolved through a
+   registry (`schema.md` Config Contract).
+6. **Every move must earn its cost.** Where the cost exceeds the benefit, leave it alone and say so.
 
 ---
 
-## §B Target tree
+## §B The tree
 
 ```
 Teaching-light-weight-llm-based-project/
-├── .claude/                        # Claude env: CLAUDE.md, rules/, agents/, skills/, hooks/, settings (exists)
-├── config/
-│   ├── simplified_config.yml       # (frozen legacy) — drives the old loop only; retired with it (exists)
-│   ├── prompts_config.yml          # (exists) prompt catalog source; wrapped by PresetRegistry
-│   └── base.yml                    # (planned — T2.1) ALL six-slot defaults; single source of truth (schema.md)
-├── experiments/                    # (planned — T2.6) one YAML per run = slot overrides only; naming per schema.md
-├── data/
-│   ├── Medical_Q&A/                # raw MedQuAD CSVs — IMMUTABLE (exists)
-│   ├── medical_by_source/          # per-domain JSONL (derived) — treat as raw (exists)
-│   ├── clean/                      # cleaned + split outputs (tool-generated) (exists)
-│   ├── interim/                    # (planned) intermediate transforms
-│   └── processed/                  # (planned) final train/heldout ready for modeling
-├── db/                             # (planned — ADR-010, deferred) unified SQLite store
+├── README.md                  front door: findings, install, usage
+├── run.py                     the entrypoint:  run.py --config experiments/<file>.yml
+├── pytest.ini                 testpaths + pythonpath (replaced a sys.path hack in tests/conftest.py)
+├── requirements.txt · environment.yml
+│
+├── .claude/                   SSOT — rules/, agents/, skills/, hooks/, settings.json
+│
+├── config/                    authored configuration only
+│   ├── base.yml               ALL six-slot defaults — the single source (ADR-016)
+│   ├── prompts/{student,teacher}.yml      preset templates (ADR-020)
+│   └── archive/               superseded prompt catalogue
+│
+├── experiments/               one YAML per run condition; grouped by study (ADR-034)
+│   ├── teaching-loop/         1-baseline · 2-self-refine · 3-teacher-feedback · 4-teacher-sees-answer
+│   ├── rag-medquad/           {small,large}-model-{no,with}-rag
+│   ├── rag-medquad-fair-tests/  matching-question-type-only · much-bigger-library
+│   ├── student-prompt/        detailed-prompt-style
+│   ├── lora/                  generate-training-data
+│   └── pilots/                the trackA_p2_* pilot configs
+│
+├── data/                      INPUTS ONLY — nothing an experiment generates lives here
+│   ├── Medical_Q&A/           raw MedQuAD CSVs — IMMUTABLE (guard-protected)
+│   ├── medical_by_source/     per-domain JSONL — treated as raw
+│   ├── clean/                 cleaner + split output (the pipeline product)
+│   ├── processed/             model-ready derivatives (LoRA SFT pairs, hard-tail question lists)
+│   ├── calibration/           judge boundary set
+│   ├── external/wixqa/        third-party data (MIT) — gitignored; scripts/dataset/fetch_wixqa.py
+│   └── legacy/                6 pre-renovation loose *.jsonl, kept for provenance
+│
+├── indexes/                   BUILT search indexes — gitignored, rebuildable  (was data/rag/)
+│   ├── medquad-diabetes-train/ · medquad-all-topics/ · wixqa-help-centre/
+│
+├── src/                       library code — imported, tested, stable
+│   ├── core/                  LLMClient ABC, types, logger, tokens        (EXEMPLAR seam)
+│   ├── providers/             factory + groq/local/gemini clients          (EXEMPLAR registry)
+│   └── tlw/                   "Teaching Lightweight LLMs" — the config-driven core
+│       ├── config/            loader · schema · validation (V1–V8, fail-loud)
+│       ├── registries.py      Memory / Preset / Judge / Strategy registries
+│       ├── memory/            faiss_backend · rag_backend · tripwire (store-time GT gate)
+│       ├── prompts/           loader · presets
+│       ├── evaluation/        judge · diagnostics · faithfulness · calibration
+│       ├── loop/              core (assert_gt_free) · strategies (arms A–D)
+│       ├── analysis/          stats · loaders · report · rag_report · cli
+│       ├── providers.py       Ollama client, registered as "local"
+│       └── runner.py          composition root: config → six slots → run → summary
+│
+├── scripts/                   thin drivers; each imports from src/ or tools/ (§A4)
+│   ├── dataset/               prepare_medquad · split_by_source · assess_all · fetch_wixqa
+│   ├── wixqa_*.py             the WixQA study drivers (build index, run, judge, analyse)
+│   ├── lora: build_lora_data · train_lora · eval_lora
+│   ├── rag: rag_faithfulness · selective_rag_sim · rejudge · reliability_analysis
+│   └── calibration: build_calibration · calibration_report
+│
+├── tools/                     reusable, importable CLI utilities
+│   ├── dataset/               cleaner · Readiness Assessor · split · judge · embeddings · app
+│   └── rag/                   builder · cli — config-driven index construction
+│
+├── tests/                     mirrors src/ and tools/;  `tests/__init__.py` is load-bearing
+│   ├── tlw/{config,memory,prompts,evaluation,loop,analysis,runner}/
+│   └── tools/rag/
+│
+├── runs/                      THE artifact root — gitignored except the evidence files below
+│   ├── teaching-loop-medquad/   does the loop work? (ADR-024)        + pilots/
+│   ├── rag-medquad/             does RAG help a model that knows? (ADR-027)
+│   ├── rag-medquad-fair-tests/  is that null an artifact? (ADR-029)
+│   ├── rag-medquad-reliability/ does RAG help reliability?  + hard-questions-only/
+│   ├── student-prompt-medquad/  does the prompt matter? (ADR-029 gate-f)
+│   ├── rag-wixqa/               does RAG help when there IS a gap? (ADR-030…033)
+│   │                            1-no-rag → 2-rag-basic → 3-rag-better-retriever
+│   │                            → 4-rag-wider-context   + pilots/
+│   └── judge-calibration/       is the judge trustworthy? (T2.3)
+│
+├── reports/                   DERIVED EVIDENCE — git-tracked, small, human-readable
+│   ├── README.md              study → question → report → reproduce command
+│   ├── rag-wixqa/ · lora-medquad/ · …
+│   └── figures/
+│
 ├── docs/
-│   ├── plan/                       # (exists) renovation task specs T*.md + README (ADR-015)
-│   ├── audit/                      # (exists) P0 audit outputs (CODE_MAP, LEAKAGE_CENSUS, CLAUDE_ENV_AUDIT)
-│   └── adr/                        # (planned — ADR-009) full ADR files; summaries stay in rules/decisions.md
-├── logs/experiments/               # phase results (summary.jsonl, memory, faiss, debug) — evidence dir (exists)
-├── models/                         # (planned — P3) LoRA adapters, encoders (git-ignored, large)
-├── notebooks/                      # analysis notebooks (exists)
-├── reports/                        # (planned) generated figures/reports; reports/figures/
-├── schemas/                        # (exists) JSON schemas (log_record.schema.json)
-├── scripts/                        # standalone stage scripts (import from src/) (exists)
-├── src/
-│   ├── core/                       # (exists, EXEMPLAR/ALIVE) ModelClient ABC, types, logger, tokens — shared base
-│   ├── providers/                  # (exists, EXEMPLAR) factory + groq/local/gemini clients — the ProviderRegistry
-│   ├── utils/                      # (exists) prompt_loader (reused by PresetRegistry)
-│   ├── tlw/                        # (planned — the NEW config-driven core; grows here, block by block)
-│   │   ├── config/                 #   (planned — T2.1) loader + validation (six-slot contract, fail-loud)
-│   │   ├── registries.py           #   (planned — T2.2) MemoryRegistry, PresetRegistry, StrategyRegistry (factory pattern)
-│   │   ├── memory/                 #   (planned — T2.5) MemoryBackend impls: none, faiss (port of simplified/memory.py), rag
-│   │   ├── prompts/                #   (planned — T2.4/T1.5) PromptPreset registry over the prompt catalog
-│   │   ├── evaluation/             #   (planned — T2.3) Judge + correctness/reference-match diagnostics; leakage tests
-│   │   ├── loop/                   #   (planned — T2.4) ArmStrategy classes A/B/C/D; NO ground-truth hint paths
-│   │   └── runner.py               #   (planned — T2.6) resolve config → build slots → run arm → write summary.jsonl
-│   ├── simplified/                 # (FROZEN LEGACY) old loop core — keep running, do not extend; deleted T2.9
-│   ├── prompts/                    # (exists) student.py ALIVE; teacher.py DEAD (CODE_MAP.md:58) → T2.9
-│   └── eval/                       # (exists) metrics.py ALIVE; reports.py + retrieval.py DEAD (CODE_MAP.md:78-79) → T2.9
-├── tests/                          # (planned — mirrors src/tlw/; created when first block lands, T2.1+)
-├── tools/dataset/                  # (exists) Dataset Readiness Assessor + cleaner — track in git (CODE_MAP BLOCKER)
-├── app/                            # (planned — P3+) product frontend/backend; NOT designed yet (ADR-015)
-├── simplified_teaching_loop.py     # (FROZEN LEGACY) monolithic entrypoint (843 ln, MESSY) — retired T2.9
-├── simplified_experiment_runner.py # (FROZEN LEGACY) old CLI entrypoint — retired T2.9
-├── run.py                          # (planned — T2.6) new entrypoint: run.py --config experiments/<file>.yml
-├── requirements.txt / environment.yml (exists)
-└── README.md (exists)
+│   ├── README.md              "start here" index
+│   ├── RAG_LAW.md             the unified result (the portfolio artifact)
+│   ├── TRACK_A_RESULTS.md · RAG_RESULTS.md · WIXQA_RESULTS.md · PRODUCT_RESULTS.md
+│   ├── RAG_RELIABILITY_ANALYSIS.md
+│   ├── plan/ · audit/         task specs, design docs, P0 audits
+│   └── archive/               SUPERSEDED docs, each with a banner saying what was wrong
+│
+├── logs/experiments/phase0..6/  pre-renovation evidence — IMMUTABLE, guard-protected
+├── models/                    LoRA adapters + base weights — gitignored
+├── notebooks/ · schemas/
 ```
 
 ---
 
-## §C Module boundaries (the new core, `src/tlw/`)
+## §C What goes where (the rule, when you are unsure)
 
-Each block owns exactly one concern and talks to the rest only through a seam interface
-(§D). Blocks never import each other's internals; the **runner** wires them via the registries.
+| If it is… | it goes in | because |
+|---|---|---|
+| imported by other code, or tested | `src/` (or `tools/` if it is a CLI utility) | §A4 — only `src`/`tools` may be imported |
+| a script that drives one experiment | `scripts/<study or purpose>/` | thin driver; imports from `src/` |
+| produced by a run | `runs/<study>/<condition>/` | §A1 — artifacts never sit beside source |
+| a number a reader must be able to check | `reports/<study>/` | tracked; this is what makes "computed from a committed log" true |
+| a built index / adapter / weight | `indexes/` or `models/` | rebuildable, gitignored |
+| input data we produced | `data/{clean,processed}/` | derived forward from raw, never edited in place |
+| input data someone else produced | `data/external/` + a fetch script | licence provenance, and a clone must be able to re-acquire it |
+| prose for a human | `docs/` | narrative, authored |
+| superseded but historically meaningful | `*/archive/` with a banner | the correction is part of the honest record |
 
-| Block | Package | Single responsibility | Reuses / replaces |
+**Run outputs.** `runs/<study>/<condition>__seed<N>__<UTC ts>/` for framework runs (a run is a dated
+event); `runs/<study>/<step>/seed<N>.jsonl` for the standalone WixQA scripts. Either way the
+**directory names the condition and a `manifest.json` beside it carries the exact settings** — never
+encode the condition in a filename. Pilots and subsets go one level deeper (`pilots/`,
+`hard-questions-only/`) so that `discover_runs`, which scans one level, cannot mix them into a
+headline. That is a structural guarantee, not a convention to remember.
+
+---
+
+## §D Seams (interfaces + registries)
+
+| Seam | Interface | Registry (slot) | Where |
 |---|---|---|---|
-| **config** | `src/tlw/config/` | Load `base.yml` + experiment override, deep-merge, validate (V1–V7, `schema.md`), resolve paths. Fail-loud. | Generalizes `src/utils/prompt_loader.py` YAML loading (CODE_MAP.md:283) |
-| **providers** | `src/providers/` *(exists)* | Build a ModelClient for any slot (student/teacher/judge). | Keep as-is — EXEMPLAR (CODE_MAP.md:65) |
-| **memory** | `src/tlw/memory/` | Store/retrieve teaching notes; `none`/`faiss`/`rag` backends behind one interface. Store-time GT tripwire (T1.3, §0.2). | Ports `src/simplified/memory.py` (CODE_MAP.md:298) |
-| **prompts** | `src/tlw/prompts/` | Resolve a preset **name** → rendered prompt for student/teacher. | Wraps `config/prompts_config.yml` via prompt_loader; catalog from T1.5 |
-| **evaluation** | `src/tlw/evaluation/` | Score an answer via a Judge; keep correctness ≠ reference-match separate; leakage guards. | Reworks `src/simplified/metrics.py` + `src/eval/metrics.py` (deterministic) |
-| **loop** | `src/tlw/loop/` | Arm strategies A/B/C/D as swappable classes; orchestrate rounds; **no GT hint paths**. | Refactors monolithic run() (CODE_MAP.md:338) |
-| **runner** | `src/tlw/runner.py` + `run.py` | Resolve config → build the six slots from registries → run the arm → record resolved config + results to `summary.jsonl`. | Replaces `simplified_experiment_runner.py` |
+| **ModelClient** | `chat(messages, temperature, max_tokens, timeout_s, seed=None)` | ProviderRegistry (A student, B teacher, F judge) | `src/core/client.py` + `src/providers/factory.py` |
+| **MemoryBackend** | `store` · `retrieve` · `update_outcome` · `stats` | MemoryRegistry (D) — `none` / `faiss` / `rag` | `src/tlw/memory/` |
+| **PromptPreset** | `get(name)` · `render(name, **vars)` | PresetRegistry (C) | `src/tlw/prompts/` |
+| **Judge** | `score(question, answer, mode)` | slot F + eval block | `src/tlw/evaluation/judge.py` |
+| **ArmStrategy** | `run(question, student, teacher, memory, judge, params)` | StrategyRegistry (E `params.arm`) | `src/tlw/loop/strategies.py` |
+
+Every registry copies `src/providers/factory.py`: a `_REGISTRY` dict + `@register` decorator + a
+`build_*()` resolver.
 
 ---
 
-## §D Seams table (interfaces + registries)
+## §E Junk / smell checklist (what housekeeping flags)
 
-Every seam is an interface (method names only — signatures finalized by the owning P2 task)
-resolved through a registry. Registry names match the Config Contract slots (`schema.md`).
-
-| Seam | Interface (methods) | Registry (slot) | Status / source |
-|---|---|---|---|
-| **ModelClient** | `chat_completion(messages, model, temperature, max_tokens)` · `stream(...)` | **ProviderRegistry** (A student, B teacher, F judge) — `build_client(provider, **kwargs)` | **exists**: `src/core/client.py` (LLMClient ABC, CODE_MAP.md:86) + `src/providers/factory.py` (CODE_MAP.md:65) |
-| **MemoryBackend** | `store(episode)` · `retrieve(query, top_k)` · `update_outcome(id, scores)` · `stats()` | **MemoryRegistry** (D memory) — `type ∈ {none, faiss, rag}` | planned (T2.5); port of `src/simplified/memory.py`. Methods align with T1.3 memory spec |
-| **PromptPreset** | `get(name)` · `render(name, **vars)` | **PresetRegistry** (C preset) — preset name → template | planned (T2.4); wraps `src/utils/prompt_loader.py`; names from T1.5 |
-| **Judge** | `score(question, answer, mode)` → `{score, ...}` · `mode ∈ {blind, gt_comparing}` | (ProviderRegistry judge client, slot F) + eval block | planned (T2.3); from `src/simplified/metrics.py`. §0.2: judge family ≠ student family (V2) |
-| **ArmStrategy** | `run(question, student, teacher, memory, judge, params)` → rounds | **StrategyRegistry** (E params.arm) — `arm ∈ {A,B,C,D}` | planned (T2.4); A baseline / B self-refine / C blind-teacher / D sighted-teacher (ADR-002) |
-
-Pattern for all registries: copy `src/providers/factory.py` — a `_REGISTRY` dict + `@register`
-decorator + `build_*()` resolver (CODE_MAP.md:243-263 recommends exactly this for the slots).
-
----
-
-## §E Placement + migration policy (strangler)
-
-- **`data/Medical_Q&A/` and `data/medical_by_source/` are immutable** — never edit; derive
-  forward into `data/clean/` → (planned) `data/processed/`.
-- **New core code goes under `src/tlw/`**, one block per P2 task, beside the legacy. Reusable
-  tools → `tools/`; one-off stage scripts → `scripts/` (import shared logic from `src/`).
-- **`src/providers/` and `src/core/` stay where they are** (EXEMPLAR/ALIVE) and are imported
-  in place by `src/tlw/`. Relocating them under `src/tlw/` is optional cleanup, not required —
-  do not churn.
-- **Frozen legacy = do-not-extend, delete-in-T2.9:** `src/simplified/*`, `src/prompts/teacher.py`,
-  `src/eval/reports.py`, `src/eval/retrieval.py`, root `simplified_teaching_loop.py`,
-  `simplified_experiment_runner.py`, `config/simplified_config.yml`. They keep working so the
-  ADR-001 baseline stays reproducible until the new arms are proven.
-- **Each P2 task states exactly what it may touch** (scope discipline, ADR-015):
-  - T2.1 config loader → creates `src/tlw/config/` + `config/base.yml`; touches nothing legacy.
-  - T2.2 registries → creates `src/tlw/registries.py`.
-  - T2.3 eval / T2.5 memory / T2.4 loop → create their `src/tlw/` sub-packages + `tests/` mirror.
-  - T2.6 runner → creates `src/tlw/runner.py`, `run.py`, `experiments/*.yml`.
-  - **T2.9 demolition only** deletes DEAD + frozen-legacy files and finalizes this tree.
-- **No file is moved or refactored before its P2 task.** P1 (this task included) writes paper
-  only; zero code/file moves.
-- **Tests mirror `src/tlw/` under `tests/`** — created when the first block lands, not before.
+- **A run artifact outside `runs/<study>/`** — a new `runs_*` root at top level is the exact drift
+  ADR-034 removed.
+- **Analysis output written inside `runs/`** — derived evidence belongs in `reports/`.
+- **A hardcoded absolute path** (`ROOT = Path("C:/Users/…")`). 13 scripts had this; it made the
+  headline results unreproducible from a clone (§0.3). Use `Path(__file__).resolve().parents[N]`.
+- **A run-discovery glob keyed on a config stem** (`trackB_p3_3bRAG*`) — it breaks silently on
+  rename. Key on the label, and fail loud when nothing matches.
+- **A name only an insider can read** — if understanding it needs project vocabulary, rename it.
+- **A test that skips when its fixture is missing** without distinguishing "absent in a fresh
+  clone" (skip is right) from "the layout moved" (must fail).
+- **A `tests/<name>/` that shadows a top-level package** — `tests/__init__.py` prevents this; do not
+  delete it.
+- Numbers in `docs/`/`README` that disagree with the source log (§0.1).
+- Debug dumps, `*.tmp`, editor backups, stray `__pycache__/` not gitignored.
 
 ---
 
-## §F Junk / smell checklist (housekeeping flags these) — v2
+## §F Tracking policy
 
-- **DEAD files (0 importers, T2.9 demolition targets — CODE_MAP.md:227-237):**
-  `src/eval/reports.py`, `src/eval/retrieval.py`, `src/prompts/teacher.py`,
-  `src/simplified/console_logger.py` (empty), `src/simplified/logger_manager.py` (empty).
-  These are *known and scheduled* — flag only if they gain new importers (that would be a
-  regression) or if they still exist after T2.9.
-- **Untracked-but-exemplary code** (CODE_MAP BLOCKER; CLAUDE_ENV_AUDIT BLOCKER): `tools/`,
-  `.claude/`, `docs/plan/`, `docs/audit/`, `scripts/{assess_all,compare_judges,compare_students}.py`
-  are `?? ` in git — flag as needs-commit, not as delete-junk.
-- **Files claiming to be "clean" that still contain raw boilerplate** — e.g.
-  `data/medical_all_clean.jsonl` (misnamed; still has HPO boilerplate hits, under D3/D4 audit,
-  CODE_MAP.md:354).
-- **Hardcoded absolute paths in committed configs** — e.g. `C:\Users\...\Desktop\...` in
-  `logs/experiments/*/configs/*.yml` (`logs/experiments/phase6/configs/P6A-NoMemory-Baseline.yml:42-43`,
-  schema.md §config-contract). Killed structurally by the T2.1 loader's path resolution.
-- **Config comment-drift** — a comment disagreeing with the live value
-  (`config/simplified_config.yml:45-53`, schema.md V1). New configs use `base.yml` single-source.
-- **New reusable code placed at repo root or `src/simplified/`** instead of `src/tlw/`, `src/`,
-  or `tools/` (strangler violation — new code must not grow inside frozen legacy).
-- **Numbers in `docs/`/`README` that disagree with `logs/experiments/*/summary.jsonl`** (§0.1).
-- Debug dumps, `*.tmp`, editor backups, stray `__pycache__/` not git-ignored.
-- Duplicated data files with no clear owner.
+**Track what a reader must check; ignore what a command rebuilds.**
+
+| Tracked | Ignored |
+|---|---|
+| `runs/**/summary.jsonl`, `config_used.json`, `manifest.json`, `README.md` | `runs/**` everything else (raw generations, `rounds.jsonl`) |
+| everything under `reports/` | `indexes/`, `models/`, `data/external/` |
+
+The `.gitignore` block uses `runs/**` plus `!runs/**/` and per-file negations. **The `!runs/**/` line
+is load-bearing** — without it git never descends into `runs/<study>/<condition>/` and every negation
+below it is dead. Keep comments on their own lines: gitignore has no trailing-comment syntax, and a
+trailing comment silently disables the whole rule.

@@ -1,0 +1,20 @@
+============================================================================
+Stage-1 grounding comparison: self-refine vs single-pass
+paired on 133 (question,seed) cells; 133 judged in BOTH  [gold-retrieved only]
+============================================================================
+  single-pass  prompt 6239 chars avg
+  self-refine  prompt 6239 chars avg
+
+  reference-coverage (continuous, judge-free, n=133):
+    single-pass=0.414  self-refine=0.445   delta=+0.031 [+0.018, +0.047]  <-- CI excludes 0
+    answer length: 141 -> 164 words
+    extraction ratio (answer-cov / context-cov): single-pass 63%  ->  self-refine 68%
+
+  pass@>=3:  single-pass=0.571 [0.486,0.652]   self-refine=0.556 [0.472,0.638]
+    delta=-0.015 [-0.068, +0.038]  McNemar p=0.774 (fixed 5 / broke 7)
+
+  pass@>=4:  single-pass=0.015 [0.004,0.053]   self-refine=0.008 [0.001,0.041]
+    delta=-0.008 [-0.023, +0.000]  McNemar p=1 (fixed 0 / broke 1)
+
+  mean judge score: 2.35 -> 2.35
+  catastrophe rate (score<=1): 0.165 -> 0.173
