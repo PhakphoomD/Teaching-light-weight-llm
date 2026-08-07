@@ -1,0 +1,13 @@
+{
+  "study": "rag-wixqa",
+  "condition": "4-rag-wider-context-goldonly",
+  "subset": "pilots",
+  "dataset": "WixQA expertwritten, 200 questions",
+  "student": "qwen2.5:3b (Ollama, local)",
+  "judge": "groq/llama-3.1-8b-instant, reference-comparing, PASS = score >= 3",
+  "seeds": [
+    13,
+    42,
+    123
+  ]
+}

@@ -1,0 +1,35 @@
+# experiments/lora/generate-training-data.yml
+# T3.6 LoRA data-generation recipe (NOT a measurement run). Uses the loop as the
+# offline factory (ADR-024): arm B (self-refine) on the 3B over the Diabetes
+# TRAIN split, to produce (question -> self-refined answer) pairs the 3B itself
+# can reach, so T3.7 LoRA can bake that self-refine style into 1-pass weights.
+#
+# Recipe chosen per the T3.5 gate (ADR-027): self-refine, NOT RAG — RAG hurts
+# (3B net-zero, 7B −7pt), while self-refine is the honest +9pt gain (ADR-024).
+#
+# Diffs from config/base.yml:
+#   student : local qwen2.5:3b (the product floor we will LoRA-tune, T3.7)
+#   eval    : local llama3.1:8b judge (Llama != Qwen student, §0.2/V2; free, no
+#             Groq cap — the quality gate that keeps only answers scoring >= 4),
+#             pass_threshold 1.0 (score>=4 "correct AND complete")
+#   params  : arm B (self-refine), max_rounds 3
+# teacher unused (arm B never calls it); memory none (RAG excluded by the gate).
+#
+# Run on TRAIN only (§0.2 — never held-out); seed via EXPERIMENT_PARAMS_SEED:
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "...tlw python" run.py --config experiments/lora/generate-training-data.yml `
+#     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --runs-dir runs_lora
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  judge:
+    provider: local
+    model: llama3.1:8b
+  pass_threshold: 1.0
+
+params:
+  arm: B
+  max_rounds: 3

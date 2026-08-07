@@ -1,0 +1,28 @@
+# experiments/teaching-loop/3-teacher-feedback.yml
+# FULL-RUN arm C (blind teacher — the headline treatment) — fast-judge design,
+# hub 2026-07-15. Diffs from config/base.yml — see trackA_full_armA_diabetes.yml
+# header for full rationale (student=local qwen2.5:3b, judge=Groq
+# llama-3.1-8b-instant, pass bar score>=4). Teacher = base default (Groq
+# qwen/qwen3-32b), sees NO ground truth in arm C (blind, §0.2).
+# params.seed supplied per-run via EXPERIMENT_PARAMS_SEED (not hardcoded here).
+#
+# HEADLINE CLAIM = pass_rate(C) - pass_rate(B), 95% CI (EVAL_SPEC.md §4.3),
+# computed by T2.8 across seeds {13, 42, 123} on the real 125-question heldout.
+#
+# Run:
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop/3-teacher-feedback.yml `
+#     --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: C

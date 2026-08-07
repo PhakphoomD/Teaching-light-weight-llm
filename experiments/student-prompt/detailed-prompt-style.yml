@@ -1,0 +1,27 @@
+# experiments/student-prompt/detailed-prompt-style.yml
+# Closes the open gate-(f) question: does the ORCA student preset differ from
+# MINIMAL? Identical to the armA baseline (0.864 seed42, minimal) but
+# preset.student = orca. No RAG, no memory — isolates the student prompt.
+#
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   run.py --config experiments/student-prompt/detailed-prompt-style.yml `
+#     --judge-fallback local:llama3.1:8b --runs-dir runs/student-prompt-medquad
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+preset:
+  student: orca_student   # NB: student orca registers as "orca_student" — plain "orca" is the teacher preset (presets.py:71-89, one flat namespace)
+
+memory:
+  type: none
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: A

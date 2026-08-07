@@ -1,0 +1,15 @@
+{
+  "study": "teaching-loop-medquad",
+  "condition": "3-teacher-feedback",
+  "dataset": "MedQuAD (Diabetes), 125 held-out questions",
+  "student": "qwen2.5:3b (Ollama, local)",
+  "judge": "groq/llama-3.1-8b-instant, blind, PASS = score >= 4",
+  "seeds": [
+    13,
+    42,
+    123
+  ],
+  "arm": "C",
+  "rounds": 3,
+  "feedback": "an independent teacher, blind to the reference"
+}

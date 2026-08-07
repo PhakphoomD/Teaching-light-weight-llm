@@ -1,0 +1,31 @@
+# experiments/rag-medquad-fair-tests/matching-question-type-only.yml
+# T3.9 FLAW-2 re-test: 3B+RAG with ASPECT-AWARE retrieval. Same as
+# trackB_p3_3bRAG_diabetes.yml but memory.aspect_rerank: true — keeps only
+# same-aspect passages (the old retriever surfaced a wrong-aspect passage 90% of
+# the time; coverage of same-aspect passages verified at 99%). Tests whether the
+# RAG null was an artifact of the broken retriever.
+#
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   run.py --config experiments/rag-medquad-fair-tests/matching-question-type-only.yml `
+#     --judge-fallback local:llama3.1:8b --runs-dir runs/rag-medquad-fair-tests
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+memory:
+  type: rag
+  corpus_path: indexes/medquad-diabetes-train
+  top_k: 3
+  similarity_threshold: 0.35
+  aspect_rerank: true
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: A
+  max_rounds: 1

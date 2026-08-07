@@ -1,0 +1,28 @@
+# experiments/rag-medquad/large-model-no-rag.yml
+# RAG ablation arm "7B" (no retrieval) — ceiling reference: does a bigger model
+# close the gap WITHOUT retrieval? (RAG_SPEC §3/§6, ADR-026).
+#
+# Diffs from config/base.yml:
+#   student : local qwen2.5:7b-instruct (this IS the base default; stated for clarity)
+#   eval    : Groq llama-3.1-8b-instant + pass_threshold 1.0 (score>=4) — SAME
+#             judge+bar as every ablation arm (comparability, RAG_SPEC §4.1).
+#   params  : arm A, max_rounds 1 (single pass).
+# memory stays base default (none).
+#
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/rag-medquad/large-model-no-rag.yml `
+#     --judge-fallback local:llama3.1:8b
+
+student:
+  provider: local
+  model: qwen2.5:7b-instruct
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: A
+  max_rounds: 1

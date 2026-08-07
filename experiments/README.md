@@ -108,6 +108,34 @@ Smoke/dry runs of these files MUST still pass `--data
 data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit N`
 (never the heldout set, §0.2) — see each file's header for the exact command.
 
+## Track-B RAG ablation configs (P3-A, T3.3/T3.5 — ADR-026)
+
+`trackB_p3_{3b,3bRAG,7b,7bRAG}_diabetes.yml` — the four-arm RAG ablation
+(RAG_SPEC §3). Each is single-pass (`arm A`, `max_rounds 1` — retrieval is the
+only variable) and uses the **same judge + bar as the Track-A full run** (Groq
+`llama-3.1-8b-instant`, `pass_threshold 1.0` = score≥4) so the RAG number is
+directly comparable to Track A (RAG_SPEC §4.1).
+
+| File | Student | Retrieval (slot D) | Role |
+|---|---|---|---|
+| `trackB_p3_3b_diabetes.yml` | `qwen2.5:3b` | `none` | floor |
+| `trackB_p3_3bRAG_diabetes.yml` | `qwen2.5:3b` | `rag` (`indexes/diabetes_train`, floor 0.35) | **headline treatment** |
+| `trackB_p3_7b_diabetes.yml` | `qwen2.5:7b-instruct` | `none` | ceiling reference |
+| `trackB_p3_7bRAG_diabetes.yml` | `qwen2.5:7b-instruct` | `rag` | does RAG still help a stronger model? |
+
+**Headline = `pass_rate(3B+RAG) − pass_rate(3B)`** with 95% paired
+cluster-bootstrap CI (`src/tlw/analysis`), 125 held-out × 3 seeds `{13,42,123}`
+(supply via `EXPERIMENT_PARAMS_SEED`). The `rag` backend requires a prebuilt,
+held-out-free index (`python -m tools.rag.cli`, T3.2). RAG runs **must** target
+the held-out set (a `--data ..._train.jsonl` RAG run trips RAG-L3 by design —
+a train query retrieves its own answer). Run e.g.:
+
+```
+$env:EXPERIMENT_PARAMS_SEED = "42"
+& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackB_p3_3bRAG_diabetes.yml `
+  --judge-fallback local:llama3.1:8b
+```
+
 ## Not built here (future experiment files, not required by T2.6)
 
 - `trackA_p2_armCprime_diabetes.yml` / `armDprime` — the **C′/D′ memory-on

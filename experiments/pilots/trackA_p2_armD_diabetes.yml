@@ -1,0 +1,14 @@
+# experiments/pilots/trackA_p2_armD_diabetes.yml
+# Arm D — sighted-teacher: the teacher sees GT (legal §0.2 use, its OWN
+# prompt only) — the LEAKAGE CEILING, printed for context, NEVER a claimed
+# result (EVAL_SPEC.md §1). No config diff is needed beyond the arm itself:
+# teacher/preset/memory are already the P1-gate defaults in base.yml; the
+# runner supplies ground_truth to this arm's params at run time (it is the
+# ONLY arm that receives it — see src/tlw/runner.py::_build_params).
+#
+# Run:
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/trackA_p2_armD_diabetes.yml
+
+params:
+  arm: D
+  seed: 42

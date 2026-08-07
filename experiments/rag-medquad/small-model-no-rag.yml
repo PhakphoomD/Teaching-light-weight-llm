@@ -1,0 +1,34 @@
+# experiments/rag-medquad/small-model-no-rag.yml
+# RAG ablation arm "3B" (no retrieval) — the baseline the RAG lift is measured
+# against (RAG_SPEC §3, ADR-026). Identical settings to trackA_full_armA except
+# it is pinned single-pass (max_rounds 1) and named for the P3 ablation.
+#
+# Diffs from config/base.yml:
+#   student            : local qwen2.5:3b (product floor, ADR-015)
+#   eval.judge         : Groq llama-3.1-8b-instant + pass_threshold 1.0 (score>=4)
+#                        — the SAME judge+bar Track A's full run used
+#                        (experiments/teaching-loop/1-baseline.yml), so the RAG
+#                        number is directly comparable (RAG_SPEC §4.1).
+#   params.arm         : A, max_rounds 1 (single pass — retrieval is the only
+#                        variable across the 3B / 3B+RAG pair, RAG_SPEC §3)
+# memory stays base default (none). teacher unused (arm A never calls it).
+#
+# params.seed supplied per invocation via EXPERIMENT_PARAMS_SEED (all 3 seeds
+# {13,42,123} from this one file). Run on the heldout 125 (never --data train):
+#   $env:EXPERIMENT_PARAMS_SEED = "42"
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/rag-medquad/small-model-no-rag.yml `
+#     --judge-fallback local:llama3.1:8b
+
+student:
+  provider: local
+  model: qwen2.5:3b
+
+eval:
+  judge:
+    provider: groq
+    model: llama-3.1-8b-instant
+  pass_threshold: 1.0
+
+params:
+  arm: A
+  max_rounds: 1

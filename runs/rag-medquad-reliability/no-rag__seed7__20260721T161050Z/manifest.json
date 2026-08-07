@@ -1,0 +1,19 @@
+{
+  "study": "rag-medquad-reliability",
+  "condition": "no-rag",
+  "dataset": "MedQuAD (Diabetes), 125 held-out questions",
+  "student": "qwen2.5:3b (Ollama, local)",
+  "judge": "groq/llama-3.1-8b-instant, blind, PASS = score >= 4",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "retrieval": "none",
+  "note": "4 seeds classify difficulty, 4 measure"
+}

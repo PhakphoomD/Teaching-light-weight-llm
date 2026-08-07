@@ -1,0 +1,15 @@
+{
+  "study": "teaching-loop-medquad",
+  "condition": "4-teacher-sees-answer",
+  "dataset": "MedQuAD (Diabetes), 125 held-out questions",
+  "student": "qwen2.5:3b (Ollama, local)",
+  "judge": "groq/llama-3.1-8b-instant, blind, PASS = score >= 4",
+  "seeds": [
+    13,
+    42,
+    123
+  ],
+  "arm": "D",
+  "rounds": 3,
+  "feedback": "teacher WITH the reference \u2014 a labelled leakage ceiling, not a result"
+}

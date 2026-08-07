@@ -233,7 +233,24 @@ logs/simplified/memory.jsonl
 # (rounds.jsonl, summary.jsonl, config_used.json, memory/); reproducible from
 # the experiment config + seed + git commit recorded inside summary.jsonl, so
 # outputs stay local, not committed (mirrors logs/simplified/* above).
-runs/
+# Experiment artifacts (ADR-034): raw generations ignored, small evidence tracked.
+# NOTE: the `!runs/**/` line is load-bearing -- without it git never descends into
+# runs/<study>/<condition>/ and every negation below is dead.
+# NOTE: gitignore has no trailing-comment syntax -- keep comments on their own lines.
+runs/**
+!runs/**/
+!runs/**/summary.jsonl
+!runs/**/config_used.json
+!runs/**/manifest.json
+!runs/**/README.md
+# Rebuildable search indexes (was: data/rag/) -- python -m tools.rag.cli
+indexes/
+# Third-party datasets -- see scripts/dataset/fetch_wixqa.py
+data/external/
+
+# RAG retrieval indexes (T3.2) — data/rag/<name>/{faiss.index,passages.jsonl,
+# faiss.ids.json,manifest.json,build_report.md}; the binary index is rebuildable
+# via `python -m tools.rag.cli` (§0.3), so it stays local, not committed.
 
 # Legacy code (deprecated)
 src/simplified/legacy/

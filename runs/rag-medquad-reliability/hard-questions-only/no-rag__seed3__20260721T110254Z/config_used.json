@@ -1,0 +1,54 @@
+{
+  "student": {
+    "provider": "local",
+    "model": "qwen2.5:3b",
+    "temperature": 0.3,
+    "max_tokens": 256,
+    "timeout": 60
+  },
+  "teacher": {
+    "provider": "groq",
+    "model": "qwen/qwen3-32b",
+    "temperature": 0.0,
+    "max_tokens": 256,
+    "timeout": 60
+  },
+  "preset": {
+    "student": "minimal",
+    "teacher": "orca"
+  },
+  "memory": {
+    "type": "none",
+    "embedding": "minilm",
+    "top_k": 3,
+    "similarity_threshold": 0.75,
+    "min_success_rate": 0.3,
+    "max_episodes": 1000,
+    "gt_substring_shingle": 12,
+    "gt_similarity_max": 0.8
+  },
+  "params": {
+    "max_rounds": 1,
+    "early_stopping": {
+      "enabled": false
+    },
+    "arm": "A",
+    "seed": 3
+  },
+  "eval": {
+    "judge": {
+      "provider": "groq",
+      "model": "llama-3.1-8b-instant",
+      "temperature": 0.0,
+      "max_tokens": 256,
+      "timeout": 60
+    },
+    "mode": "blind",
+    "pass_threshold": 1.0,
+    "metrics": {
+      "weights": {
+        "blind_score": 1.0
+      }
+    }
+  }
+}

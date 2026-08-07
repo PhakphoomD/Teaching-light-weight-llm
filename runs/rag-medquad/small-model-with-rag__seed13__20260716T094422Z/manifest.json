@@ -1,0 +1,14 @@
+{
+  "study": "rag-medquad",
+  "condition": "small-model-with-rag",
+  "dataset": "MedQuAD (Diabetes), 125 held-out questions",
+  "student": "qwen2.5:3b (Ollama, local)",
+  "judge": "groq/llama-3.1-8b-instant, blind, PASS = score >= 4",
+  "seeds": [
+    13,
+    42,
+    123
+  ],
+  "model": "qwen2.5:3b",
+  "retrieval": "MiniLM + FAISS over the training split, top-3"
+}

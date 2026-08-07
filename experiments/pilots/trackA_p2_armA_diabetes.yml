@@ -1,0 +1,13 @@
+# experiments/pilots/trackA_p2_armA_diabetes.yml
+# Arm A — baseline: single pass, no teacher, no loop, no memory (EVAL_SPEC.md
+# §1: "the floor"). Diffs from config/base.yml only (ADR-016 layering rule 2)
+# — student/teacher/preset/memory/eval all stay at the P1-gate default
+# (ADR-022); memory.type already defaults to 'none' in base.yml, which also
+# satisfies Config Contract V8 for this arm (arm A/B REQUIRE memory: none).
+#
+# Run:
+#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/trackA_p2_armA_diabetes.yml
+
+params:
+  arm: A
+  seed: 42
