@@ -165,20 +165,53 @@ def test_v7_bad_enum_or_range_rejected(mutate):
 # --- V8: arm × memory cross-check (ADR-022 (e)) ---
 
 @pytest.mark.parametrize("arm", ["A", "B"])
-def test_v8_baseline_arm_with_memory_rejected(arm):
+def test_v8_baseline_arm_with_faiss_rejected(arm):
+    # 'faiss' (an ACCUMULATING store) is still forbidden on the baseline arms.
     cfg = valid_config()
     cfg["params"]["arm"] = arm
     cfg["memory"]["type"] = "faiss"
     msg = assert_single_rule(cfg, "V8")
-    assert "memory.type: none" in msg
+    assert "faiss" in msg
 
 
-@pytest.mark.parametrize("arm,mem", [("A", "none"), ("B", "none"), ("C", "faiss"), ("D", "faiss")])
+@pytest.mark.parametrize("arm", ["A", "B"])
+def test_v8_baseline_arm_with_rag_allowed(arm):
+    # 'rag' is a READ-ONLY corpus (ADR-026), exempt from V8 — the RAG headline
+    # arms are single-pass arm A + memory.type: rag.
+    cfg = valid_config()
+    cfg["params"]["arm"] = arm
+    cfg["memory"]["type"] = "rag"
+    cfg["memory"]["corpus_path"] = "indexes/medquad-diabetes-train"
+    validate(cfg)  # must not raise
+
+
+@pytest.mark.parametrize(
+    "arm,mem", [("A", "none"), ("B", "none"), ("C", "faiss"), ("D", "faiss")]
+)
 def test_v8_legal_combinations_pass(arm, mem):
     cfg = valid_config()
     cfg["params"]["arm"] = arm
     cfg["memory"]["type"] = mem
     validate(cfg)
+
+
+def test_rag_requires_corpus_path():
+    cfg = valid_config()
+    cfg["params"]["arm"] = "A"
+    cfg["memory"]["type"] = "rag"  # no corpus_path -> fail loud
+    msg = assert_single_rule(cfg, "RAG")
+    assert "corpus_path" in msg
+
+
+def test_rag_corpus_path_must_be_relative():
+    cfg = valid_config()
+    cfg["params"]["arm"] = "A"
+    cfg["memory"]["type"] = "rag"
+    cfg["memory"]["corpus_path"] = "C:/abs/rag_index"
+    # PATH rule fires (absolute path); RAG corpus_path presence is satisfied.
+    with pytest.raises(Exception) as ei:
+        validate(cfg)
+    assert "PATH" in str(ei.value) and "corpus_path" in str(ei.value)
 
 
 # --- PATH: absolute paths banned (§0.3) ---

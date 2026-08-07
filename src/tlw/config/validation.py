@@ -120,6 +120,7 @@ def _check_v7_enums_and_types(cfg: Dict[str, Any], errors: List[str]) -> None:
     numeric("memory.max_episodes", lo=0, integer=True, strict_lo=True)
     numeric("memory.gt_substring_shingle", lo=0, integer=True, strict_lo=True)
     numeric("memory.gt_similarity_max", lo=0, hi=1)
+    numeric("memory.max_passage_words", lo=0, integer=True, strict_lo=True)
     numeric("params.max_rounds", lo=0, integer=True, strict_lo=True)
     numeric("eval.pass_threshold", lo=0, hi=1)
 
@@ -174,8 +175,12 @@ def _check_v4_seed(cfg: Dict[str, Any], errors: List[str]) -> None:
     seed = _get(cfg, "params.seed")
     if seed is None:
         errors.append(
-            "V4 — params.seed is mandatory (§0.3 reproducibility); "
-            "set it in the experiment file, never as a base.yml default"
+            "V4 — params.seed is mandatory (§0.3 reproducibility). Supply it either "
+            "(a) in the experiment file, for a config that names one specific run, or "
+            "(b) via EXPERIMENT_PARAMS_SEED at invocation, which is how a multi-seed "
+            "protocol drives the SAME file across its pre-registered seeds "
+            "(schema.md Layering rule 4). Never as a base.yml default — that would give "
+            "every run the same seed silently."
         )
     elif not isinstance(seed, int) or isinstance(seed, bool):
         errors.append(f"V4 — params.seed = {seed!r} must be an integer")
@@ -197,11 +202,28 @@ def _check_v6_memory_denylist(cfg: Dict[str, Any], errors: List[str]) -> None:
 def _check_v8_arm_memory(cfg: Dict[str, Any], errors: List[str]) -> None:
     arm = _get(cfg, "params.arm")
     mem_type = _get(cfg, "memory.type")
-    if arm in ("A", "B") and mem_type is not None and mem_type != "none":
+    # V8 (ADR-022 (e)) forbids arms A/B from ACCUMULATING notes ('faiss') — a
+    # measured baseline must not learn. 'rag' is exempt (ADR-026 / schema.md
+    # slot-D rag): it is a read-only corpus, not a note-accumulating store, so
+    # the RAG headline arms (single-pass arm A + memory.type: rag) are legal.
+    if arm in ("A", "B") and mem_type is not None and mem_type not in ("none", "rag"):
         errors.append(
-            f"V8 — arm {arm!r} requires memory.type: none, got {mem_type!r} "
+            f"V8 — arm {arm!r} requires memory.type in {{none, rag}}, got {mem_type!r} "
             f"(ADR-022 (e): a measured baseline must not accumulate notes; "
-            f"memory-on is a C′/D′ ablation for arms C/D only)"
+            f"'faiss' memory-on is a C′/D′ ablation for arms C/D only. 'rag' is a "
+            f"read-only corpus and is allowed on A/B, ADR-026)"
+        )
+
+
+def _check_rag_corpus_path(cfg: Dict[str, Any], errors: List[str]) -> None:
+    """memory.type: rag REQUIRES a corpus_path (RAG_SPEC §2 / schema.md slot-D
+    rag) — a rag run with no index must fail loud, not retrieve nothing silently."""
+    if _get(cfg, "memory.type") != "rag":
+        return
+    if not _get(cfg, "memory.corpus_path"):
+        errors.append(
+            "RAG — memory.type: rag requires memory.corpus_path (a prebuilt "
+            "tools/rag/ index dir, T3.2); none was given (RAG_SPEC §2)"
         )
 
 
@@ -210,15 +232,19 @@ def _check_paths(cfg: Dict[str, Any], errors: List[str]) -> None:
     kills hardcoded absolute paths (§0.3)."""
     from pathlib import PureWindowsPath, PurePosixPath
 
-    seed_from = _get(cfg, "memory.seed_from")
-    if seed_from is None:
-        return
-    s = str(seed_from)
-    if PureWindowsPath(s).is_absolute() or PurePosixPath(s).is_absolute():
-        errors.append(
-            f"PATH — memory.seed_from = {s!r} is absolute; config paths must be "
-            f"project-relative (§0.3; the loader resolves them against the repo root)"
-        )
+    def _reject_absolute(dotted: str) -> None:
+        val = _get(cfg, dotted)
+        if val is None:
+            return
+        s = str(val)
+        if PureWindowsPath(s).is_absolute() or PurePosixPath(s).is_absolute():
+            errors.append(
+                f"PATH — {dotted} = {s!r} is absolute; config paths must be "
+                f"project-relative (§0.3; the loader resolves them against the repo root)"
+            )
+
+    _reject_absolute("memory.seed_from")
+    _reject_absolute("memory.corpus_path")  # rag index dir (T3.3)
 
 
 def validate(cfg: Dict[str, Any]) -> None:
@@ -236,6 +262,7 @@ def validate(cfg: Dict[str, Any]) -> None:
     _check_v4_seed(cfg, errors)
     _check_v6_memory_denylist(cfg, errors)
     _check_v8_arm_memory(cfg, errors)
+    _check_rag_corpus_path(cfg, errors)
     _check_paths(cfg, errors)
     if errors:
         raise ConfigValidationError(errors)
