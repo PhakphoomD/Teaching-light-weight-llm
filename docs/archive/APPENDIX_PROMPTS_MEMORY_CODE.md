@@ -1,3 +1,17 @@
+> # SUPERSEDED - describes code that no longer exists
+>
+> **Archived 2026-08-07 (ADR-034).** This appendix documents the pre-renovation prompt catalogue and
+> the `teaching_feedback` memory field. Both are gone:
+>
+> - the memory payload was replaced by a bounded, GT-free `teaching_note` (**ADR-018**), because the
+>   old field could hold the reference answer and be retrieved back as an answer key;
+> - the loop, the prompt catalogue and `src/simplified/` were deleted in **T2.9**.
+>
+> Kept as a record of the design that was replaced. For the live system see
+> `.claude/rules/schema.md` (Memory v2 contract) and `config/prompts/`.
+>
+> ---
+
 # Appendix: Prompt Templates, Memory System & Code Snippets
 
 This appendix provides detailed documentation of the core components used in our Teaching-Loop system for improving lightweight LLMs.

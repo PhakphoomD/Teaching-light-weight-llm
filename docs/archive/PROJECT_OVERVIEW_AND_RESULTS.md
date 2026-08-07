@@ -1,3 +1,29 @@
+> # SUPERSEDED - DO NOT CITE THESE NUMBERS
+>
+> **Archived 2026-08-06 (task T3.13).** This document reports **pre-renovation** results that this
+> project's own audits later proved wrong. It is kept as the record of what was originally claimed -
+> the correction is part of the honest story (Constitution SS0.1), so it is archived, not deleted.
+>
+> ### What is wrong with it
+>
+> | claim in this file | why it is false | corrected by |
+> |---|---|---|
+> | "25% -> 83% pass rate" | the metric scored *similarity to a noisy reference*, not correctness - and the teacher saw the ground-truth answer every round (guided imitation, not learning) | ADR-001, ADR-024 |
+> | "ground-truth memory injection achieving 100% accuracy" | the memory store held the reference answers, so the system was quoting its own answer key | ADR-001, ADR-018 |
+> | "+58% from the teaching loop" | an independent teacher adds **+0.003 (95% CI [-0.021, +0.029], p = 1.00)** over plain self-refinement | ADR-024 |
+>
+> ### Read these instead (the honest results)
+>
+> | document | what it establishes |
+> |---|---|
+> | `docs/RAG_LAW.md` | the unified write-up - start here |
+> | `docs/TRACK_A_RESULTS.md` | the real loop effect: self-refine **+0.091**, teacher **~0** |
+> | `docs/RAG_RESULTS.md` | RAG on MedQuAD: **no net effect** (no knowledge gap to fill) |
+> | `docs/WIXQA_RESULTS.md` | RAG where a real gap exists: **+0.152**; the dose-response proof; grounding + Loop+RAG |
+> | `docs/PRODUCT_RESULTS.md` | LoRA gold-SFT: **-0.292** (it hurts) |
+>
+> ---
+
 # Teaching Loop for Lightweight LLMs: Experimental Analysis and Results
 
 ## Executive Summary
