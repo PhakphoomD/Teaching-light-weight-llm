@@ -29,19 +29,13 @@ from dotenv import load_dotenv
 load_dotenv(ROOT / ".env")
 import src.tlw.providers  # noqa: F401
 from src.providers.factory import build_client
-from scripts.wixqa_retriever_ladder import load_data, build_ranked, encode
-from scripts.wixqa_grounding_ladder import window, best_chunk_word_offset
-from scripts.wixqa_run3seed import RAG_SYS, MAX_PASSAGE_CHARS, TEMPERATURE, MAX_TOKENS, retrieval_record
+from src.tlw.wixqa.retrieval import load_data, build_ranked, encode
+from src.tlw.wixqa.grounding import window, best_chunk_word_offset
+from src.tlw.wixqa.prompts import RAG_SYS, TEMPERATURE, MAX_TOKENS
+from src.tlw.wixqa.retrieval import retrieval_record, clear_models
 
 OUT = ROOT / "runs/rag-wixqa"
 
-# T3.14 Stage-1 grounding variants (2x2: article-head vs matched-chunk-centred,
-# 900 vs 2400 chars per article). `head900` == the T3.11 behaviour byte-for-byte.
-# Verified 2026-07-25: the largest variant (~6.2k chars = 1,323 tokens) is NOT
-# truncated by Ollama's default context (needle-at-start test recovered), so the
-# default num_ctx is kept unchanged from T3.11 for comparability.
-GROUNDINGS = {"head900": (900, False), "chunk900": (900, True),
-              "head2400": (2400, False), "chunk2400": (2400, True)}
 
 
 def main():
@@ -112,15 +106,9 @@ def main():
         dest = "(not written — partial/tagged run)"
     print(f"[{a.retriever}] retrieval hit-rate@{a.top_k} = {hit}/{len(qa)} = {hit/len(qa):.3f}  -> {dest}")
 
-    # free the sentence-transformer GPU memory before Ollama generation runs —
-    # the encoder and qwen2.5:3b must not both sit in the 8GB VRAM (contention).
-    import scripts.wixqa_retriever_ladder as ladder
-    ladder._MODELS.clear()
-    try:
-        import gc, torch
-        gc.collect(); torch.cuda.empty_cache()
-    except Exception:
-        pass
+    # free the encoder's GPU memory before Ollama generation runs — the encoder
+    # and qwen2.5:3b must not both sit in the 8GB VRAM (contention).
+    clear_models()
 
     # --- generation: seeded student, grounded on top-k ARTICLES ---------------
     student = build_client("local", model="qwen2.5:3b")

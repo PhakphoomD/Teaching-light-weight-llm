@@ -39,10 +39,10 @@ from dotenv import load_dotenv
 load_dotenv(ROOT / ".env")
 import src.tlw.providers  # noqa: F401
 from src.providers.factory import build_client
-from scripts.wixqa_retriever_ladder import load_data, encode
-from scripts.wixqa_grounding_ladder import window, best_chunk_word_offset
-from scripts.wixqa_run3seed_retriever import GROUNDINGS
-from scripts.wixqa_run3seed import RAG_SYS, TEMPERATURE, MAX_TOKENS
+from src.tlw.wixqa.retrieval import load_data, encode
+from src.tlw.wixqa.grounding import window, best_chunk_word_offset
+from src.tlw.wixqa.grounding import GROUNDINGS
+from src.tlw.wixqa.prompts import RAG_SYS, TEMPERATURE, MAX_TOKENS
 
 OUT = ROOT / "runs/rag-wixqa"
 

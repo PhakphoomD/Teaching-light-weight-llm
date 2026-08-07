@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 load_dotenv(ROOT / ".env")
 import src.tlw.providers  # noqa: F401
 from src.providers.factory import build_client
-from scripts.wixqa_baseline import JUDGE_SYS  # reuse the EXACT ADR-030 judge prompt
+from src.tlw.wixqa.prompts import JUDGE_SYS
 
 
 def judge_one(judge, q, ref, cand):

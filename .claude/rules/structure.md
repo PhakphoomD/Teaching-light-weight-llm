@@ -73,6 +73,7 @@ Teaching-light-weight-llm-based-project/
 │       ├── loop/              core (assert_gt_free) · strategies (arms A–D)
 │       ├── analysis/          stats · loaders · report · rag_report · cli
 │       ├── providers.py       Ollama client, registered as "local"
+│       ├── wixqa/             the WixQA study library — paths · prompts · retrieval · grounding
 │       └── runner.py          composition root: config → six slots → run → summary
 │
 ├── scripts/                   thin drivers; each imports from src/ or tools/ (§A4)
@@ -87,7 +88,7 @@ Teaching-light-weight-llm-based-project/
 │   └── rag/                   builder · cli — config-driven index construction
 │
 ├── tests/                     mirrors src/ and tools/;  `tests/__init__.py` is load-bearing
-│   ├── tlw/{config,memory,prompts,evaluation,loop,analysis,runner}/
+│   ├── tlw/{config,memory,prompts,evaluation,loop,analysis,runner,wixqa}/
 │   └── tools/rag/
 │
 ├── runs/                      THE artifact root — gitignored except the evidence files below
@@ -168,6 +169,9 @@ Every registry copies `src/providers/factory.py`: a `_REGISTRY` dict + `@registe
   headline results unreproducible from a clone (§0.3). Use `Path(__file__).resolve().parents[N]`.
 - **A run-discovery glob keyed on a config stem** (`trackB_p3_3bRAG*`) — it breaks silently on
   rename. Key on the label, and fail loud when nothing matches.
+- **A script importing another script.** Shared logic belongs in `src/`; a driver that other
+  drivers import is library code wearing a script's name, and renaming it changes what a different
+  experiment measures. The arrow points one way (§A4).
 - **A name only an insider can read** — if understanding it needs project vocabulary, rename it.
 - **A test that skips when its fixture is missing** without distinguishing "absent in a fresh
   clone" (skip is right) from "the layout moved" (must fail).

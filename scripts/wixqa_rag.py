@@ -21,7 +21,7 @@ load_dotenv(ROOT / ".env")
 import src.tlw.providers  # noqa: registers Ollama under "local"
 from src.providers.factory import build_client
 from tools.dataset.embeddings import embed
-from scripts.wixqa_baseline import JUDGE_SYS, judge_score  # reuse the SAME judge
+from src.tlw.wixqa.prompts import JUDGE_SYS, judge_score
 
 QA = ROOT / "data/external/wixqa/expertwritten.jsonl"
 IDX = ROOT / "indexes/wixqa-help-centre"

@@ -33,46 +33,18 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.wixqa_retriever_ladder import chunks_of, encode, load_data  # same chunking/encoder
+from src.tlw.wixqa.retrieval import encode, load_data
+from src.tlw.wixqa.grounding import GROUNDINGS, best_chunk_word_offset, window
 
 RL = ROOT / "runs/rag-wixqa/retrieval_log_bge_chunk.jsonl"   # the T3.11 retrieval (article ids per question)
 OUT = ROOT / "reports/rag-wixqa"; OUT.mkdir(parents=True, exist_ok=True)
-
-CHARS_PER_WORD = 5.5  # rough; windows are built in words then rendered
-STOP = set(
-    "a an the is are was were be been being of to in for on with and or as at by from this that these "
-    "those it its you your can will may if not no do does did have has had how what when where which "
-    "who why about into over under more most other some such only own same so than too very s t just".split()
-)
-
 
 def content(text: str):
     return set(w for w in re.findall(r"[a-z0-9]+", text.lower()) if w not in STOP and len(w) > 2)
 
 
-def window(article, budget_chars, centre_word=None):
-    """Render the grounding text for ONE article at a char budget.
-    centre_word=None -> head (chars 0..budget). Otherwise a word window centred
-    on the matched chunk, clipped to the article."""
-    title = (article.get("title") or "").strip()
-    body = article.get("contents") or ""
-    if centre_word is None:
-        return body[:budget_chars]
-    words = body.split()
-    span = max(1, int(budget_chars / CHARS_PER_WORD))
-    start = max(0, min(centre_word - span // 2, max(0, len(words) - span)))
-    return " ".join(words[start:start + span])
 
 
-def best_chunk_word_offset(article, qvec, enc="bge"):
-    """Word offset of the article's chunk that best matches the question."""
-    chs = chunks_of(article)
-    if len(chs) <= 1:
-        return 0
-    cv = encode(enc, chs, is_query=False)
-    best = int(np.argmax(cv @ qvec))
-    stride = 180 - 40  # CHUNK_WORDS - OVERLAP, matching wixqa_retriever_ladder
-    return best * stride
 
 
 def main():
@@ -99,8 +71,7 @@ def main():
         if (i + 1) % 50 == 0:
             print(f"  {i+1}/{len(qa)}")
 
-    SPEC = {"head900": (900, False), "chunk900": (900, True),
-            "head2400": (2400, False), "chunk2400": (2400, True)}
+    SPEC = GROUNDINGS
 
     results = {}
     for name in a.variants:
