@@ -8,5 +8,6 @@ from config, exactly like it must import any other registry-populating module.
 """
 
 from src.tlw.memory.faiss_backend import FaissMemory  # noqa: F401  (registers "faiss")
+from src.tlw.memory.rag_backend import RagMemory  # noqa: F401  (registers "rag", T3.3)
 
-__all__ = ["FaissMemory"]
+__all__ = ["FaissMemory", "RagMemory"]

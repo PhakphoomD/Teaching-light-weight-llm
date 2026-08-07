@@ -69,16 +69,23 @@ class OllamaClient(LLMClient):
         top_p: float = 1.0,
         max_tokens: int = 256,
         timeout_s: int = 30,
+        seed: int | None = None,
     ) -> ChatResult:
+        options = {
+            "temperature": temperature,
+            "top_p": top_p,
+            "num_predict": max_tokens,
+        }
+        if seed is not None:
+            # Ollama `options.seed` makes sampling reproducible for a given
+            # (model, prompt, options) — used by the WixQA 3-seed re-run (T3.9)
+            # so seeds {13,42,123} are distinct-but-reproducible draws (§0.3).
+            options["seed"] = seed
         payload = {
             "model": self.model,
             "messages": list(messages),
             "stream": False,
-            "options": {
-                "temperature": temperature,
-                "top_p": top_p,
-                "num_predict": max_tokens,
-            },
+            "options": options,
         }
         req = urllib.request.Request(
             f"{self.host}/api/chat",

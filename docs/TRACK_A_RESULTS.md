@@ -153,7 +153,7 @@ EXPERIMENT_PARAMS_SEED=<seed> \
   --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_heldout.jsonl \
   --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
 # then the headline stats (paired cluster bootstrap + McNemar + Wilson):
-python -m src.tlw.analysis --runs-dir runs --comparison C-B   # (filter to trackA_full_* / heldout)
+python -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B   # (filter to trackA_full_* / heldout)
 ```
 
 All numbers above were computed directly from `runs/trackA_full_arm{A,B,C,D}_diabetes__seed{13,42,123}__*/`

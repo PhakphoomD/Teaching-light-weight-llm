@@ -175,11 +175,15 @@ def test_faiss_registered_after_t25(tmp_path):
     assert isinstance(backend, MemoryBackend)
 
 
-def test_rag_memory_not_registered_yet():
-    """'rag' is Track-B/P3 scope (schema.md Memory v2 contract §4) — must
-    still fail loudly, unlike 'faiss' which T2.5 made real."""
-    with pytest.raises(RegistryError, match="Unknown memory backend 'rag'"):
-        build_memory_backend("rag")
+def test_rag_registered_after_t33(tmp_path):
+    """T3.3 shipped: importing src.tlw.memory now registers the real 'rag'
+    backend (read-only corpus retriever, ADR-026) — it requires a corpus_path
+    and fails loud without one (RAG_SPEC §2)."""
+    import src.tlw.memory  # noqa: F401  (side-effect import: registers "rag")
+
+    assert "rag" in MEMORY_REGISTRY.names()
+    with pytest.raises(ValueError, match="corpus_path"):
+        build_memory_backend("rag")  # no corpus_path -> fail loud
 
 
 # --- End-to-end: a validated config resolves through the registries ---

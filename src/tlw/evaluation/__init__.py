@@ -7,10 +7,13 @@
 # RegistryError) must import `src.tlw.evaluation` first.
 
 from .diagnostics import reference_match, rouge_l, semantic_similarity
+from .faithfulness import FaithfulnessJudge, parse_faithfulness
 from .judge import BlindJudge, parse_verdict
 
 __all__ = [
     "BlindJudge",
+    "FaithfulnessJudge",
+    "parse_faithfulness",
     "parse_verdict",
     "reference_match",
     "rouge_l",

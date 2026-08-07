@@ -43,7 +43,7 @@ from .judge import BlindJudge
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TRAIN_PATH = PROJECT_ROOT / "data" / "clean" / "Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl"
-OUTPUT_DIR = PROJECT_ROOT / "runs" / "calibration"
+OUTPUT_DIR = PROJECT_ROOT / "runs" / "judge-calibration"
 
 # EVAL_SPEC §3.3 acceptance gates.
 GATE_GOOD_PASS_RATE_MIN = 0.80

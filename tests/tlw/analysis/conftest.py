@@ -36,6 +36,8 @@ def _write_run(
     memory_episodes: int = 0,
     memory_rejects: int = 0,
     rounds_per_question: Optional[Sequence[int]] = None,
+    faithfulness_mean: Optional[float] = None,  # RAG groundedness diagnostic (T3.4)
+    grounding_filtered: int = 0,
 ) -> Path:
     run_dir.mkdir(parents=True, exist_ok=True)
     n = len(passed_flags)
@@ -115,7 +117,13 @@ def _write_run(
                 "semantic_sim_mean": (sum(reference_match_semantic) / n) if n else None,
                 "rouge_l_mean": (sum(reference_match_rouge) / n) if n else None,
             },
+            "faithfulness": {
+                "mean": faithfulness_mean,
+                "n": (n if faithfulness_mean is not None else 0),
+                "null": 0,
+            },
         },
+        "grounding_filtered_total": grounding_filtered,
         "student_calls": {"calls": n, "tokens": student_tokens, "seconds": 1.0, "errors": 0},
         "teacher_calls": {"calls": 0, "tokens": teacher_tokens, "seconds": 0.0, "errors": 0},
         "judge_calls": {"calls": n, "tokens": judge_tokens, "seconds": 1.0, "errors": 0},

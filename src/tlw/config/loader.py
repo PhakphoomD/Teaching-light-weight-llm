@@ -107,6 +107,8 @@ def _resolve_paths(cfg: Dict[str, Any]) -> None:
     memory = cfg.get("memory")
     if isinstance(memory, dict) and memory.get("seed_from"):
         memory["seed_from"] = str((PROJECT_ROOT / str(memory["seed_from"])).resolve())
+    if isinstance(memory, dict) and memory.get("corpus_path"):
+        memory["corpus_path"] = str((PROJECT_ROOT / str(memory["corpus_path"])).resolve())
 
 
 def _build_model_slot(d: Dict[str, Any]) -> ModelSlot:
@@ -137,6 +139,9 @@ def _build_typed(cfg: Dict[str, Any]) -> ExperimentConfig:
             gt_substring_shingle=cfg["memory"].get("gt_substring_shingle"),
             gt_similarity_max=cfg["memory"].get("gt_similarity_max"),
             seed_from=cfg["memory"].get("seed_from"),
+            corpus_path=cfg["memory"].get("corpus_path"),
+            max_passage_words=cfg["memory"].get("max_passage_words"),
+            aspect_rerank=cfg["memory"].get("aspect_rerank"),
         ),
         params=ParamsSlot(
             seed=params["seed"],

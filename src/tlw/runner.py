@@ -283,7 +283,12 @@ def _build_params(cfg: ExperimentConfig, run_id: str, ground_truth: Optional[str
         "memory_top_k": cfg.memory.top_k or 3,
         "teacher_model": cfg.teacher.model,
     }
-    if cfg.params.arm == "D":
+    # ground_truth is passed to the arm ONLY as a guard input (never into a
+    # prompt): arm D's teacher may legally see it (§0.2), and a rag run needs it
+    # for the RAG-L3 leak guard on the grounded student prompt (T3.3/ADR-026 —
+    # a retrieved passage carrying a 12-token gold shingle aborts the run; the
+    # build-time RAG-L1/L2 scrub is the primary seal, this is defence-in-depth).
+    if cfg.params.arm == "D" or cfg.memory.type == "rag":
         params["ground_truth"] = ground_truth
     return params
 
@@ -311,6 +316,7 @@ def run_experiment(
     run_dir: Path,
     teacher_fallback: Optional[Tuple[str, str]] = None,
     judge_fallback: Optional[Tuple[str, str]] = None,
+    compute_faithfulness: bool = True,
 ) -> Dict[str, Any]:
     """Build the six slots from `cfg` via the registries, run every question
     in `data_path` (first `limit` records if given) through the configured
@@ -389,10 +395,30 @@ def run_experiment(
         "gt_substring_shingle": cfg.memory.gt_substring_shingle,
         "gt_similarity_max": cfg.memory.gt_similarity_max,
         "seed_from": cfg.memory.seed_from,
+        "corpus_path": cfg.memory.corpus_path,  # rag backend (T3.3); ignored by none/faiss
+        "max_passage_words": cfg.memory.max_passage_words,
+        "aspect_rerank": bool(cfg.memory.aspect_rerank),  # T3.9 FLAW-2 fix
     }
     if cfg.memory.type != "none":
         memory_kwargs["storage_dir"] = str(run_dir / "memory")
     memory = build_memory_backend(cfg.memory.type, **memory_kwargs)
+
+    # Faithfulness diagnostic (T3.4, RAG_SPEC §4.2) — built ONLY for rag runs
+    # (it needs retrieved passages). Reuses the SAME judge model as the blind
+    # correctness judge for one consistent evaluator; it sees (answer, passages)
+    # only, never the gold answer (§0.2). Computed post-hoc like reference_match,
+    # NEVER merged into pass/fail (ADR-019). Uses the same faithfulness client
+    # as the correctness judge so its calls are counted in judge_calls.
+    faithfulness_judge = None
+    if cfg.memory.type == "rag" and compute_faithfulness:
+        from src.tlw.evaluation.faithfulness import FaithfulnessJudge
+
+        faithfulness_judge = FaithfulnessJudge(
+            client=judge_client,
+            temperature=cfg.eval.judge.temperature if cfg.eval.judge.temperature is not None else 0.0,
+            max_tokens=cfg.eval.judge.max_tokens or 256,
+            timeout=cfg.eval.judge.timeout or 60,
+        )
 
     # C + E — preset names + arm strategy (PresetRegistry resolved lazily
     # inside the arm; StrategyRegistry here).
@@ -409,6 +435,9 @@ def run_experiment(
     final_normalized: List[float] = []
     ref_semantic: List[float] = []
     ref_rouge: List[float] = []
+    grounding_filtered_total = 0  # RAG-L3 passages dropped across the run (§0.1 observability)
+    faithfulness_values: List[float] = []  # RAG groundedness diagnostic (rag runs only)
+    faithfulness_null = 0
 
     t_start = time.time()
     with open(rounds_path, "w", encoding="utf-8") as rf:
@@ -429,11 +458,21 @@ def run_experiment(
                 final_normalized.append(final["normalized_score"])
 
             for r in round_records:
+                grounding_filtered_total += r.get("grounding_dropped", 0) or 0
                 diag = _diagnose_round(r, ground_truth)
                 r["reference_match"] = diag
                 if diag:
                     ref_semantic.append(diag["semantic_sim"])
                     ref_rouge.append(diag["rouge_l"])
+                # Faithfulness (rag only) — groundedness of this answer vs the
+                # passages it was shown; diagnostic, never gates (RAG_SPEC §4.2).
+                if faithfulness_judge is not None and r.get("grounding_context"):
+                    fscore = faithfulness_judge.score(r.get("answer", ""), r["grounding_context"])
+                    r["faithfulness"] = fscore.get("faithfulness")
+                    if fscore.get("faithfulness") is None:
+                        faithfulness_null += 1
+                    else:
+                        faithfulness_values.append(fscore["faithfulness"])
                 row = {
                     "run_id": run_id,
                     "arm": cfg.params.arm,
@@ -474,6 +513,11 @@ def run_experiment(
                 "semantic_sim_mean": (sum(ref_semantic) / len(ref_semantic)) if ref_semantic else None,
                 "rouge_l_mean": (sum(ref_rouge) / len(ref_rouge)) if ref_rouge else None,
             },
+            "faithfulness": {  # RAG groundedness diagnostic (rag runs only, T3.4)
+                "mean": (sum(faithfulness_values) / len(faithfulness_values)) if faithfulness_values else None,
+                "n": len(faithfulness_values),
+                "null": faithfulness_null,
+            },
         },
         "student_calls": call_stats.get("student", {}),
         "teacher_calls": call_stats.get("teacher", {}),
@@ -485,6 +529,7 @@ def run_experiment(
         "judge_fallback": call_stats.get("judge_fallback", dict(_EMPTY_FALLBACK_STATS)),
         "judge_fallback_configured": f"{judge_fallback[0]}:{judge_fallback[1]}" if judge_fallback else None,
         "memory_stats": memory.stats(),
+        "grounding_filtered_total": grounding_filtered_total,
         "data_path": str(data_path),
         "limit": limit,
         "elapsed_seconds": elapsed,
@@ -526,6 +571,13 @@ def print_summary(summary: Dict[str, Any]) -> None:
         f"semantic_sim = {'n/a' if sem is None else f'{sem:.3f}'}   "
         f"rouge_l = {'n/a' if rouge is None else f'{rouge:.3f}'}"
     )
+    faith = summary["metrics"].get("faithfulness") or {}
+    if faith.get("n"):
+        print(
+            f"faithfulness   (DIAGNOSTIC ONLY — RAG groundedness, never gates)   "
+            f"mean = {faith['mean']:.3f}  (n={faith['n']}, null={faith['null']})   "
+            f"grounding_filtered = {summary.get('grounding_filtered_total', 0)}"
+        )
     print("-" * 72)
     print(f"avg_rounds       : {summary['avg_rounds']:.2f}")
     print(f"elapsed_seconds  : {summary['elapsed_seconds']:.1f}")
@@ -608,6 +660,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         "Off by default.",
     )
     parser.add_argument(
+        "--no-faithfulness",
+        action="store_true",
+        help="skip the inline RAG faithfulness diagnostic (T3.4). Use for the full "
+        "rag run so the correctness judge (Groq) stays within the daily token cap "
+        "and consistent — faithfulness is computed offline afterward (a diagnostic, "
+        "never the headline). No effect on non-rag runs.",
+    )
+    parser.add_argument(
         "--teacher-fallback-model",
         default=None,
         help="DEPRECATED alias for '--teacher-fallback local:<model>' (T2.6 "
@@ -641,6 +701,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         cfg, config_path, data_path, args.limit, run_dir,
         teacher_fallback=teacher_fallback,
         judge_fallback=args.judge_fallback,
+        compute_faithfulness=not args.no_faithfulness,
     )
     print_summary(summary)
     print(f"rounds  -> {run_dir / 'rounds.jsonl'}")

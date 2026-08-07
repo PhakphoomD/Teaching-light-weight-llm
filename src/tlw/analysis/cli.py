@@ -18,6 +18,7 @@ import sys
 from typing import List, Optional, Sequence
 
 from .loaders import ConflationError, RunRecord, discover_runs
+from .rag_report import DEFAULT_RAG_COMPARISONS, build_rag_report
 from .report import (
     PRE_REGISTERED_N_QUESTIONS,
     PRE_REGISTERED_N_SEEDS,
@@ -45,6 +46,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
         type=_parse_comparison,
         dest="comparisons",
         help="ARM_A-ARM_B, e.g. C-B (headline). Repeatable. Default: C-B, B-A, D-C.",
+    )
+    parser.add_argument(
+        "--rag",
+        action="store_true",
+        help="RAG ablation report (T3.4): {3B,3B+RAG,7B,7B+RAG} labels, headline "
+        "3B+RAG - 3B with 95%% CI + faithfulness/reference_match columns. Ignores "
+        "--comparison/--memory-type (RAG conditions cross memory.type by design).",
     )
     parser.add_argument(
         "--memory-type",
@@ -140,6 +148,58 @@ def render_report(report: dict) -> str:
     return "\n".join(lines)
 
 
+def render_rag_report(report: dict) -> str:
+    lines: List[str] = []
+    lines.append("=" * 78)
+    lines.append("RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE")
+    lines.append(f"labels present: {', '.join(report['labels_present']) or '(none)'}")
+    lines.append("-" * 78)
+
+    lines.append("Descriptive per-label pass-rate (Wilson 95% CI):")
+    for label, wi in sorted(report["descriptive"].items()):
+        lines.append(f"  {label:8s}: {wi.point:.3f}  [{wi.low:.3f}, {wi.high:.3f}]  (n={wi.n}, k={wi.k})")
+
+    lines.append("-" * 78)
+    lines.append("Headline delta (paired cluster bootstrap, 95% CI) + McNemar p:")
+    for label, comp in report["comparisons"].items():
+        bs, mc = comp.bootstrap, comp.mcnemar
+        lines.append(f"  {label}: {bs.summary_line()}")
+        lines.append(f"      McNemar: b={mc.b} c={mc.c} p={mc.p_value:.4f}")
+        if comp.per_seed:
+            spread = ", ".join(f"seed {s}: {d:+.3f}" for s, d in sorted(comp.per_seed.items()))
+            lines.append(f"      per-seed deltas: {spread}")
+        if comp.banner:
+            lines.append(f"      {comp.banner}")
+    for label, err in sorted(report.get("comparison_errors", {}).items()):
+        lines.append(f"  {label}: SKIPPED -- {err}")
+
+    lines.append("-" * 78)
+    lines.append("Three SEPARATE columns, never merged (ADR-019):")
+    lines.append("  label     correctness   faithfulness(diag)   reference_match(diag)   grounding_filtered")
+    fa = report["faithfulness"]
+    gf = report["grounding_filtered"]
+    for label, row in sorted(report["reference_match"].items()):
+        f = fa.get(label, {})
+        fmean = f.get("faithfulness_mean")
+        lines.append(
+            f"  {label:8s}  {_fmt_pct(row['correctness_pass_rate']):>10s}   "
+            f"{_fmt_pct(fmean):>16s}   "
+            f"sem={_fmt_pct(row['reference_match_semantic_sim_mean'])} rouge={_fmt_pct(row['reference_match_rouge_l_mean'])}   "
+            f"{gf.get(label, 0):>6d}"
+        )
+
+    lines.append("-" * 78)
+    lines.append("Token cost per label (student+judge; judge incl. faithfulness calls):")
+    for label, tc in sorted(report["token_cost"].items()):
+        lines.append(f"  {label:8s}: total={tc['total']}  student={tc['student']}  judge={tc['judge']}")
+
+    if report.get("banner"):
+        lines.append("=" * 78)
+        lines.append(report["banner"])
+    lines.append("=" * 78)
+    return "\n".join(lines)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_arg_parser()
     args = parser.parse_args(argv)
@@ -150,6 +210,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not runs:
         print(f"No runs found under {args.runs_dir!r} (looked for */summary.jsonl).", file=sys.stderr)
         return 1
+
+    if args.rag:
+        rag_report = build_rag_report(
+            runs,
+            comparisons=args.comparisons or DEFAULT_RAG_COMPARISONS,
+            n_resamples=args.resamples,
+            seed=args.seed,
+            pre_registered_n=args.pre_registered_n,
+            pre_registered_seeds=args.pre_registered_seeds,
+        )
+        print(render_rag_report(rag_report))
+        return 0
 
     try:
         report = build_report(

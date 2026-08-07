@@ -16,7 +16,13 @@ from typing import Any, Dict, List, Optional
 from src.tlw.evaluation.diagnostics import reference_match as _diagnostic_reference_match
 
 from ..registries import STRATEGY_REGISTRY, ArmStrategy, build_preset
-from .core import judge_answer, make_round_record, student_answer, teacher_feedback
+from .core import (
+    grounding_block,
+    judge_answer,
+    make_round_record,
+    student_answer,
+    teacher_feedback,
+)
 
 _DEFAULT_STUDENT_PRESET = "minimal"
 _DEFAULT_TEACHER_PRESET = "orca"
@@ -70,6 +76,25 @@ class _BaseArm(ArmStrategy):
             self._teacher_preset = build_preset(self._teacher_preset_name)
         return self._teacher_preset
 
+    def _first_prompt(self, question, memory, top_k, ground_truth=None):
+        """Build the round-1 student prompt. If the memory backend grounds the
+        first attempt (the `rag` backend, T3.3/ADR-026) and returns passages,
+        render the `grounded_first` variant with them as {context}; otherwise
+        the plain `first` variant — so a `none`/`faiss` run is byte-identical to
+        its pre-RAG behaviour (no regression). `ground_truth` (rag runs only)
+        drives the RAG-L3 per-passage leak filter inside `grounding_block`.
+        Returns (prompt, grounded_flag, n_dropped, context) — `context` is the
+        REFERENCE PASSAGES block (or "") persisted for the faithfulness diagnostic."""
+        context, dropped = grounding_block(memory, question, top_k, ground_truth)
+        if context:
+            return (
+                self._student().render("grounded_first", question=question, context=context),
+                True,
+                dropped,
+                context,
+            )
+        return self._student().render("first", question=question), False, dropped, ""
+
 
 @STRATEGY_REGISTRY.register("A")
 class BaselineArm(_BaseArm):
@@ -80,12 +105,14 @@ class BaselineArm(_BaseArm):
         ground_truth = params.get("ground_truth")
         s_temp = params.get("student_temperature", 0.3)
         s_tok = params.get("student_max_tokens", 256)
+        top_k = params.get("memory_top_k", 3)
 
-        prompt = self._student().render("first", question=question)
+        prompt, grounded, dropped, context = self._first_prompt(question, memory, top_k, ground_truth)
         answer = student_answer(student, prompt, ground_truth=ground_truth, temperature=s_temp, max_tokens=s_tok)
         verdict = judge_answer(judge, question, answer)
         record = make_round_record(
-            1, answer, verdict, reference_match=_reference_match(answer, ground_truth)
+            1, answer, verdict, memory_used=grounded, grounding_dropped=dropped,
+            grounding_context=context, reference_match=_reference_match(answer, ground_truth),
         )
         return [record]
 
@@ -101,12 +128,16 @@ class SelfRefineArm(_BaseArm):
         max_rounds = params.get("max_rounds", 3)
         s_temp = params.get("student_temperature", 0.3)
         s_tok = params.get("student_max_tokens", 256)
+        top_k = params.get("memory_top_k", 3)
 
-        prompt = self._student().render("first", question=question)
+        prompt, grounded, dropped, context = self._first_prompt(question, memory, top_k, ground_truth)
         answer = student_answer(student, prompt, ground_truth=ground_truth, temperature=s_temp, max_tokens=s_tok)
         verdict = judge_answer(judge, question, answer)
         records = [
-            make_round_record(1, answer, verdict, reference_match=_reference_match(answer, ground_truth))
+            make_round_record(
+                1, answer, verdict, memory_used=grounded, grounding_dropped=dropped,
+                grounding_context=context, reference_match=_reference_match(answer, ground_truth),
+            )
         ]
 
         round_num = 1
@@ -167,11 +198,14 @@ class _TeacherArm(_BaseArm):
         t_temp = params.get("teacher_temperature", 0.0)
         t_tok = params.get("teacher_max_tokens", 256)
 
-        prompt = self._student().render("first", question=question)
+        prompt, grounded, dropped, context = self._first_prompt(question, memory, top_k, ground_truth)
         answer = student_answer(student, prompt, ground_truth=ground_truth, temperature=s_temp, max_tokens=s_tok)
         verdict = judge_answer(judge, question, answer)
         records = [
-            make_round_record(1, answer, verdict, reference_match=_reference_match(answer, ground_truth))
+            make_round_record(
+                1, answer, verdict, memory_used=grounded, grounding_dropped=dropped,
+                grounding_context=context, reference_match=_reference_match(answer, ground_truth),
+            )
         ]
 
         round_num = 1
@@ -188,7 +222,10 @@ class _TeacherArm(_BaseArm):
             feedback = teacher_feedback(teacher, t_prompt, temperature=t_temp, max_tokens=t_tok)
 
             combined_feedback = feedback
-            if notes:
+            # Only faiss teaching-NOTES fold into refinement feedback here; RAG
+            # passages (which lack `teaching_note`) are grounded at round 1 via
+            # `_first_prompt`, never re-injected as "prior guidance" (T3.3).
+            if notes and notes[0].get("teaching_note"):
                 combined_feedback = f"{feedback}\n\nPrior guidance: {notes[0]['teaching_note']}"
 
             refine_prompt = self._student().render(

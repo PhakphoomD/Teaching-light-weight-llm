@@ -1,9 +1,9 @@
 """Loader tests (T2.8 step 1): discovery, parsing, V8 no-conflation guard.
 
-Synthetic fixtures (`make_run`) are the primary vehicle. The real n=5
-dry-run artifacts under `runs/trackA_p2_arm{A,C}_diabetes__seed42__*` are
-used for one shapes-only smoke test (`test_discover_runs_on_real_dry_run_artifacts`)
--- read-only, never modified."""
+Synthetic fixtures (`make_run`) are the primary vehicle. The real n=5 dry-run
+artifacts under `runs/teaching-loop-medquad/pilots/trackA_p2_arm{A,C}_diabetes__seed42__*`
+(ADR-034 layout) back one shapes-only smoke test
+(`test_discover_runs_on_real_dry_run_artifacts`) -- read-only, never modified."""
 
 from pathlib import Path
 
@@ -22,7 +22,10 @@ from src.tlw.analysis.loaders import (
     select_arm_runs,
 )
 
-REAL_RUNS_DIR = Path(__file__).resolve().parents[3] / "runs"
+# ADR-034 moved pilot artifacts under runs/<study>/pilots/ so that a one-level
+# discover_runs() scan of a study never mixes pilots into a headline.
+RUNS_ROOT = Path(__file__).resolve().parents[3] / "runs"
+REAL_RUNS_DIR = RUNS_ROOT / "teaching-loop-medquad" / "pilots"
 
 
 # --- discovery / parsing -----------------------------------------------------------
@@ -201,17 +204,33 @@ def test_build_cluster_table_pools_seeds_within_question(runs_root, make_run):
 # --- real dry-run artifacts (shapes only) ----------------------------------------
 
 
-@pytest.mark.skipif(not REAL_RUNS_DIR.is_dir(), reason="runs/ not present in this checkout")
+@pytest.mark.skipif(not RUNS_ROOT.is_dir(), reason="runs/ absent — fresh clone, artifacts are gitignored")
 def test_discover_runs_on_real_dry_run_artifacts():
-    """Shapes-only smoke test against the REAL n=5 dry-run artifacts
-    (`runs/trackA_p2_arm{A,C}_diabetes__seed42__*`, read-only -- this test
-    must never write into `runs/`). Skips cleanly if a concurrent pilot
-    agent has not left those specific dirs in this checkout."""
+    """Shapes-only smoke test against the REAL dry-run artifacts, which live in
+    `runs/teaching-loop-medquad/pilots/trackA_p2_arm*_diabetes__seed42__*`
+    (read-only -- this test must never write into `runs/`).
+
+    Skip policy matters here. Two situations used to collapse into one silent
+    skip, and that hid a real problem during the ADR-034 restructure: the layout
+    moved, the glob stopped matching, and the suite still reported green. So:
+
+      * `runs/` absent entirely  -> SKIP. A fresh clone has no artifacts (they are
+        gitignored and rebuildable); there is nothing to check.
+      * `runs/` present but these artifacts are not where we expect -> FAIL. That
+        is layout drift, which is exactly what this test is worth having for.
+    """
     real_dirs = [
         p for p in REAL_RUNS_DIR.glob("trackA_p2_arm*_diabetes__seed42__*") if (p / "summary.jsonl").is_file()
     ]
     if not real_dirs:
-        pytest.skip("no matching real dry-run artifacts found under runs/")
+        present = sorted(p.name for p in RUNS_ROOT.iterdir() if p.is_dir())
+        raise AssertionError(
+            f"runs/ exists but no dry-run artifacts were found at {REAL_RUNS_DIR}.\n"
+            f"studies present under runs/: {present}\n"
+            "Either the run layout changed (update REAL_RUNS_DIR and any path literal "
+            "that moved with it), or these artifacts were deleted. This test fails "
+            "rather than skips so a layout change cannot pass silently."
+        )
 
     runs = discover_runs(REAL_RUNS_DIR, pattern="trackA_p2_arm*_diabetes__seed42__*")
     assert len(runs) >= 1

@@ -16,6 +16,28 @@ minimal:
 
     Answer:
 
+  # GT-FREE — RAG grounding variant (T3.3, ADR-026 / RAG_SPEC §1.4). Used only
+  # when a `rag` backend returns passages for the FIRST attempt; {context} holds
+  # the retrieved REFERENCE PASSAGES. No {ground_truth} placeholder — the
+  # passages are TRAIN evidence, and the prompt is still assert_gt_free-checked.
+  # T3.5 note (2026-07-16): a "v2" hardened variant (explicit "ignore irrelevant
+  # passages, don't mention them") BACKFIRED on the 3B — it made the small model
+  # FIXATE on passage-relevance and preface answers with "the passage does not
+  # answer this…", dropping completeness (pilot: 0.80 -> 0.56). A 3B can't follow
+  # "use-if-relevant-else-ignore-silently". Reverted to this simpler v1.
+  grounded_first: |
+    Use the REFERENCE PASSAGES below as supporting evidence when they are
+    relevant. They are background material, NOT the answer — write your OWN
+    answer to the question, and do not copy a passage verbatim. If the passages
+    do not cover the question, answer from your own knowledge.
+
+    REFERENCE PASSAGES:
+    {context}
+
+    Question: {question}
+
+    Answer:
+
   # GT-FREE — PROMPT_CATALOG S5 (config/prompts_config.yml:83-88)
   refine: |
     Answer: {question}
@@ -56,6 +78,26 @@ orca:
     {question}
 
     Produce your best possible answer to the task.
+    Be clear, concise, and avoid making up facts.
+
+    Output:
+    Draft:
+    <your answer>
+
+  # GT-FREE — RAG grounding variant for the orca student family (T3.3; the T3.5
+  # "hardened" variant backfired on the 3B, see minimal.grounded_first — reverted).
+  grounded_first: |
+    You are the Student model.
+
+    [Reference Passages]
+    Use these as supporting evidence when relevant. They are background, NOT the
+    answer — write your own answer and do not copy a passage verbatim.
+    {context}
+
+    [Task]
+    {question}
+
+    Produce your best possible answer, grounded in the passages when they apply.
     Be clear, concise, and avoid making up facts.
 
     Output:
