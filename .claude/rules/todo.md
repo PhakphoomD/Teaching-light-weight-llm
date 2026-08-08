@@ -3,11 +3,20 @@
 Status: `[ ]` todo · `[~]` in progress · `[x]` done · `[?]` needs user decision · ✋ = user gate
 
 **How work happens (ADR-015):** decisions are made at the *hub* chat with the user; execution
-happens in fresh *spoke* chats. Every task below has a full spec in `docs/plan/T*.md` —
-a spoke chat starts by reading `docs/plan/README.md` + its task spec, and ends by ticking its
-box here with a one-line result note. Do not start P2 before the P1 gate ✋ passes.
+happens in fresh *spoke* chats. A spoke ends by ticking its box here with a one-line result note,
+and by logging any durable decision in `decisions.md` (§0.6).
 
-## ACTIVE — P0: Inspect the house (read-only, parallel-safe)
+**Read the entries below as a dated work log, not as current state.** Each note records what was
+true on the day it was written, so it names files and directories by the paths they had then.
+Several have since moved — run roots were consolidated under `runs/<study>/` and indexes out to
+`indexes/` (ADR-034), and `scripts/` was regrouped into one package per study (T3.18). Those
+references are left as written on purpose: rewriting a dated record to match today's tree would
+make the log agree with the repository by falsifying the history. For where a path is **now**, use
+`structure.md`, which is regenerated from the executed tree.
+
+**Every box below is ticked.** What remains is the closing sweep noted at the end of P3-C.
+
+## DONE — P0: Inspect the house (read-only, parallel-safe)
 - [x] **T0.1** Code map — every file: role + verdict (EXEMPLAR/ALIVE/MESSY/DEAD) → `docs/audit/CODE_MAP.md` *(owner: housekeeping)* — done 2026-07-13: 44 files mapped; 5 DEAD confirmed (1,415 ln ≈ 26% of src/); 1 MESSY (teaching_loop `run()` 214–742); ⚠️ tools/ untracked in git
 - [x] **T0.2** `.claude/` environment audit — is the crew fit for the new direction? → `docs/audit/CLAUDE_ENV_AUDIT.md` *(owner: main thread)* — done 2026-07-13: PASS-WITH-NOTES; BLOCKER = `.claude/`+plan+tools untracked in git; gaps = stats/RAG/LoRA ownership; guard works (tested live) but `.env` Write hole + `2>&1` false block
 - [x] **T0.3** Ground-truth leakage census → `docs/audit/LEAKAGE_CENSUS.md` *(owner: qa-engineer)* — done 2026-07-13:
@@ -123,12 +132,12 @@ p<0.0001). New `src/tlw/` core; legacy demolished; 239 tests pass; independently
   now dead — retire in P3 housekeeping). CODE_MAP.md pre-demolition tables marked historical (banner).
   **P2 COMPLETE.**
 
-## ACTIVE — P3: Track B (RAG + LoRA product) — PLANNED 2026-07-16 (ADR-025)
+## DONE — P3: Track B (RAG + LoRA product) — planned 2026-07-16 (ADR-025), complete 2026-08-08
 Index + rationale: `docs/plan/P3-track-b-placeholder.md`. RAG sub-track first (user decision).
 Ownership (ADR-025, no new agents): corpus→data-engineer, backend→codebase-steward, eval→qa,
 training→ops, design→program-architect.
 
-### P3-A — RAG (detailed; start here)
+### P3-A — RAG
 - [x] **T3.1** RAG blueprint + grounded-eval design (paper) → `docs/plan/RAG_SPEC.md` + ADR *(program-architect + qa)* — done 2026-07-16: `docs/plan/RAG_SPEC.md` + schema.md §"Slot-D `rag` backend contract" + ADR-026 (Proposed). Retriever = MiniLM+FAISS-IP over TRAIN questions→return answers as passages, top_k 3, floor 0.35 (lower than memory's 0.75), grounding injected at the FIRST answer attempt. `rag` = corpus-backed read-only MemoryBackend (`store()` no-op), same seam → runner unchanged. Eval = blind correctness reused from Track A (PASS≥4, comparable) as headline; faithfulness DECIDED = RAGAS groundedness ratio (GT-free, diagnostic only, never merged); reference_match kept as leakage smell-test. Headline = 3B+RAG−3B, 95% paired-bootstrap CI (reuse `src/tlw/analysis`), arms {3B,3B+RAG,7B,7B+RAG} single-pass. Anti-leak: corpus=TRAIN-only + manifest (zero heldout ids) + train↔heldout ≥0.90 near-dup scrub + `assert_gt_free` run-time guard. Budget ≈ free (all local). 2 small hub flags: 3B+RAG+self-refine secondary arm? + V8 one-line exemption for `type: rag` on arms A/B.
 - [x] **T3.2** Build retrieval corpus + index from `data/clean/` Diabetes (held-out excluded) → `tools/rag/` *(data-engineer)* — done 2026-07-16: reusable config-driven `tools/rag/{builder,cli}.py` (reuses `tools/dataset/embeddings.embed` MiniLM + FAISS IndexFlatIP like `faiss_backend.py`). Diabetes build: 506 source → 0 dropped by id (RAG-L1, splits disjoint) → **58 dropped by near-dup scrub (RAG-L2, ≥0.90 cosine vs heldout, q OR a)** → **448 indexed**; both exclusion checks PASS. Artifacts `data/rag/diabetes_train/{faiss.index,passages.jsonl,faiss.ids.json,manifest.json,build_report.md}` (gitignored, rebuildable via `python -m tools.rag.cli`). Sample retrievals sane (same-topic passages sim 0.61–0.84, NOT the exact heldout answer → validates the 0.35 floor). 5 tests pass (`tests/rag/`); generality smoke on Heart/Lung (246 rec) OK.
 - [x] **T3.3** slot-D `type: rag` backend + grounding into answer prompt; leak guard *(codebase-steward + data)* — done 2026-07-16: `src/tlw/memory/rag_backend.py` (`RagMemory`, registers "rag", read-only corpus, `store`/`update_outcome` no-op, `grounds_first_attempt=True`); grounding wired via `core.grounding_block` + `_BaseArm._first_prompt` (passages → `grounded_first` preset at round 1); config: `corpus_path`/`max_passage_words` keys, V8 exempts rag on A/B, rag-requires-corpus_path check. **Leak handling strengthened after first real run surfaced templated leaks** (hub-approved): RAG-L2b build-time verbatim-block scrub (drop train records sharing ≥8 twelve-shingles w/ any heldout answer — cosine is blind to MedQuAD "What to do for X" template reuse, e.g. Crohn's/Colitis 108 shingles @ 0.76 cos) + RAG-L3 changed from abort-run to **filter-per-passage** (drop+count leaky passage, ground on survivors; `grounding_filtered_total` in summary). Index rebuilt: 506→ L2a 58 + L2b 34 → **414 indexed**. E2E smoke (5 heldout, 3B+RAG): completed, all grounded, 1 residual passage filtered, no abort. Full suite **257 pass**. ⚠️ Ops: set `HF_HUB_OFFLINE=1` for embed runs (see [[hf-offline-embedding-stall]]).
@@ -151,7 +160,7 @@ Motivation: before accepting the MedQuAD RAG null, exhaust the "fair-test" objec
   retriever** (option a) — folds in (b) 3-seed CI + (d) stale-doc fix. Options (c) TechQA + product-FE
   deferred. → P3-E below.
 
-### ACTIVE — P3-E: Prove "retrieval is RAG's bottleneck" via WixQA dose-response (ADR-031)
+### DONE — P3-E: Prove "retrieval is RAG's bottleneck" via WixQA dose-response (ADR-031)
 Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hit-rate toward the
 0.409 gold-retrieved anchor. Hold student/judge/PASS≥3/top-k fixed across variants; KB articles only.
 - [x] **T3.9** Instrument per-question hit-rate + re-run WixQA RAG at 3 seeds (CI on the +13pt) *(data + qa)* —
@@ -269,7 +278,7 @@ Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hi
   progress-bar "100%". **Known remaining staleness (deliberately deferred to the housekeeping pass):**
   README's architecture diagram/Project-Structure/Usage sections still describe the pre-T2.9 layout.
 
-### ACTIVE — P3-C: Product demo + portfolio presentation (PLANNED 2026-08-07, ADR-035)
+### DONE — P3-C: Product demo + portfolio presentation (planned 2026-08-07, ADR-035)
 Index + senior-refined narrative outline: `docs/plan/P3-C-product-and-portfolio.md`. Three distinct
 artifacts (keep separate). Sequence: T3.15 ∥ T3.16 → T3.17.
 - [x] **T3.15** Local RAG demo app → `app/` — DONE 2026-08-07: `app/{engine,demo,build_showcase}.py` + README.

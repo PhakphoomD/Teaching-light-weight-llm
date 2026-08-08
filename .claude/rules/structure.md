@@ -75,6 +75,8 @@ Teaching-light-weight-llm-based-project/
 │       ├── analysis/          stats · loaders · report · rag_report · cli
 │       ├── providers.py       Ollama client, registered as "local"
 │       ├── wixqa/             the WixQA study library — paths · prompts · retrieval · grounding
+│       ├── figures/           data · style · panels — every published figure and table,
+│       │                      recomputed from artifacts, never hand-typed (T3.16)
 │       └── runner.py          composition root: config → six slots → run → summary
 │
 ├── scripts/                   thin drivers, one package per study (§A4)
@@ -90,8 +92,9 @@ Teaching-light-weight-llm-based-project/
 │   └── rag/                   builder · cli — config-driven index construction
 │
 ├── tests/                     mirrors src/ and tools/;  `tests/__init__.py` is load-bearing
-│   ├── tlw/{config,memory,prompts,evaluation,loop,analysis,runner,wixqa}/
-│   └── tools/rag/
+│   ├── tlw/{config,memory,prompts,evaluation,loop,analysis,runner,wixqa,figures}/
+│   └── tools/rag/             tests/tlw/figures/ asserts each drawn value still equals
+│                              what docs/ publishes — the guard against silent drift
 │
 ├── runs/                      THE artifact root — gitignored except the evidence files below
 │   ├── teaching-loop-medquad/   does the loop work? (ADR-024)        + pilots/
@@ -106,8 +109,9 @@ Teaching-light-weight-llm-based-project/
 │
 ├── reports/                   DERIVED EVIDENCE — git-tracked, small, human-readable
 │   ├── README.md              study → question → report → reproduce command
-│   ├── rag-wixqa/ · lora-medquad/ · …
-│   └── figures/
+│   ├── rag-wixqa/ · lora-medquad/ · …   analysis printouts the documents cite
+│   ├── figures/               fig-NN-<testbed>-<what>.{png,svg}, light and dark
+│   └── tables/                tab-NN-<testbed>-<what>.md — every value, APA-labelled
 │
 ├── docs/
 │   ├── README.md              "start here" index
