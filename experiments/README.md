@@ -8,7 +8,7 @@ result (V1–V8, `.claude/rules/schema.md`), and runs it.
 ## Usage
 
 ```
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_p2_armC_diabetes.yml
+& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop-teacher-feedback-7b.yml
 ```
 
 Flags (CLI-only — dataset selection is deliberately **not** a config slot,
@@ -32,7 +32,7 @@ writes, ADR-012):
 
 ## Naming convention (ADR-016)
 
-`experiments/<track><phase>_<arm>_<slug>.yml`, e.g. `trackA_p2_armC_diabetes.yml`.
+`experiments/<track><phase>_<arm>_<slug>.yml`, e.g. `teaching-loop-teacher-feedback-7b.yml`.
 `<track>` = `trackA`/`trackB`; `<phase>` = `p2`, `p3`, …; `<arm>` = `armA`..`armD`
 (ADR-002); `<slug>` = short domain/variant tag.
 
@@ -46,10 +46,10 @@ overrides only `params.arm` + `params.seed`:
 
 | File | Arm | What differs from base.yml | Teacher calls? | Memory |
 |---|---|---|---|---|
-| `trackA_p2_armA_diabetes.yml` | A — baseline | `params.arm: A` | none (1 pass) | none |
-| `trackA_p2_armB_diabetes.yml` | B — self-refine | `params.arm: B` | none (student self-critiques) | none |
-| `trackA_p2_armC_diabetes.yml` | C — blind-teacher (the treatment) | `params.arm: C` | yes, blind (no GT) | none |
-| `trackA_p2_armD_diabetes.yml` | D — sighted-teacher (leakage ceiling) | `params.arm: D` | yes, sees GT (its own prompt only, §0.2) | none |
+| `teaching-loop-baseline-7b.yml` | A — baseline | `params.arm: A` | none (1 pass) | none |
+| `teaching-loop-self-refine-7b.yml` | B — self-refine | `params.arm: B` | none (student self-critiques) | none |
+| `teaching-loop-teacher-feedback-7b.yml` | C — blind-teacher (the treatment) | `params.arm: C` | yes, blind (no GT) | none |
+| `teaching-loop-teacher-sees-answer-7b.yml` | D — sighted-teacher (leakage ceiling) | `params.arm: D` | yes, sees GT (its own prompt only, §0.2) | none |
 
 **Headline claim = `pass_rate(C) − pass_rate(B)`** with a 95% CI (EVAL_SPEC.md
 §4.3) — computed by T2.8 from the `summary.jsonl`/`rounds.jsonl` these produce,

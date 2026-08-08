@@ -95,7 +95,7 @@ hit-rate ladder. *Honesty note:* the reference answer is used **only by the anal
 offline**, never at runtime to select content — the same legitimate status as using gold article-ids to
 score hit-rate (§0.2 preserved).
 
-#### Stage-1 offline result (RUN 2026-07-25, `scripts/wixqa_grounding_ladder.py`, 0 LLM calls)
+#### Stage-1 offline result (RUN 2026-07-25, `scripts/wixqa/build_grounding_ladder.py`, 0 LLM calls)
 
 2×2 factorial over the 200 questions; coverage = fraction of the expert answer's content words present
 in the **gold article's** grounding text (block-level coverage in `grounding_table.json`):
@@ -187,8 +187,8 @@ are **reused**; only refine rounds are generated and only final answers are judg
 - **Diagnostics:** answer-coverage@budget (Stage-1 gate), faithfulness/groundedness (RAGAS-style,
   Es et al., arXiv:2309.15217) to detect drift during refinement, score-0/1 catastrophe rate, per-seed
   spread, and mean judge score (finer-grained than a binary bar).
-- **Tooling:** `scripts/wixqa_grounding_ladder.py` (Stage-1 offline coverage), extend
-  `wixqa_run3seed_retriever.py` with a `--grounding` mode, `scripts/wixqa_selfrefine.py` (Stage 2),
+- **Tooling:** `scripts/wixqa/build_grounding_ladder.py` (Stage-1 offline coverage), extend
+  `wixqa_run3seed_retriever.py` with a `--grounding` mode, `scripts/wixqa/run_self_refine.py` (Stage 2),
   reuse `wixqa_judge.py` (resumable/TPD-graceful) and `wixqa_dose_analyze.py` (new rows).
 
 ---

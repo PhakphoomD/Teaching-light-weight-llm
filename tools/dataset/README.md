@@ -13,7 +13,7 @@ All commands run in the `tlw` conda env, from repo root. Use the full-path inter
 | 1 · Clean | `-m tools.dataset.cli --all` | `data/clean/<d>_clean.jsonl` + `_report.json` |
 | 2 · Assess | `-m tools.dataset.assessor --input data/clean/<d>_clean.jsonl --target lora` | `_readiness_<target>.md/.json` |
 | 3 · Split | `-m tools.dataset.split --input data/clean/<d>_clean.jsonl` | `<d>_train.jsonl` + `<d>_heldout.jsonl` |
-| 4 · Verify all | `scripts/assess_all.py --target lora` | cross-domain readiness table |
+| 4 · Verify all | `scripts/dataset/assess_all.py --target lora` | cross-domain readiness table |
 | 5 · UI (opt) | `-m pip install streamlit` then `-m streamlit run tools/dataset/app.py` | drag-and-drop web app |
 
 Judge (D4 quality): `--judge none` (default in sweeps, model-free) · `groq` (Llama, fast) · `ollama` (local Qwen).

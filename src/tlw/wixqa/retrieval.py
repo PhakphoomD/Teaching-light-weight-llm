@@ -1,6 +1,6 @@
 """Retrieval over the WixQA knowledge base — the seven variants of the T3.10 ladder.
 
-Moved verbatim from `scripts/wixqa_retriever_ladder.py`, which four other scripts
+Moved verbatim from `scripts/wixqa/build_retriever_ladder.py`, which four other scripts
 imported. Behaviour is unchanged: the chunk size, the encoder prefixes and the
 candidate depths are the controlled variables behind the published hit-rates
 (T3.10) and the dose-response proof (T3.11).

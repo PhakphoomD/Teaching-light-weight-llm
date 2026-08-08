@@ -141,7 +141,7 @@ Output STRICT JSON on one line: {"score": <0-4 integer>, "reason": "<=12 words"}
 
 ### 3.3 Calibration probe (gate the judge BEFORE the real run)
 
-Extends the honest, label-free method already in `scripts/compare_judges.py:1-14` (build
+Extends the honest, label-free method already in `scripts/calibration/compare_judges.py:1-14` (build
 candidates whose quality ordering we *know*, no human labels). **Built and run on the TRAIN
 split (506 recs) or the clean pool excluding heldout — NEVER on the 125 held-out questions**
 (§0.2; do not contaminate the measurement set). Candidate classes per question:

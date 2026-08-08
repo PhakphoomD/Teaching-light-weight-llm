@@ -2,7 +2,7 @@
 
 Gates the judge BEFORE the real Track-A run. Built and run on the TRAIN
 split (506 recs), NEVER the 125-question held-out set (§0.2). Extends the
-label-free method of scripts/compare_judges.py (GOOD/WRONG/TRUNCATED) with
+label-free method of scripts/calibration/compare_judges.py (GOOD/WRONG/TRUNCATED) with
 the spec's fourth, harder class:
 
   GOOD             the real cleaned train-split answer            -> PASS (3-4)
@@ -12,7 +12,7 @@ the spec's fourth, harder class:
 
 Judge client: this script talks to the local Ollama daemon directly
 (mirrors tools/dataset/judge.py's OllamaJudge, already proven working in
-scripts/compare_judges.py) and injects it into BlindJudge via the `client=`
+scripts/calibration/compare_judges.py) and injects it into BlindJudge via the `client=`
 constructor param. See NEEDS-HUB-DECISION in the T2.3 report for why this
 bypasses `build_client("local", ...)`: the registered "local" provider
 (src/providers/local_client.py::LocalTinyLlama) is a HuggingFace-transformers

@@ -1,7 +1,8 @@
 # Canonical Repo Structure (v3 — ADR-034)
 
 Source of truth for **housekeeping** and for every build task. Generated from the executed tree on
-2026-08-07, not from a plan — v2 had drifted into describing paths that no longer existed while
+2026-08-07 and re-synced 2026-08-08 after P3-C (ADR-036 moved `RAG_LAW.md` to `archive/`, added
+`EXPERIMENT_RESULTS.md`, emptied `notebooks/`), not from a plan — v2 had drifted into describing paths that no longer existed while
 omitting ~14 that did, and every audit compared against that wrong map. **If this file and the repo
 disagree, this file is the bug.**
 
@@ -47,7 +48,7 @@ Teaching-light-weight-llm-based-project/
 │   ├── rag-medquad-fair-tests/  matching-question-type-only · much-bigger-library
 │   ├── student-prompt/        detailed-prompt-style
 │   ├── lora/                  generate-training-data
-│   └── pilots/                the trackA_p2_* pilot configs
+│   └── pilots/                teaching-loop-*-{3b,7b} — the pre-registration pilots
 │
 ├── data/                      INPUTS ONLY — nothing an experiment generates lives here
 │   ├── Medical_Q&A/           raw MedQuAD CSVs — IMMUTABLE (guard-protected)
@@ -76,12 +77,13 @@ Teaching-light-weight-llm-based-project/
 │       ├── wixqa/             the WixQA study library — paths · prompts · retrieval · grounding
 │       └── runner.py          composition root: config → six slots → run → summary
 │
-├── scripts/                   thin drivers; each imports from src/ or tools/ (§A4)
+├── scripts/                   thin drivers, one package per study (§A4)
 │   ├── dataset/               prepare_medquad · split_by_source · assess_all · fetch_wixqa
-│   ├── wixqa_*.py             the WixQA study drivers (build index, run, judge, analyse)
-│   ├── lora: build_lora_data · train_lora · eval_lora
-│   ├── rag: rag_faithfulness · selective_rag_sim · rejudge · reliability_analysis
-│   └── calibration: build_calibration · calibration_report
+│   ├── wixqa/                 run_* · build_* · analyze_* · judge · repair_empty
+│   ├── lora/                  build_data · train · evaluate
+│   ├── rag/                   faithfulness · selective_simulation · reliability · rejudge
+│   ├── calibration/           build_probe · report · compare_judges · compare_students
+│   └── make_figures.py        regenerates every figure and table from committed logs
 │
 ├── tools/                     reusable, importable CLI utilities
 │   ├── dataset/               cleaner · Readiness Assessor · split · judge · embeddings · app
@@ -109,15 +111,19 @@ Teaching-light-weight-llm-based-project/
 │
 ├── docs/
 │   ├── README.md              "start here" index
-│   ├── RAG_LAW.md             the unified result (the portfolio artifact)
+│   ├── EXPERIMENT_RESULTS.md  the full record — objectives, decisions, every measurement (ADR-036)
 │   ├── TRACK_A_RESULTS.md · RAG_RESULTS.md · WIXQA_RESULTS.md · PRODUCT_RESULTS.md
 │   ├── RAG_RELIABILITY_ANALYSIS.md
 │   ├── plan/ · audit/         task specs, design docs, P0 audits
 │   └── archive/               SUPERSEDED docs, each with a banner saying what was wrong
+│                              (incl. RAG_LAW.md, superseded by EXPERIMENT_RESULTS.md — ADR-036,
+│                               and v1-notebook-narrative.md recovered from the deleted notebook)
 │
+├── app/                       the demo the results point at — engine + showcase builder (T3.15)
 ├── logs/experiments/phase0..6/  pre-renovation evidence — IMMUTABLE, guard-protected
 ├── models/                    LoRA adapters + base weights — gitignored
-├── notebooks/ · schemas/
+├── notebooks/                 empty by design; README.md records why (ADR-036)
+├── schemas/
 ```
 
 ---

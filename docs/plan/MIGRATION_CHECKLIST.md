@@ -57,22 +57,22 @@ All 13 carry the identical literal
 
 | file:line |
 |---|
-| `scripts/wixqa_analyze.py:21` |
-| `scripts/wixqa_baseline.py:16` |
-| `scripts/wixqa_build_index.py:17` |
-| `scripts/wixqa_dose_analyze.py:23` |
-| `scripts/wixqa_grounding_compare.py:24` |
-| `scripts/wixqa_grounding_ladder.py:34` |
-| `scripts/wixqa_judge.py:22` |
-| `scripts/wixqa_rag.py:17` |
-| `scripts/wixqa_repair_empty.py:20` |
-| `scripts/wixqa_retriever_ladder.py:32` |
-| `scripts/wixqa_run3seed.py:32` |
-| `scripts/wixqa_run3seed_retriever.py:26` |
-| `scripts/wixqa_selfrefine.py:36` |
+| `scripts/wixqa/analyze_three_seeds.py:21` |
+| `scripts/wixqa/run_baseline.py:16` |
+| `scripts/wixqa/build_index.py:17` |
+| `scripts/wixqa/analyze_dose_response.py:23` |
+| `scripts/wixqa/analyze_grounding.py:24` |
+| `scripts/wixqa/build_grounding_ladder.py:34` |
+| `scripts/wixqa/judge.py:22` |
+| `scripts/wixqa/run_rag.py:17` |
+| `scripts/wixqa/repair_empty.py:20` |
+| `scripts/wixqa/build_retriever_ladder.py:32` |
+| `scripts/wixqa/run_three_seeds.py:32` |
+| `scripts/wixqa/run_three_seeds_retriever.py:26` |
+| `scripts/wixqa/run_self_refine.py:36` |
 
 Correct siblings (the replacement pattern, `Path(__file__).resolve().parents[1]`):
-`scripts/build_calibration.py:25`, `build_lora_data.py:25`, `eval_lora.py:18`,
+`scripts/calibration/build_probe.py:25`, `build_lora_data.py:25`, `eval_lora.py:18`,
 `finish_when_groq_ready.py:21`, `train_lora.py:17`.
 The other "correct" hits ADR-034 counts are in library code and use a different depth:
 `src/tlw/config/loader.py:30` / `src/tlw/evaluation/calibration.py:44` /
@@ -95,27 +95,27 @@ grep -rn "runs_hardtail|runs_lora|runs_orca|runs_rag|runs_reliability|runs_wixqa
 
 | file:line | literal | post-move value |
 |---|---|---|
-| `scripts/build_calibration.py:50` | `glob.glob("runs_reliability/*/rounds.jsonl")` | `runs/rag-medquad-reliability/*/rounds.jsonl` |
-| `scripts/eval_lora.py:107` | `ROOT / "runs_lora/lora_eval_result.json"` | `reports/lora-medquad/fine-tuned-vs-original.json` (phase 4.1) |
+| `scripts/calibration/build_probe.py:50` | `glob.glob("runs_reliability/*/rounds.jsonl")` | `runs/rag-medquad-reliability/*/rounds.jsonl` |
+| `scripts/lora/evaluate.py:107` | `ROOT / "runs_lora/lora_eval_result.json"` | `reports/lora-medquad/fine-tuned-vs-original.json` (phase 4.1) |
 | `scripts/finish_when_groq_ready.py:64,67,70` | `"--runs-dir", "runs_rag"` ×3 | `runs/rag-medquad` |
-| `scripts/rag_faithfulness.py:80` | `default="runs"` | **unchanged token, but see BLOCKER-1** |
-| `scripts/rejudge.py:91` | `default="runs_rag"` | `runs/rag-medquad` |
-| `scripts/reliability_analysis.py:53` | `default="runs_reliability"` | `runs/rag-medquad-reliability` |
-| `scripts/selective_rag_sim.py:83` | `default="runs_rag"` | `runs/rag-medquad` |
-| `scripts/wixqa_analyze.py:27` | `RUNS = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
-| `scripts/wixqa_baseline.py:57` | `out = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` (+ filename change) |
-| `scripts/wixqa_dose_analyze.py:27` | `RUNS = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
-| `scripts/wixqa_grounding_ladder.py:38` | `RL = ROOT / "runs_wixqa/retrieval_log_bge_chunk.jsonl"` | `ROOT / "runs/rag-wixqa/3-rag-better-retriever/retrieval-log.jsonl"` |
-| `scripts/wixqa_rag.py:52` | `out = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
-| `scripts/wixqa_run3seed.py:42` | `OUT = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
-| `scripts/wixqa_run3seed_retriever.py:36` | `OUT = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
-| `scripts/wixqa_selfrefine.py:47` | `OUT = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
+| `scripts/rag/faithfulness.py:80` | `default="runs"` | **unchanged token, but see BLOCKER-1** |
+| `scripts/rag/rejudge.py:91` | `default="runs_rag"` | `runs/rag-medquad` |
+| `scripts/rag/reliability.py:53` | `default="runs_reliability"` | `runs/rag-medquad-reliability` |
+| `scripts/rag/selective_simulation.py:83` | `default="runs_rag"` | `runs/rag-medquad` |
+| `scripts/wixqa/analyze_three_seeds.py:27` | `RUNS = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
+| `scripts/wixqa/run_baseline.py:57` | `out = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` (+ filename change) |
+| `scripts/wixqa/analyze_dose_response.py:27` | `RUNS = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
+| `scripts/wixqa/build_grounding_ladder.py:38` | `RL = ROOT / "runs_wixqa/retrieval_log_bge_chunk.jsonl"` | `ROOT / "runs/rag-wixqa/3-rag-better-retriever/retrieval-log.jsonl"` |
+| `scripts/wixqa/run_rag.py:52` | `out = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
+| `scripts/wixqa/run_three_seeds.py:42` | `OUT = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
+| `scripts/wixqa/run_three_seeds_retriever.py:36` | `OUT = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
+| `scripts/wixqa/run_self_refine.py:47` | `OUT = ROOT / "runs_wixqa"` | `ROOT / "runs/rag-wixqa"` |
 | `src/tlw/evaluation/calibration.py:46` | `OUTPUT_DIR = PROJECT_ROOT / "runs" / "calibration"` | `PROJECT_ROOT / "runs" / "judge-calibration"` — **MISSED BY THE PROPOSAL** (see MAJOR-2) |
 | `src/tlw/analysis/cli.py:42` | `--runs-dir` `default="runs"` | see BLOCKER-1 |
 | `src/tlw/runner.py:76` | `RUNS_ROOT = PROJECT_ROOT / "runs"` | unchanged (new runs still land at `runs/<run_id>/`) — see MAJOR-3 |
 
 **Docstring/usage-string literals (cosmetic but §0.3-relevant — a user copies these):**
-`scripts/build_calibration.py:11`, `finish_when_groq_ready.py:10`, `rejudge.py:15`,
+`scripts/calibration/build_probe.py:11`, `finish_when_groq_ready.py:10`, `rejudge.py:15`,
 `reliability_analysis.py:3,12`, `selective_rag_sim.py:15`, `wixqa_analyze.py:7`,
 `wixqa_grounding_compare.py:16,17`, `wixqa_judge.py:16,17`, `wixqa_repair_empty.py:13`,
 `wixqa_run3seed_retriever.py:62,161`, `wixqa_selfrefine.py:163`.
@@ -124,12 +124,12 @@ grep -rn "runs_hardtail|runs_lora|runs_orca|runs_rag|runs_reliability|runs_wixqa
 
 | file:line | literal | phase |
 |---|---|---|
-| `scripts/wixqa_build_index.py:10` (docstring), `:22` | `data/rag/wixqa_kb` | 4.3 |
-| `scripts/wixqa_rag.py:27` | `ROOT / "data/rag/wixqa_kb"` | 4.3 |
-| `scripts/wixqa_run3seed.py:41` | `ROOT / "data/rag/wixqa_kb"` | 4.3 |
-| `scripts/wixqa_grounding_ladder.py:25` (docstring), `:39` | `data/rag/retriever_ladder` | 4.1/4.3 |
-| `scripts/wixqa_retriever_ladder.py:37` | `data/rag/retriever_ladder` | 4.1/4.3 |
-| `scripts/selective_rag_sim.py:16` (docstring), `:84` | `data/rag/diabetes_train` | 4.3 |
+| `scripts/wixqa/build_index.py:10` (docstring), `:22` | `data/rag/wixqa_kb` | 4.3 |
+| `scripts/wixqa/run_rag.py:27` | `ROOT / "data/rag/wixqa_kb"` | 4.3 |
+| `scripts/wixqa/run_three_seeds.py:41` | `ROOT / "data/rag/wixqa_kb"` | 4.3 |
+| `scripts/wixqa/build_grounding_ladder.py:25` (docstring), `:39` | `data/rag/retriever_ladder` | 4.1/4.3 |
+| `scripts/wixqa/build_retriever_ladder.py:37` | `data/rag/retriever_ladder` | 4.1/4.3 |
+| `scripts/rag/selective_simulation.py:16` (docstring), `:84` | `data/rag/diabetes_train` | 4.3 |
 | `scripts/finish_when_groq_ready.py:68` | `"data/rag/diabetes_train"` | 4.3 |
 | `tools/rag/builder.py:17` (docstring), `tools/rag/cli.py:8` | `data/rag/<name>` | 4.3 |
 | `experiments/trackB_p3_3bRAG_diabetes.yml:8,30` | `corpus_path: data/rag/diabetes_train` | 4.3 |
@@ -138,7 +138,7 @@ grep -rn "runs_hardtail|runs_lora|runs_orca|runs_rag|runs_reliability|runs_wixqa
 | `experiments/trackB_p3_7bRAG_diabetes.yml:7,22` | `corpus_path: data/rag/diabetes_train` | 4.3 |
 | **`tests/tlw/config/test_validation.py:184`** | `cfg["memory"]["corpus_path"] = "data/rag/diabetes_train"` | **MISSED — see MINOR-1** |
 | `.gitignore` (`data/rag/` block) | ignore rule | 3.8/4.3 |
-| `scripts/wixqa_baseline.py:23`, `wixqa_build_index.py:21`, `wixqa_rag.py:26`, `wixqa_retriever_ladder.py:35,36`, `wixqa_run3seed.py:40` | `data/wixqa/…` (6 literals — proposal count correct) | 4.4 |
+| `scripts/wixqa/run_baseline.py:23`, `wixqa_build_index.py:21`, `wixqa_rag.py:26`, `wixqa_retriever_ladder.py:35,36`, `wixqa_run3seed.py:40` | `data/wixqa/…` (6 literals — proposal count correct) | 4.4 |
 
 ### V1.4 `discover_runs` — the single highest-risk claim. **VERIFIED BY EXECUTION, not by reading.**
 
@@ -183,19 +183,19 @@ run directory, which §C.4 renames. Every one of these was read live:
 
 | file:line | pattern (hardcoded run-dir stem) | what happens after phase 3 |
 |---|---|---|
-| `scripts/reliability_analysis.py:60` | `f"{runs_dir}/trackB_p3_3b_diabetes__seed*/rounds.jsonl"` | matches nothing → `questions: 0` printed, **empty report, exit 0** |
-| `scripts/reliability_analysis.py:61` | `f"{runs_dir}/trackB_p3_3bRAG*/rounds.jsonl"` | same |
-| `scripts/selective_rag_sim.py:92` | `f"{rd}/trackA_full_armA_diabetes__seed*/rounds.jsonl"` | no pairs → prints `no matching (question,seed) pairs found`, exit 1 (loud) |
-| `scripts/selective_rag_sim.py:93` | `f"{rd}/trackB_p3_3bRAG*/rounds.jsonl"` | same |
-| `scripts/rejudge.py:92` | `--pattern` default `"trackB_p3_7b*"` | 0 runs matched, loops zero times, **exit 0 silently** |
+| `scripts/rag/reliability.py:60` | `f"{runs_dir}/trackB_p3_3b_diabetes__seed*/rounds.jsonl"` | matches nothing → `questions: 0` printed, **empty report, exit 0** |
+| `scripts/rag/reliability.py:61` | `f"{runs_dir}/trackB_p3_3bRAG*/rounds.jsonl"` | same |
+| `scripts/rag/selective_simulation.py:92` | `f"{rd}/trackA_full_armA_diabetes__seed*/rounds.jsonl"` | no pairs → prints `no matching (question,seed) pairs found`, exit 1 (loud) |
+| `scripts/rag/selective_simulation.py:93` | `f"{rd}/trackB_p3_3bRAG*/rounds.jsonl"` | same |
+| `scripts/rag/rejudge.py:92` | `--pattern` default `"trackB_p3_7b*"` | 0 runs matched, loops zero times, **exit 0 silently** |
 | `scripts/finish_when_groq_ready.py:64-65` | passes `--pattern trackB_p3_7b*` | same |
-| `scripts/build_calibration.py:50` | `glob.glob("runs_reliability/*/rounds.jsonl")` — **CWD-relative, not `ROOT`-relative** | matches nothing |
-| `scripts/selective_rag_sim.py:74` | `Path(".").glob(pat)` — **CWD-relative** | ditto |
+| `scripts/calibration/build_probe.py:50` | `glob.glob("runs_reliability/*/rounds.jsonl")` — **CWD-relative, not `ROOT`-relative** | matches nothing |
+| `scripts/rag/selective_simulation.py:74` | `Path(".").glob(pat)` — **CWD-relative** | ditto |
 
-`scripts/rag_faithfulness.py:36-46` is the one that is safe: it globs `runs_dir.glob("*")` and
+`scripts/rag/faithfulness.py:36-46` is the one that is safe: it globs `runs_dir.glob("*")` and
 filters on `summary["memory_type"] == "rag"` — directory-shaped, like `discover_runs`.
 
-`scripts/reliability_analysis.py` is the dangerous one: **its failure mode is a clean-looking empty
+`scripts/rag/reliability.py` is the dangerous one: **its failure mode is a clean-looking empty
 report, not an error.** That is a §0.1 hazard, and it is the script behind
 `docs/RAG_RELIABILITY_ANALYSIS.md`.
 
@@ -203,8 +203,8 @@ report, not an error.** That is a §0.1 hazard, and it is the script behind
 
 | file:line | map | after the phase-3 file renames |
 |---|---|---|
-| `scripts/wixqa_analyze.py:32-35` | `FILES = {"baseline": {13:"baseline__seed13.jsonl", 42:"baseline_norag.jsonl", 123:"baseline__seed123.jsonl"}, "rag": {…"rag_top3.jsonl"…}}` | all 6 names dead → `main()` prints `MISSING run files` and returns 1 (loud). Replace with `f"{step}/seed{s}.jsonl"` as §C.4 says. |
-| `scripts/wixqa_dose_analyze.py:31-39` | `VARIANTS` — **4 variants × 3 seeds = 12 filenames + 3 `hit_log` names** (`retrieval_log.jsonl`, `retrieval_log_minilm_chunk.jsonl`, `retrieval_log_bge_chunk.jsonl`) | **the proposal never mentions this map at all.** Failure mode is *silent*: `load_variant` (`:48-55`) does `if not p.is_file(): continue`, so a renamed file becomes a **missing seed, not an error** — the dose-response table would render with fewer replicates and different numbers. **This is the worst silent-failure risk in the whole migration.** |
+| `scripts/wixqa/analyze_three_seeds.py:32-35` | `FILES = {"baseline": {13:"baseline__seed13.jsonl", 42:"baseline_norag.jsonl", 123:"baseline__seed123.jsonl"}, "rag": {…"rag_top3.jsonl"…}}` | all 6 names dead → `main()` prints `MISSING run files` and returns 1 (loud). Replace with `f"{step}/seed{s}.jsonl"` as §C.4 says. |
+| `scripts/wixqa/analyze_dose_response.py:31-39` | `VARIANTS` — **4 variants × 3 seeds = 12 filenames + 3 `hit_log` names** (`retrieval_log.jsonl`, `retrieval_log_minilm_chunk.jsonl`, `retrieval_log_bge_chunk.jsonl`) | **the proposal never mentions this map at all.** Failure mode is *silent*: `load_variant` (`:48-55`) does `if not p.is_file(): continue`, so a renamed file becomes a **missing seed, not an error** — the dose-response table would render with fewer replicates and different numbers. **This is the worst silent-failure risk in the whole migration.** |
 
 Note also that §C.4's before→after table has **no destination for
 `retrieval_log_minilm_chunk.jsonl`** — the `minilm_chunk` variant is a real dose point in
@@ -369,7 +369,7 @@ finding 3 is accurate.
   directory**, which violates the proposal's own naming rule (a name that promises data that
   isn't there). → MINOR-3.
 - `runs_wixqa/rag_minilm_chunk__seed*.jsonl` and `retrieval_log_minilm_chunk.jsonl`
-  **do not exist** — confirmed by `ls`. `scripts/wixqa_dose_analyze.py:36-37` declares a
+  **do not exist** — confirmed by `ls`. `scripts/wixqa/analyze_dose_response.py:36-37` declares a
   `minilm_chunk` variant for them; running it live prints
   `[skip] minilm_chunk: no judged run files yet` and renders a 3-row table. This is a *pre-existing*
   condition, not a migration regression — but it is a live demonstration that this analyser
@@ -529,8 +529,8 @@ All commands below were read out of the five result docs (`grep -n`) and, where 
 |---|---|---|---|
 | `:320` | `python -m src.tlw.analysis --runs-dir runs` | ⚠️ **ALREADY BROKEN** — see below | `python -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B --comparison B-A` |
 | `:323` | `python -m src.tlw.analysis --runs-dir runs_rag --rag` | ✅ runs, gives the published 4-arm table | `--runs-dir runs/rag-medquad --rag` |
-| `:326` | `python scripts/wixqa_analyze.py` | ✅ (`+0.152 [+0.090,+0.213]`, hit-rate 0.550) | unchanged path, but the `FILES` map at `wixqa_analyze.py:32-35` **must** be rewritten |
-| `:327` | `python scripts/wixqa_dose_analyze.py` | ✅ (`0.163 / 0.315 / 0.340`, `+0.025 [−0.030,+0.078] p=0.273`) | unchanged path, but `VARIANTS` at `wixqa_dose_analyze.py:31-39` **must** be rewritten |
+| `:326` | `python scripts/wixqa/analyze_three_seeds.py` | ✅ (`+0.152 [+0.090,+0.213]`, hit-rate 0.550) | unchanged path, but the `FILES` map at `wixqa_analyze.py:32-35` **must** be rewritten |
+| `:327` | `python scripts/wixqa/analyze_dose_response.py` | ✅ (`0.163 / 0.315 / 0.340`, `+0.025 [−0.030,+0.078] p=0.273`) | unchanged path, but `VARIANTS` at `wixqa_dose_analyze.py:31-39` **must** be rewritten |
 | `:328-330` | `wixqa_grounding_compare.py --control 'runs_wixqa/rag_bge_chunk__seed*.jsonl' --treat 'runs_wixqa/rag_bge_chunk_chunk2400__seed*.jsonl'` | ✅ | `--control 'runs/rag-wixqa/3-rag-better-retriever/seed*.jsonl' --treat 'runs/rag-wixqa/4-rag-wider-context/seed*.jsonl'` |
 | `:334` | `python -m pytest tests/ -q` (270 tests) | ✅ 270 passed | unchanged (count must stay 270) |
 
@@ -559,7 +559,7 @@ silent). This should be called out in the migration commit as a §0.1 repair, no
 | `:193-196` | `python -m tools.rag.cli … --out data/rag/diabetes_train` | `--out indexes/medquad-diabetes-train` |
 | `:199-201` | `run.py --config experiments/trackB_p3_3bRAG_diabetes.yml … --runs-dir runs_rag` | `--config experiments/rag-medquad/small-model-with-rag.yml … --runs-dir runs/rag-medquad` |
 | `:203` | `python -m src.tlw.analysis --runs-dir runs_rag --rag` | `--runs-dir runs/rag-medquad --rag` |
-| `:205` | `scripts/rag_faithfulness.py --runs-dir runs_rag …` | `--runs-dir runs/rag-medquad` |
+| `:205` | `scripts/rag/faithfulness.py --runs-dir runs_rag …` | `--runs-dir runs/rag-medquad` |
 | `:208-209` | prose naming `runs_rag/trackB_p3_3bRAG_*` **and the reused `runs_rag/trackA_full_armA_*` baseline** | rename both; **and see MAJOR-1 — the reused baseline must NOT be deleted** |
 
 ### `docs/WIXQA_RESULTS.md`
@@ -575,14 +575,14 @@ silent). This should be called out in the migration commit as a §0.1 repair, no
 | line | today | post-move |
 |---|---|---|
 | `:107-109` | `scripts/{build_lora_data,train_lora,eval_lora}.py` | **unchanged in phases 1–5** (script renames are §C.9 = phase 6, out of scope) |
-| `:111` | "Numbers from `runs_lora/lora_eval_result.json`" | `reports/lora-medquad/fine-tuned-vs-original.json` (phase 4.1) — **and `scripts/eval_lora.py:107` must be repointed in the same commit** |
+| `:111` | "Numbers from `runs_lora/lora_eval_result.json`" | `reports/lora-medquad/fine-tuned-vs-original.json` (phase 4.1) — **and `scripts/lora/evaluate.py:107` must be repointed in the same commit** |
 
 ### `docs/RAG_RELIABILITY_ANALYSIS.md`
 | line | today | post-move |
 |---|---|---|
 | `:3-4`, `:126` | "`runs_reliability/` … **is running**" (stale — 16 completed dirs on disk) | `runs/rag-medquad-reliability/` + a truthful status (proposal finding 12) |
 | `:16-17` | the **35 broad hard-tail** table row | **sourced exclusively from `runs_hardtail/` — see BLOCKER-1** |
-| — | no reproduce command is given at all | add `python scripts/reliability_analysis.py --runs-dir runs/rag-medquad-reliability …` — but see MAJOR-2: its internal globs must be fixed first |
+| — | no reproduce command is given at all | add `python scripts/rag/reliability.py --runs-dir runs/rag-medquad-reliability …` — but see MAJOR-2: its internal globs must be fixed first |
 
 ### `README.md`
 `:90` "Every number below is computed from a **committed** run log" — false today (`git ls-files`
@@ -743,10 +743,10 @@ change the default to a required argument, or improve the message to list the st
 `.claude/rules/{00-index,structure,todo,schema}.md`, `.claude/settings.json` (all 46 lines),
 `.claude/hooks/guard.py:1-45`, `.gitignore:220-247`,
 `src/tlw/analysis/loaders.py` (all 249 lines), `src/tlw/analysis/cli.py` (all 246 lines),
-`tests/conftest.py`, `tests/tlw/conftest.py`, `scripts/wixqa_analyze.py:1-60`,
-`scripts/wixqa_dose_analyze.py:25-60`, `scripts/reliability_analysis.py:1-90`,
-`scripts/selective_rag_sim.py:60-110`, `scripts/rejudge.py:85-115`,
-`scripts/rag_faithfulness.py:30-50`, `scripts/wixqa_run3seed_retriever.py:110-125`,
+`tests/conftest.py`, `tests/tlw/conftest.py`, `scripts/wixqa/analyze_three_seeds.py:1-60`,
+`scripts/wixqa/analyze_dose_response.py:25-60`, `scripts/rag/reliability.py:1-90`,
+`scripts/rag/selective_simulation.py:60-110`, `scripts/rag/rejudge.py:85-115`,
+`scripts/rag/faithfulness.py:30-50`, `scripts/wixqa/run_three_seeds_retriever.py:110-125`,
 `docs/RAG_RELIABILITY_ANALYSIS.md:1-45`, `docs/RAG_LAW.md:308-345`,
 `runs_hardtail/*/summary.jsonl` (10), `runs_hardtail/…seed1…/config_used.json`,
 `runs_orca/*/` (both, with `ls -la`), `runs_orca/…155536Z/summary.jsonl`.
@@ -772,8 +772,8 @@ python -m pytest -q -o pythonpath=. -o testpaths=tests                        # 
 python -m pytest -q <abs>/tests   (from cwd C:\)                              # 270 passed
 python -m src.tlw.analysis --runs-dir runs --comparison C-B                   # +0.001, banner FIRES (pilot pollution)
 python -m src.tlw.analysis --runs-dir runs_rag --rag                          # 4 labels; -0.005 [-0.067,+0.056] p=0.9088
-python scripts/wixqa_analyze.py                                               # +0.152 [+0.090,+0.213] p=5.156e-11
-python scripts/wixqa_dose_analyze.py                                          # 0.163/0.315/0.340; +0.025 [-0.030,+0.078] p=0.273
+python scripts/wixqa/analyze_three_seeds.py                                               # +0.152 [+0.090,+0.213] p=5.156e-11
+python scripts/wixqa/analyze_dose_response.py                                          # 0.163/0.315/0.340; +0.025 [-0.030,+0.078] p=0.273
 ```
 **Simulations (temp dirs only, repo untouched):**
 ```
@@ -838,7 +838,7 @@ addopts = -q
 | # | Action | Verification |
 |---|---|---|
 | 2.1 | In each of the 13 files from V1.1, replace the hardcoded literal with `ROOT = Path(__file__).resolve().parents[1]`. Change **nothing else**. | after each file: `& …python.exe -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" scripts/<f>.py` |
-| 2.2 | Prove the two pure-offline analysers still print the published numbers | `& …python.exe scripts/wixqa_analyze.py` → `+0.152 [+0.090, +0.213]`, McNemar `p=5.156e-11`, hit-rate `110/200 = 0.550`  ·  `& …python.exe scripts/wixqa_dose_analyze.py` → `0.163 / 0.315 / 0.340`, `+0.025 [-0.030, +0.078] p=0.273` |
+| 2.2 | Prove the two pure-offline analysers still print the published numbers | `& …python.exe scripts/wixqa/analyze_three_seeds.py` → `+0.152 [+0.090, +0.213]`, McNemar `p=5.156e-11`, hit-rate `110/200 = 0.550`  ·  `& …python.exe scripts/wixqa/analyze_dose_response.py` → `0.163 / 0.315 / 0.340`, `+0.025 [-0.030, +0.078] p=0.273` |
 | 2.3 | `SMOKE` | 270 passed |
 
 > These are the exact values I captured **before** any change (V5) — they are the regression oracle
@@ -850,14 +850,14 @@ Do them in this order; each is independently green.
 
 | # | Action | Verification (run immediately) |
 |---|---|---|
-| 3.0 | Fix the four config-stem globs **first** so they survive the renames: `reliability_analysis.py:60,61`, `selective_rag_sim.py:92,93`, `rejudge.py:92`, `finish_when_groq_ready.py:64-65`. Make them label-driven (`no-rag__seed*`, `with-rag__seed*`, `large-model*`) *and* keep a back-compat fallback until the matching study has moved. | `& …python.exe scripts/reliability_analysis.py --runs-dir runs_reliability` → still prints `questions: 125` (**not 0**) |
+| 3.0 | Fix the four config-stem globs **first** so they survive the renames: `reliability_analysis.py:60,61`, `selective_rag_sim.py:92,93`, `rejudge.py:92`, `finish_when_groq_ready.py:64-65`. Make them label-driven (`no-rag__seed*`, `with-rag__seed*`, `large-model*`) *and* keep a back-compat fallback until the matching study has moved. | `& …python.exe scripts/rag/reliability.py --runs-dir runs_reliability` → still prints `questions: 125` (**not 0**) |
 | 3.1 | `mkdir runs/teaching-loop-medquad/pilots`; `git mv` the 12 `runs/trackA_full_arm{A,B,C,D}_*` to `1-baseline` / `2-self-refine` / `3-teacher-feedback` / `4-teacher-sees-answer` `__seed<N>__<ts>`; `git mv` the 14 `runs/trackA_p2_*` into `pilots/` | `& …python.exe -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B --comparison B-A` → **C-B `+0.003 [-0.021,+0.029]` p=1.0000; B-A `+0.091 [+0.051,+0.133]`; arms 0.821/0.912/0.915/0.940; NO honesty banner** *(pre-verified in V4.3)* |
 | 3.2 | `git mv runs/calibration runs/judge-calibration` + regroup the 8 probes per §C.4 Study 8 **and edit `src/tlw/evaluation/calibration.py:46`** to `runs/judge-calibration` (MAJOR-4) | `& …python.exe -c "from src.tlw.evaluation.calibration import OUTPUT_DIR; print(OUTPUT_DIR)"` → ends `runs\judge-calibration`; `SMOKE` |
 | 3.3 | `git mv runs_rag/* runs/rag-medquad/` with the 2×2 names. **KEEP all three `trackA_full_armA_*` copies** as `small-model-no-rag__seed*` (P0.2). Edit `rejudge.py:91`, `selective_rag_sim.py:83`, `finish_when_groq_ready.py:64,67,70`, `rag_faithfulness.py` docstrings | `& …python.exe -m src.tlw.analysis --runs-dir runs/rag-medquad --rag` → `labels present: 3B, 3B+RAG, 7B, 7B+RAG`; `3B+RAG-3B: -0.005 [-0.067,+0.056] p=0.9088`; `7B+RAG-7B: -0.069 [-0.120,-0.019] p=0.0004` |
 | 3.4 | `git mv runs_rag_aspect/ + runs_rag_big/` → `runs/rag-medquad-fair-tests/` | `& …python.exe -m src.tlw.analysis --runs-dir runs/rag-medquad-fair-tests --rag` → 2 labels, no crash |
-| 3.5 | `git mv runs_reliability/` → `runs/rag-medquad-reliability/` (`no-rag__seed{1..8}`, `with-rag__seed{1..8}`); **`git mv runs_hardtail/` → the same study** (P0.1 — do **not** delete); edit `reliability_analysis.py:53` default and `build_calibration.py:50` | `& …python.exe scripts/reliability_analysis.py --runs-dir runs/rag-medquad-reliability` → `questions: 125`, non-empty strata table |
+| 3.5 | `git mv runs_reliability/` → `runs/rag-medquad-reliability/` (`no-rag__seed{1..8}`, `with-rag__seed{1..8}`); **`git mv runs_hardtail/` → the same study** (P0.1 — do **not** delete); edit `reliability_analysis.py:53` default and `build_calibration.py:50` | `& …python.exe scripts/rag/reliability.py --runs-dir runs/rag-medquad-reliability` → `questions: 125`, non-empty strata table |
 | 3.6 | `git mv runs_orca/…155536Z` → `runs/student-prompt-medquad/detailed-prompt-style__seed42__20260723T155536Z`; **delete** `…155406Z` (P0.4, evidenced) | `& …python.exe -m src.tlw.analysis --runs-dir runs/student-prompt-medquad` → 1 run, `pass_rate 0.840` |
-| 3.7 | `git mv runs_wixqa/*.jsonl` → the `runs/rag-wixqa/<step>/seed<N>.jsonl` ladder; **rewrite `wixqa_analyze.py:32-35` (`FILES`) and `wixqa_dose_analyze.py:31-39` (`VARIANTS`) in the same commit** (V1.6); edit `wixqa_{baseline,rag,run3seed,run3seed_retriever,selfrefine,grounding_ladder}.py` output/input paths | `& …python.exe scripts/wixqa_analyze.py` → **`+0.152 [+0.090, +0.213]`, `110/200 = 0.550`, nulls all 0**  ·  `& …python.exe scripts/wixqa_dose_analyze.py` → **`0.163 / 0.315 / 0.340`, `+0.025 [-0.030,+0.078] p=0.273`** — byte-for-byte the §P2.2 oracle |
+| 3.7 | `git mv runs_wixqa/*.jsonl` → the `runs/rag-wixqa/<step>/seed<N>.jsonl` ladder; **rewrite `wixqa_analyze.py:32-35` (`FILES`) and `wixqa_dose_analyze.py:31-39` (`VARIANTS`) in the same commit** (V1.6); edit `wixqa_{baseline,rag,run3seed,run3seed_retriever,selfrefine,grounding_ladder}.py` output/input paths | `& …python.exe scripts/wixqa/analyze_three_seeds.py` → **`+0.152 [+0.090, +0.213]`, `110/200 = 0.550`, nulls all 0**  ·  `& …python.exe scripts/wixqa/analyze_dose_response.py` → **`0.163 / 0.315 / 0.340`, `+0.025 [-0.030,+0.078] p=0.273`** — byte-for-byte the §P2.2 oracle |
 | 3.8 | Write one `manifest.json` per condition directory + one `README.md` per study (additive) | `& …python.exe -c "import json,glob; [json.load(open(p)) for p in glob.glob('runs/*/*/manifest.json')]"` → no exception |
 | 3.9 | Apply the **corrected** `.gitignore` block from V1.7 (replaces `.gitignore:236` and `:241`) — **not** the verbatim block from the proposal (BLOCKER-2) | `git add -A -n \| grep summary.jsonl` → non-empty; `git check-ignore -v runs/teaching-loop-medquad/1-baseline__seed13__*/rounds.jsonl` → matched by `runs/**` |
 | 3.10 | Rename/regroup `experiments/*.yml` per §C.4. **Leave every `params.arm` value alone** (registry keys, `strategies.py:99`). Place `trackB_p3_loragen_diabetes.yml` (MINOR-2). Fix the 4 `--runs-dir runs_*` header comments. | `& …python.exe -c "import glob; from src.tlw.config.loader import load_config; [load_config(p) for p in glob.glob('experiments/**/*.yml', recursive=True)]"` → every config still validates |

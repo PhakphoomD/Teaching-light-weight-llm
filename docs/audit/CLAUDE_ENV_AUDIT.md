@@ -19,11 +19,11 @@ LoRA training), and (3) several specs contain stale or contradictory references 
 
 ### [BLOCKER] The whole `.claude/` environment is untracked in git
 - **evidence:** `git status --short` → `?? .claude/` (command run 2026-07-13; also `?? tools/`,
-  `?? docs/plan/`, `?? docs/audit/`, `?? data/clean/`, `?? scripts/assess_all.py`,
-  `?? scripts/compare_judges.py`, `?? scripts/compare_students.py`).
+  `?? docs/plan/`, `?? docs/audit/`, `?? data/clean/`, `?? scripts/dataset/assess_all.py`,
+  `?? scripts/calibration/compare_judges.py`, `?? scripts/calibration/compare_students.py`).
 - **why:** §0.3 reproducible / §0.4 evidence. The Constitution, guard hook, permission rules,
   agent specs, the entire renovation plan, AND the evidence scripts behind ADR-011/ADR-014
-  (`scripts/compare_judges.py`, `compare_students.py`) exist only on this machine's working tree.
+  (`scripts/calibration/compare_judges.py`, `compare_students.py`) exist only on this machine's working tree.
   A `git checkout`/clone loses the SSOT and the enforcement layer silently.
 - **fix:** commit `.claude/`, `docs/plan/`, `docs/audit/`, `tools/`, the three scripts, and
   (decision needed) `data/clean/`. **Owner: main thread / user** — user decides the commit; this

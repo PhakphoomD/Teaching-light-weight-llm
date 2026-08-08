@@ -8,7 +8,7 @@ confidence intervals, on a codebase rebuilt so that its own evaluation cannot le
 
 | # | Document | What it gives you | Time |
 |---|---|---|---|
-| 1 | **[RAG_LAW.md](RAG_LAW.md)** | **The whole result in one place.** The law, the evidence chain, product implications, limitations, and every number with its source. | ~10 min |
+| 1 | **[EXPERIMENT_RESULTS.md](EXPERIMENT_RESULTS.md)** | **The whole result in one place.** The law, the evidence chain, product implications, limitations, and every number with its source. | ~10 min |
 | 2 | [TRACK_A_RESULTS.md](TRACK_A_RESULTS.md) | Does the teaching loop work? Self-refinement **+0.091**; an independent teacher **+0.003 (nothing)**. | ~5 min |
 | 3 | [WIXQA_RESULTS.md](WIXQA_RESULTS.md) | RAG where the model genuinely lacks the knowledge: **+0.152**, the dose-response proof, the grounding-delivery finding (**+0.130**), and Loop+RAG. | ~10 min |
 | 4 | [RAG_RESULTS.md](RAG_RESULTS.md) | RAG where the model already knows the domain: **no effect** (−0.005), and why that null is structural. | ~5 min |
@@ -17,7 +17,7 @@ confidence intervals, on a codebase rebuilt so that its own evaluation cannot le
 
 ## If you only read one thing
 
-[**RAG_LAW.md**](RAG_LAW.md). It states the finding — *RAG helps only when the retrieved text actually
+[**EXPERIMENT_RESULTS.md**](EXPERIMENT_RESULTS.md). It states the finding — *RAG helps only when the retrieved text actually
 contains the answer, and the biggest lever turned out to be how that text is delivered into the
 prompt, not which retriever produced it* — and backs every claim with a number, a CI and a log.
 

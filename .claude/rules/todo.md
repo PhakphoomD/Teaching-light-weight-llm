@@ -133,14 +133,14 @@ training→ops, design→program-architect.
 - [x] **T3.2** Build retrieval corpus + index from `data/clean/` Diabetes (held-out excluded) → `tools/rag/` *(data-engineer)* — done 2026-07-16: reusable config-driven `tools/rag/{builder,cli}.py` (reuses `tools/dataset/embeddings.embed` MiniLM + FAISS IndexFlatIP like `faiss_backend.py`). Diabetes build: 506 source → 0 dropped by id (RAG-L1, splits disjoint) → **58 dropped by near-dup scrub (RAG-L2, ≥0.90 cosine vs heldout, q OR a)** → **448 indexed**; both exclusion checks PASS. Artifacts `data/rag/diabetes_train/{faiss.index,passages.jsonl,faiss.ids.json,manifest.json,build_report.md}` (gitignored, rebuildable via `python -m tools.rag.cli`). Sample retrievals sane (same-topic passages sim 0.61–0.84, NOT the exact heldout answer → validates the 0.35 floor). 5 tests pass (`tests/rag/`); generality smoke on Heart/Lung (246 rec) OK.
 - [x] **T3.3** slot-D `type: rag` backend + grounding into answer prompt; leak guard *(codebase-steward + data)* — done 2026-07-16: `src/tlw/memory/rag_backend.py` (`RagMemory`, registers "rag", read-only corpus, `store`/`update_outcome` no-op, `grounds_first_attempt=True`); grounding wired via `core.grounding_block` + `_BaseArm._first_prompt` (passages → `grounded_first` preset at round 1); config: `corpus_path`/`max_passage_words` keys, V8 exempts rag on A/B, rag-requires-corpus_path check. **Leak handling strengthened after first real run surfaced templated leaks** (hub-approved): RAG-L2b build-time verbatim-block scrub (drop train records sharing ≥8 twelve-shingles w/ any heldout answer — cosine is blind to MedQuAD "What to do for X" template reuse, e.g. Crohn's/Colitis 108 shingles @ 0.76 cos) + RAG-L3 changed from abort-run to **filter-per-passage** (drop+count leaky passage, ground on survivors; `grounding_filtered_total` in summary). Index rebuilt: 506→ L2a 58 + L2b 34 → **414 indexed**. E2E smoke (5 heldout, 3B+RAG): completed, all grounded, 1 residual passage filtered, no abort. Full suite **257 pass**. ⚠️ Ops: set `HF_HUB_OFFLINE=1` for embed runs (see [[hf-offline-embedding-stall]]).
 - [x] **T3.4** Grounded-QA eval — blind correctness (headline) + faithfulness (diagnostic), never merged *(qa)* — done 2026-07-16: reused Track-A `BlindJudge` unchanged (headline, comparability); `src/tlw/evaluation/faithfulness.py` `FaithfulnessJudge` (RAGAS-style groundedness ratio, single-call, §0.2-safe — sees (answer, passages) only, no gold; NEW judge not `gt_comparing`); runner computes it post-hoc for rag runs (loop persists `grounding_context`), aggregates `metrics.faithfulness` + `grounding_filtered_total` in summary. Analysis: `src/tlw/analysis/rag_report.py` groups by RAG label {3B,3B+RAG,7B,7B+RAG} (NO V8 guard — crossing memory none/rag is the design), reuses the Track-A CI machinery; `--rag` CLI flag renders per-label Wilson + headline 3B+RAG−3B (paired bootstrap+McNemar) + **three never-merged columns** (correctness/faithfulness/reference_match) + honesty banner. 13 new tests; suite **270 pass**. E2E verified: real 3B & 3B+RAG runs (4 heldout) → faithfulness populated, `--rag` table renders, banner flags n<125.
-- [x] **T3.5** RAG ablation → `docs/RAG_RESULTS.md` + ADR → **GATE ✋ PASSED** *(ops + qa)* — done 2026-07-21 (4-arm table clean, ADR-027). Pilot (25 heldout×seed42, Groq judge) showed RAG HURTS: 3B 0.96→3B+RAG 0.80 (−0.16), broke 4/fixed 0. **Diagnosed:** (1) first-25 heldout are unusually easy (96% baseline, near-ceiling — no knowledge gap); (2) MiniLM retrieval is disease-name-dominated so "treatments for X" retrieves "symptoms of X" (right topic, wrong aspect) → grounding distracts the 3B off its already-correct answer. **Similarity floor is NOT the lever** (broken cases at 0.70-0.85, same as ok cases). Hardened grounding prompt (v2) BACKFIRED (0.80→0.56 — 3B fixates on passages, prefaces "the passage doesn't cover this") → reverted to v1. **Decisive hard-subset test:** on the 13 Qs the 3B baseline failed in ALL 3 Track-A seeds, 3B+RAG recovers **5/13 (38%)** → RAG DOES help where a knowledge gap exists; the pilot negative was an easy-question artifact. Net effect on 125 = tug-of-war (helps hard, hurts easy) → needs full run. **User chose headline pair (~4h):** reuse Track-A `trackA_full_armA` as 3B baseline (125×3, copied to `runs_rag/`), running **3B+RAG × {13,42,123} × 125** now (`--no-faithfulness`, correctness=Groq to fit TPD + stay consistent w/ baseline; faithfulness computed offline via `scripts/rag_faithfulness.py` local judge). **HEADLINE DONE 2026-07-16 (ADR-027):** 3B+RAG − 3B = **−0.005, 95% CI [−0.067,+0.056], McNemar p=0.91 → NO net effect** (3B 0.821 / 3B+RAG 0.816; 100% Groq judge). **Tug-of-war:** RAG broke 39 (35 on easy) + fixed 37 (all on baseline-failed, ~38% recovery on hardest) → net ~0. Faithfulness ≈0.81 (61% null, local judge weak — indicative). `docs/RAG_RESULTS.md` + ADR-027. **Gate ✋ passed — user (2026-07-17) said do 7B then selective RAG.**
+- [x] **T3.5** RAG ablation → `docs/RAG_RESULTS.md` + ADR → **GATE ✋ PASSED** *(ops + qa)* — done 2026-07-21 (4-arm table clean, ADR-027). Pilot (25 heldout×seed42, Groq judge) showed RAG HURTS: 3B 0.96→3B+RAG 0.80 (−0.16), broke 4/fixed 0. **Diagnosed:** (1) first-25 heldout are unusually easy (96% baseline, near-ceiling — no knowledge gap); (2) MiniLM retrieval is disease-name-dominated so "treatments for X" retrieves "symptoms of X" (right topic, wrong aspect) → grounding distracts the 3B off its already-correct answer. **Similarity floor is NOT the lever** (broken cases at 0.70-0.85, same as ok cases). Hardened grounding prompt (v2) BACKFIRED (0.80→0.56 — 3B fixates on passages, prefaces "the passage doesn't cover this") → reverted to v1. **Decisive hard-subset test:** on the 13 Qs the 3B baseline failed in ALL 3 Track-A seeds, 3B+RAG recovers **5/13 (38%)** → RAG DOES help where a knowledge gap exists; the pilot negative was an easy-question artifact. Net effect on 125 = tug-of-war (helps hard, hurts easy) → needs full run. **User chose headline pair (~4h):** reuse Track-A `trackA_full_armA` as 3B baseline (125×3, copied to `runs_rag/`), running **3B+RAG × {13,42,123} × 125** now (`--no-faithfulness`, correctness=Groq to fit TPD + stay consistent w/ baseline; faithfulness computed offline via `scripts/rag/faithfulness.py` local judge). **HEADLINE DONE 2026-07-16 (ADR-027):** 3B+RAG − 3B = **−0.005, 95% CI [−0.067,+0.056], McNemar p=0.91 → NO net effect** (3B 0.821 / 3B+RAG 0.816; 100% Groq judge). **Tug-of-war:** RAG broke 39 (35 on easy) + fixed 37 (all on baseline-failed, ~38% recovery on hardest) → net ~0. Faithfulness ≈0.81 (61% null, local judge weak — indicative). `docs/RAG_RESULTS.md` + ADR-027. **Gate ✋ passed — user (2026-07-17) said do 7B then selective RAG.**
   - **7B pair — DONE 2026-07-21 (clean 4-arm table):** original runs got Groq-cap-contaminated (mixed judge) + a same-day re-judge corrupted scores to nulls; **recovered** by re-judging the 2 still-null 7bRAG runs on fresh Groq (`rejudge.py --only-nulls`, idempotent; student answers were always intact). **7B 0.904 / 7B+RAG 0.835 → 7B+RAG−7B = −0.069 [−0.120,−0.019] p=0.0004 → RAG SIGNIFICANTLY HURTS the 7B** (fixed 13/broke 39), MORE than the 3B. **3B+RAG 0.816 < 7B 0.904** → RAG can't lift a 3B to 7B. Full 4-arm table in `docs/RAG_RESULTS.md §8` + ADR-027. Lesson: RAG's distraction dominates its repair the stronger the base model. **Ops lesson: Groq free-tier TPD (500K 8b / 100K 70b) is org-wide + too small for ~750-call judging — use local judge or batch across days; never destructive-rewrite scores without checking budget first.**
   - **Selective RAG (P3-B, `docs/plan/SELECTIVE_RAG.md`) — oracle +9.9pt real, cheap gates FAIL:** ground-only-baseline-failures = 0.920 (+0.099). But uncertainty gates (length/hedging/self-consistency) corr ~0 (3B is confidently wrong); 8B verify-then-ground LLM gate is bimodal-useless (99% lenient / 0% strict prompt). User chose: **try Groq 70B gate on reset** (queued in `finish_when_groq_ready.py`, seed-42 subset). If 70B also fails → selective RAG needs a learned gate / aspect-aware retriever (future work). New tools: `scripts/{rag_faithfulness,selective_rag_sim,rejudge,finish_when_groq_ready}.py`.
 
 ### P3-B — LoRA (LIGHT specs — scope firms up only after the T3.5 gate)
-- [x] **T3.6** LoRA data-gen *(data-engineer)* — done 2026-07-23: recipe PIVOTED per T3.5 gate — loop-factory yields no signal (self-refine doesn't engage on near-ceiling train, smoke 5/5 round-1; RAG hurts, ADR-027) → **standard gold-SFT** on (TRAIN question → TRAIN gold answer). `scripts/build_lora_data.py` → `data/processed/lora_diabetes_sft.jsonl` (**506 pairs**, 0 held-out leak verified by id+question, cloud-free — no Groq). Data card written.
-- [x] **T3.7** QLoRA 4-bit fine-tune *(ops-engineer)* — done 2026-07-23: precondition-checked FIRST (PyPI/HF/bnb-Windows-wheel/CUDA all ✓; bnb 4-bit-on-CUDA verified). Installed peft/bnb/trl, downloaded Qwen2.5-3B-Instruct (6.2GB), `scripts/train_lora.py` (NF4 4-bit + LoRA r=16 on attn+MLP, grad-checkpoint, trl SFTTrainer). Trained 2 epochs on RTX 4060 (GPU 6.5/8GB, 23min): **loss 1.98→0.99, token-acc 0.59→0.75**. Adapter → `models/lora_diabetes/` (60MB).
-- [x] **T3.8** Combined eval *(qa)* — done 2026-07-23: `scripts/eval_lora.py`, base 3B vs 3B+LoRA on held-out 125 (same HF stack, adapter on/off), 2 seeds, **validated Groq judge** (0 fallback). **3B+LoRA − base = −0.292, 95% CI [−0.360, −0.224] → LoRA HURTS**. Diagnosed: style transfer SUCCEEDED (LoRA adopts NIH gold phrasing) but answers ~30-45% shorter → fail "complete" (≥4) bar (alignment-tax/forgetting). `docs/PRODUCT_RESULTS.md` + ADR-028. **T3 (P3) COMPLETE** — all 8 tasks done; combined verdict: no lever (loop/RAG/LoRA) improves the near-ceiling aggregate, value is on the hard tail.
+- [x] **T3.6** LoRA data-gen *(data-engineer)* — done 2026-07-23: recipe PIVOTED per T3.5 gate — loop-factory yields no signal (self-refine doesn't engage on near-ceiling train, smoke 5/5 round-1; RAG hurts, ADR-027) → **standard gold-SFT** on (TRAIN question → TRAIN gold answer). `scripts/lora/build_data.py` → `data/processed/lora_diabetes_sft.jsonl` (**506 pairs**, 0 held-out leak verified by id+question, cloud-free — no Groq). Data card written.
+- [x] **T3.7** QLoRA 4-bit fine-tune *(ops-engineer)* — done 2026-07-23: precondition-checked FIRST (PyPI/HF/bnb-Windows-wheel/CUDA all ✓; bnb 4-bit-on-CUDA verified). Installed peft/bnb/trl, downloaded Qwen2.5-3B-Instruct (6.2GB), `scripts/lora/train.py` (NF4 4-bit + LoRA r=16 on attn+MLP, grad-checkpoint, trl SFTTrainer). Trained 2 epochs on RTX 4060 (GPU 6.5/8GB, 23min): **loss 1.98→0.99, token-acc 0.59→0.75**. Adapter → `models/lora_diabetes/` (60MB).
+- [x] **T3.8** Combined eval *(qa)* — done 2026-07-23: `scripts/lora/evaluate.py`, base 3B vs 3B+LoRA on held-out 125 (same HF stack, adapter on/off), 2 seeds, **validated Groq judge** (0 fallback). **3B+LoRA − base = −0.292, 95% CI [−0.360, −0.224] → LoRA HURTS**. Diagnosed: style transfer SUCCEEDED (LoRA adopts NIH gold phrasing) but answers ~30-45% shorter → fail "complete" (≥4) bar (alignment-tax/forgetting). `docs/PRODUCT_RESULTS.md` + ADR-028. **T3 (P3) COMPLETE** — all 8 tasks done; combined verdict: no lever (loop/RAG/LoRA) improves the near-ceiling aggregate, value is on the hard tail.
 
 ### P3-D — Honest RAG re-test (2026-07-24 spoke session) — findings PROPOSED, awaiting hub ratification
 Motivation: before accepting the MedQuAD RAG null, exhaust the "fair-test" objections, then test RAG's other half (does it add knowledge where the model genuinely lacks it?) on a gap-heavy SME testbed.
@@ -168,7 +168,7 @@ Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hi
   MiniLM/whole-article of the T3.10 ladder). Judge held fixed (Groq llama-3.1-8b ref-comparing, §0.2-legal);
   seed 42 = ADR-030 draw reused verbatim. **→ T3.10 (retriever ladder) unblocked.**
 - [x] **T3.10** Offline retriever ladder (chunking / encoder>MiniLM / hybrid BM25+dense), rank by hit-rate@k → **GATE**
-  *(data-engineer)* — DONE 2026-07-24, **GATE = GO**. `scripts/wixqa_retriever_ladder.py` (offline hit-rate@k, no LLM;
+  *(data-engineer)* — DONE 2026-07-24, **GATE = GO**. `scripts/wixqa/build_retriever_ladder.py` (offline hit-rate@k, no LLM;
   KB-only seal re-verified) → `data/rag/retriever_ladder/hitrate_table.json`. 7 variants, article-level hit@3 vs the
   0.550 baseline: **`bge_chunk` = 0.665 (+11.5pt) WINS** (bge-base-en-v1.5 + 180-word chunks); minilm_chunk 0.645
   (+9.5pt, chunking is the dominant lever — whole-article MiniLM truncates long KB articles at ~256 tok). Honest
@@ -182,9 +182,9 @@ Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hi
   DONE 2026-07-25, **all 600/600 judged** (final: bge_chunk pass **0.340** vs predicted 0.337 — within 0.003;
   gold-split retrieved **0.411** / missed 0.199; paired Δ vs minilm_whole +0.025 [−0.030,+0.078] p=0.27 n.s. as
   expected). Generation
-  ran via auto-resume once the user's *other* Claude session freed the shared GPU. `scripts/wixqa_run3seed_retriever.py`
+  ran via auto-resume once the user's *other* Claude session freed the shared GPU. `scripts/wixqa/run_three_seeds_retriever.py`
   (grounds 3B on a retriever's top-k, IDENTICAL prompt/judge/top-k to T3.9 — only retriever changes) +
-  `scripts/wixqa_dose_analyze.py`. **DOSE-RESPONSE (monotonic):** no-RAG hit0→pass 0.163; minilm_whole hit0.55→0.315;
+  `scripts/wixqa/analyze_dose_response.py`. **DOSE-RESPONSE (monotonic):** no-RAG hit0→pass 0.163; minilm_whole hit0.55→0.315;
   **bge_chunk hit0.665→0.329**. **MECHANISM (the proof):** gold-split P(pass|retrieved) pinned at **0.400** for BOTH
   minilm_whole AND bge_chunk (missed 0.211/0.186) → the retriever changes HOW OFTEN gold is retrieved, not the payoff
   when it is → retrieval IS the bottleneck, demonstrated not asserted. Mixture `hit·0.400+(1−hit)·0.211` predicts both
@@ -213,7 +213,7 @@ Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hi
   judged; Stage 2 (self-refine) awaiting user go.** Pre-run diagnostic found a confound that would have made
   Stage 2 uninterpretable: grounding showed only the first 900 chars but gold articles are median 3,555 →
   92.5% truncated, student saw 25% of the article, and only 36% of the expert answer's content (full article
-  holds 72%). Fixed via an offline 2×2 coverage ladder (`scripts/wixqa_grounding_ladder.py`, 0 LLM calls) →
+  holds 72%). Fixed via an offline 2×2 coverage ladder (`scripts/wixqa/build_grounding_ladder.py`, 0 LLM calls) →
   **`chunk2400`** (matched-chunk-centred window, 2400 chars/article) raises in-context answer coverage
   0.412→**0.655** (90% of the 0.726 ceiling); chunk-centring alone gives +0.071 at +7% prompt (uses the
   retriever's own localisation, which T3.11 discarded). Verified no Ollama context truncation at 1,323 tokens.
@@ -228,7 +228,7 @@ Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hi
   New tools: `wixqa_{grounding_ladder,grounding_compare,repair_empty}.py` + `--grounding` in
   `wixqa_run3seed_retriever.py`. Report → `docs/WIXQA_RESULTS.md` §"Grounding delivery".
   **STAGE 2 (self-refine + RAG = the Loop+RAG system) PILOT COMPLETE 2026-08-06** (133/133 judged,
-  gold-retrieved, seed 42; `scripts/wixqa_selfrefine.py`, grounding persisted in EVERY round — fixes the
+  gold-retrieved, seed 42; `scripts/wixqa/run_self_refine.py`, grounding persisted in EVERY round — fixes the
   `strategies.py:154` blocker; fixed rounds + offline judging so the ref-comparing judge never gates the
   loop, §0.2; teacher stays dead per ADR-024). **VERDICT: self-refine does NOT compound with RAG.**
   Mechanically it works — reference-coverage **0.414→0.445 (+0.031 [+0.018,+0.047], CI excludes 0)**,
@@ -269,8 +269,173 @@ Index + design: `docs/plan/P3-E-retrieval-proof.md`. Proof = pass-rate tracks hi
   progress-bar "100%". **Known remaining staleness (deliberately deferred to the housekeeping pass):**
   README's architecture diagram/Project-Structure/Usage sections still describe the pre-T2.9 layout.
 
-### P3-C — Product surface (placeholder) — deferred until after the RAG-law write-up
-Minimal local chat UI for SME use; storage upgrade (revisit ADR-010 SQLite/sqlite-vec). Unowned.
+### ACTIVE — P3-C: Product demo + portfolio presentation (PLANNED 2026-08-07, ADR-035)
+Index + senior-refined narrative outline: `docs/plan/P3-C-product-and-portfolio.md`. Three distinct
+artifacts (keep separate). Sequence: T3.15 ∥ T3.16 → T3.17.
+- [x] **T3.15** Local RAG demo app → `app/` — DONE 2026-08-07: `app/{engine,demo,build_showcase}.py` + README.
+  Engine (pure Python, reuses `src/tlw/wixqa`) does retrieve→ground(narrow/wide)→answer with 3B via Ollama;
+  `demo.py` Streamlit UI = 3 compare lanes (no-RAG / RAG-narrow-900 / RAG-wide-2400) + set selector
+  (gold-retrieved↔missed) + sources + honest self-refine toggle (off). **Verified end-to-end:** engine
+  smoke + `build_showcase.py` produced real `reports/rag-wixqa/demo-showcase.jsonl` (4 recs, Groq judge:
+  gold✓ +1/+1, gold✗ tug-of-war 3→1 & 1→3 = honest) + **live GUI drove a query** (no-RAG "Yes"=wrong →
+  RAG "cannot, verify first"=correct). Screenshot/GIF = user captures locally (browser pane can't composite
+  here; GUI render confirmed via page text). streamlit installed. *(ops + steward)*
+- **T3.15 UI REMOVED (user decision 2026-08-08):** `app/demo.py` deleted (generic, low
+  differentiation). Kept + verified: `app/{engine,build_showcase}.py` + README reframed — the engine
+  generates `reports/rag-wixqa/demo-showcase.jsonl`, reused as comparison TABLE #7. compile OK.
+- [x] **T3.16 — REBUILT FROM OBJECTIVES 2026-08-08 (v2).** The first pass (8 charts + 5 tables) was
+  scrapped by the user: no spine, arbitrary numbering, on-chart titles no outside reader could parse,
+  and a style that changed mid-build because the conventions were read *after* the charts were made.
+  v2 fixes the process first, then the output. Presentation rules taken from sources, not taste
+  (Rougier 2014 *Ten Simple Rules*; Cleveland & McGill on encoding accuracy; the NeurIPS error-bar
+  checklist; the table-vs-figure convention; Cumming / forest-plot practice) and fixed as a **data-shape
+  → form rule applied mechanically**: paired difference + CI → dot on a zero axis (never a bar, which
+  implies magnitude-from-zero a difference does not have); proportions → dot + Wilson; ≥3 ordered
+  points → line; polarity → diverging; per-item → dumbbell; ≥4 ranked variants or a single scalar →
+  table, not a chart. **No figure carries a title** — the claim and the method live in the caption,
+  written in the same call that saves the figure.
+  **Structure = 9 objectives (O1-O9) × two tiers:** 12 headline figures + a catalogue where every
+  measured value appears — including the 26 nulls and the predictions-vs-outcomes (2 of them wrong).
+  Each figure renders **light and dark** (the old white `facecolor` was a white slab in a dark README).
+  **The real fix is provenance.** The old `make_figures.py` read **zero run logs** — every number was
+  hand-typed from `docs/RAG_LAW.md`, violating this task's own spec (`T3.16-visualizations.md:55`) and
+  §0.3, with `fig6` re-typing rounded literals for two quantities the same script read live for
+  `fig7`/`fig8`. Now `src/tlw/figures/{data,style,panels}.py` recomputes everything from `runs/`,
+  `reports/` and `logs/experiments/` using the pre-registered `src/tlw/analysis/stats.py`, and
+  **`tests/tlw/figures/test_published_numbers.py` (35 cases) asserts each drawn value still equals
+  what `docs/` publishes** — the guard that did not exist. Suite 347 → **382 pass**.
+  **Two §0.1 catches, both from actually looking at the output:** (1) the Loop+RAG effect rendered
+  **+0.045** because it was paired against `pilots/4-rag-wider-context-goldonly` (0.511) instead of the
+  seed-42 gold-retrieved slice of `4-rag-wider-context` (0.571) — the wrong comparator *reverses the
+  study's conclusion*; correct value −0.015, now locked by a named regression test. (2) README claimed
+  self-refinement was "0.470 / +0.000" on the aggregate, but it was only ever measured on the
+  gold-retrieved subset at one seed — row corrected to say so.
+  **New finding worth keeping:** reconciling the retired V1 write-up against `logs/experiments/`
+  showed it is not merely inflated — the P1 memory comparison is published **with its sign reversed**
+  (logs: no-memory 0.90 > with-memory 0.85), the P3 temperature grid claims three levels when **only
+  0.0 and 0.2 were run**, and P4's two "hard domains" **appear nowhere in the logs**. Recorded in
+  `reports/tables/tab-02-v1-retraction.md`, recomputed live. V1 still never shares an axis with V2
+  (P3-C §5c): the only V1 chart is the *metric composition* (70% of its score was resemblance to the
+  reference), which is a fact about the instrument, not a score comparison. *(qa + main)*
+- [x] **T3.16b — completeness pass, 2026-08-08.** A review found the v2 set covered the *results* but
+  not the *project*. Now **17 figures + 19 tables** across 11 objectives (O0 overview, **OS what was
+  built**, OD the dataset, O1–O9). Added: an architecture figure (the set had 17 result charts and
+  nothing showing what the system *is*); the dataset-cleaning stage; the judge-calibration probe that
+  **both candidates failed**; a leakage-census table (18 paths, 6 seals) — it had been one row in a
+  guardrail table; a provenance table behind the overview figure; reliability (per-attempt vs
+  dependable), selective-application bounds, cost/hardware, retriever lever decomposition, article
+  lengths, faithfulness with its 61% null rate. **Removed** the hit@k figure: 7 ranked variants is a
+  table by this task's own form rule, and `tab-09` already was one. **Renumbered** every figure into
+  reading order (the old numbering was the same arbitrary-ordinal defect that got v1 scrapped), and
+  renamed two so "chunk" cannot mean both an index chunk and a prompt window in adjacent figures
+  (the ADR-034 trap). Cross-linked the two independent replications of the gate finding.
+  **The strongest new evidence is in the V1 retraction:** its pass-threshold grid is the one table in
+  the retired write-up that reconciles against its logs *exactly* — 0.975 / 0.775 / 0.338 on the same
+  runs depending only on the threshold chosen, and 0.80 was chosen. So the reported 25%→83% is a
+  function of a dial, not a measurement. Figure 6 now pairs it with the rebuild turning the same dial
+  the other way (bar raised to ≥4 because at ≥3 every arm scored 0.99+). Also added: P0's contradicted
+  question count, and P2's teacher-style table (claimed 90/85/80, logged 90/50/40 — and the conclusion
+  it justified was later overturned at p=0.58). Suite **394 pass**. *(qa + main)*
+- [x] **T3.16c — two agents audited the set; both returned FAIL; 8 findings fixed** 2026-08-08.
+  qa-engineer: **(1) BLOCKER — `faithfulness()` returned the first run it found instead of
+  aggregating**, and because run directories sort lexically that was seed123 alone: 0.828 / 58% null
+  published where the 3-seed evidence says **0.809 / 61% (228 of 375)**. One third of the evidence
+  reported as all of it. (2) **The local judge's calibration probes were silently dropped** — the two
+  candidates were probed by different script versions using different key names, so the table said
+  "neither candidate passed" while showing one row; the dropped one is the *more* damning (passes 95%
+  of deliberately-wrong answers). Now 4 probes / 2 judges, and the stricter-rubric retry that made the
+  judge worse is visible in the same table. (3) **`docs/RAG_LAW.md` and `WIXQA_RESULTS.md` published
+  the median (36%) where every surrounding number is a mean** — their own arithmetic ("31 points
+  discarded") only reconciles with the mean, **41%**; corrected with a note. The frozen ADR log was
+  checked and is unaffected. (4) fig-17's second panel was the one hand-typed thing in the set (four
+  answer-length pairs exist only as prose in a report) → panel removed, claim moved to `tab-13`
+  marked *quoted, not recomputed*. (5) arm D was unlabelled in `tab-03` — the leakage-ceiling caveat
+  existed only in the figure. (6) the published reliable@5 result (**0/13 → 4/13** on questions the
+  model never once answered unaided) was in no figure or table; recomputed from the runs rather than
+  read from a stored list. (7) test count and (8) a CI that differs in the third decimal from an
+  earlier bootstrap draw — the RNG seed is now stated so either draw is reproducible.
+  housekeeping: figure numbering (fixed), the dead notebook (deleted), and `reports/` not yet
+  committed — that one is a commit-time gate, left for the user. Suite 391 → **396**, with named
+  regression tests on findings 1, 2 and 6.
+- [x] **Old V1 notebook retired** 2026-08-08 — `notebooks/experiment.ipynb` deleted (git keeps it at
+  `b5440a6`). All 44 code cells imported modules T2.9 had deleted, so it errored on its first cell.
+  **Correction:** the housekeeping audit reported "no prose worth salvaging" and that was repeated
+  without opening the file. It was wrong — the notebook held **24 markdown cells of design
+  rationale**, including the per-phase strategy, the Groq pricing model, and the Phase-6
+  "open-book exam" framing that is the single most useful cell for explaining *why* the leakage
+  looked reasonable at the time. Recovered from git verbatim →
+  `docs/archive/v1-notebook-narrative.md`. Lesson: an agent saying "nothing there" is a claim to
+  verify, not a result to repeat.
+- [x] **Chronology corrected + the failures that were missing** 2026-08-08. A third review caught
+  that the presented order put *import → clean → split* **before** the original experiments. Verified
+  against evidence and it is wrong by seven and a half months: the original runs are timestamped
+  **2025-11-29**, ADR-001 (the audit that invalidated them) is **2026-07-10**, and ADR-006 —
+  *"Dataset **identified as** MedQuAD"* — is **2026-07-12**. So the early work ran on an unidentified
+  Q&A dump with **no held-out split**, and all the provenance in `tab-02` (source, CC BY licence,
+  twelve NIH sites, the mislabelled GHR directory) was learned during the repair. Narrating it the
+  other way makes the retracted results look like they were measured on clean, split data — which is
+  precisely one of the things wrong with them. Fixed structurally rather than in prose: **`tab-21`
+  is a dated timeline generated by merging run-log timestamps with the decision log**, so the order
+  cannot be misremembered again, and `tab-02` now opens by saying when it happened.
+  Also added the three project-credibility failures that appeared in **no** table (grep-confirmed):
+  **13 scripts hardcoded an absolute home-directory path**, so the scripts behind the headline
+  retrieval results could not run from a clone (ADR-034); the **843-line monolith that produced the
+  retracted numbers was deleted** (T2.9); and the project was still **advertising 83% on line 3 of
+  its own README** until T3.13 removed it. These join the judge-calibration failure, the pooled-pilot
+  defect and the five crash-repaired records in a new `tab-19` section — a guardrail nobody has ever
+  tripped is untested, so the ones that fired are the ones worth showing. **17 figures + 21 tables**,
+  396 tests.
+- [x] **Chronological completeness pass** 2026-08-08 — walked the actual order of work (import →
+  clean → V1 phases 0-6 → results → audit → plan V2 → rebuild → each V2 study) and closed the four
+  stages that had no presentation: **data lineage** (source, licence, why this dataset, the 506/125
+  split) now heads `tab-02`; **the decision record** — all 35 ADRs parsed from `decisions.md` into
+  `tab-20`, which is the "why" a results table cannot carry; **V1's spend** at its own quoted rates
+  (recovered from the notebook) in `tab-18`; and **the V1 design rationale** in the archive file
+  above. Two more §0.1 findings fell out: the retired write-up claimed **920,814 tokens ≈ A$0.50**
+  but the logs total **2,956,979** (it quoted one run per phase where a phase had up to twelve), and
+  at its own rates that is **A$1.46–1.98** — a range, not a figure, because input and output tokens
+  were never recorded separately and are priced differently. Now **17 figures + 20 tables**, 396 tests.
+- [x] **T3.18 — naming pass across every artifact a reader meets, 2026-08-08.** The user's objection
+  was that the outputs read as generic and had to be opened to be identified — not professional. Three
+  changes, all mechanical once decided. **(1) 38 figures and tables renamed** to carry the *testbed*
+  and the *kind of study*: `fig-08-tug-of-war` → `fig-08-medquad-rag-outcome-split`,
+  `tab-10-delivery` → `tab-10-wixqa-grounding-window-results`. Every name now answers "which
+  experiment, on what data" without being opened, using the same vocabulary `runs/` already uses.
+  **(2) APA 7 throughout** — each table and figure carries `**Table 6**` / `*MedQuAD RAG Results*` /
+  the content / `*Note.*`, and the label and title are **derived from the filename** by
+  `style.apa_label`, so they cannot disagree with it. In-text references became `**Table 6.**
+  [*MedQuAD RAG Results*](…)` instead of the internal `→ tab-06`. **(3) The experiment files
+  themselves**: the 8 pilots still carried pre-ADR-034 codes (`trackA_p2_armC_diabetes` →
+  `teaching-loop-teacher-feedback-7b`), and 27 drivers moved from a flat `scripts/*.py` with name
+  prefixes into one package per study (`scripts/wixqa/`, `lora/`, `rag/`, `calibration/`, `dataset/`)
+  — matching how `runs/`, `experiments/` and `reports/` are already grouped.
+  **The move broke 23 scripts and the check caught it:** each resolved the repo root with
+  `parents[1]`, which after gaining a directory pointed at `scripts/` instead. Repointed to
+  `parents[2]` and verified by running one of the analyses the documents tell a reader to run — it
+  reproduces (hit-rate 110/200 = 0.550). This is the same class of defect as ADR-034's hardcoded
+  paths, found the same way: by checking rather than assuming. `structure.md` §B re-synced; all
+  documented commands verified to resolve; 401 tests green; no broken link in any index.
+- [x] **T3.17 → the two documents, DONE 2026-08-08 (ADR-036).** `README.md` rewritten as the GitHub
+  front door — the problem, the four findings with intervals, what was built, results with six
+  figures embedded via `<picture>` so they survive dark mode, install/reproduce, repository map.
+  `docs/EXPERIMENT_RESULTS.md` written as the complete record: objectives and pre-stated success
+  criteria, the corrected chronology, the original system and its retraction (including the
+  pass-threshold grid), the audit, the rebuild, all seven measured questions with figures and tables
+  inline, literature comparison, the project's own six failures, seven product implications, seven
+  limitations, reproduction commands. `docs/RAG_LAW.md` → `docs/archive/` with a banner (narrower,
+  not wrong — and two documents covering the same findings is exactly the drift surface this project
+  exists to remove); the two values corrected before archiving are named in the banner. Live docs and
+  the figure driver relinked; both new documents pass a link check; 396 tests green. The five
+  per-study reports stay as linked deep detail. *(main thread)*
+- [x] **T3.17 — SUPERSEDED by user decision 2026-08-08: no notebook.** Two documents instead, to
+  avoid a third place for the numbers to drift: **README.md** = the GitHub front door (summary of
+  everything, figures embedded) and **`docs/EXPERIMENT_RESULTS.md`** = the full record — objectives,
+  goals, what was decided and why, every finding. `docs/RAG_LAW.md` is superseded by the latter and
+  moves to `docs/archive/` with a banner; the five per-study reports stay as linked deep detail
+  (they hold protocol and limitations, not narrative). *(main thread)*
+
+**After P3-C:** final `reconcile-numbers` sweep → merge B2 → main → portfolio push. Research is DONE
+(ADR-024…034); the demo+narrative make it tangible and legible.
 
 ## DONE — Repo restructure (ADR-034) — phases 1–5, 2026-08-07
 Executed after a housekeeping audit (FAIL, 18 findings) + an independent pre-execution safety check

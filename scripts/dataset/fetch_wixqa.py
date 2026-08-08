@@ -43,7 +43,7 @@ def main() -> int:
         print(f"  wrote {len(ds)} records")
 
     print("\nnext: rebuild the search index —")
-    print("  HF_HUB_OFFLINE=1 python scripts/wixqa_build_index.py")
+    print("  HF_HUB_OFFLINE=1 python scripts/wixqa/build_index.py")
     return 0
 
 

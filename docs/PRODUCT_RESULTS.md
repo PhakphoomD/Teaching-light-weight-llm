@@ -104,8 +104,8 @@ gains (if any) live on the hard tail via targeted retrieval, not aggregate style
 
 ### Reproduce
 ```
-python scripts/build_lora_data.py                                  # T3.6 data (506 pairs)
-HF_HUB_OFFLINE=1 python scripts/train_lora.py --epochs 2           # T3.7 QLoRA adapter
-HF_HUB_OFFLINE=1 python scripts/eval_lora.py --adapter models/lora_diabetes --seeds 1,2  # T3.8
+python scripts/lora/build_data.py                                  # T3.6 data (506 pairs)
+HF_HUB_OFFLINE=1 python scripts/lora/train.py --epochs 2           # T3.7 QLoRA adapter
+HF_HUB_OFFLINE=1 python scripts/lora/evaluate.py --adapter models/lora_diabetes --seeds 1,2  # T3.8
 ```
 Numbers from `runs_lora/lora_eval_result.json` (2026-07-23), validated Groq judge.

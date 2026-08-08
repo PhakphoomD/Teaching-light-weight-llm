@@ -152,7 +152,7 @@ lift — and the eval that matters is on the **hard tail**, not the near-saturat
 
 The 7B / 7B+RAG ceiling pair completed (originally corrupted by a Groq daily-cap exhaustion; the
 7B+RAG runs were re-judged on a fresh, consistent Groq judge once the cap reset — student answers
-were untouched, `scripts/rejudge.py --only-nulls`). All four arms are now judged by the same Groq
+were untouched, `scripts/rag/rejudge.py --only-nulls`). All four arms are now judged by the same Groq
 `llama-3.1-8b-instant`, score≥4:
 
 | Arm | Pass-rate | Wilson 95% CI | RAG delta (paired bootstrap, McNemar) |
@@ -202,7 +202,7 @@ EXPERIMENT_PARAMS_SEED=<seed> HF_HUB_OFFLINE=1 \
 # 3. Headline + tug-of-war:
 python -m src.tlw.analysis --runs-dir runs/rag-medquad --rag
 # 4. Faithfulness diagnostic (offline, local judge):
-HF_HUB_OFFLINE=1 python scripts/rag_faithfulness.py --runs-dir runs/rag-medquad --judge local:llama3.1:8b
+HF_HUB_OFFLINE=1 python scripts/rag/faithfulness.py --runs-dir runs/rag-medquad --judge local:llama3.1:8b
 ```
 
 All numbers above were computed from `runs/rag-medquad/trackB_p3_3bRAG_diabetes__seed{13,42,123}__*/` and

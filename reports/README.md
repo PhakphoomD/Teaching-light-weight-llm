@@ -42,6 +42,23 @@ python scripts/wixqa/analyze_three_seeds.py
 python scripts/wixqa/analyze_dose_response.py
 ```
 
-> **Status:** this directory is populated during phase 4 of the ADR-034 restructure
-> (`docs/plan/MIGRATION_CHECKLIST.md` §P4). Until that phase lands, the reports named above still
-> live beside their raw runs; the table already reflects where each one is going.
+> **Status:** populated. Every study above has its report here, and `figures/` + `tables/`
+> regenerate from the same logs with one command.
+
+## Presentation
+
+| | |
+|---|---|
+| `figures/` | 17 figures, light and dark, PNG and SVG. **[List of figures and tables](figures/README.md)** — grouped by the question each answers, each with a caption stating what was tested, what was measured, and what came out. |
+| `tables/` | The catalogue: every measured value, including the nulls and the predictions that turned out wrong. |
+
+Both regenerate with one command, from the logs — nothing is transcribed by hand:
+
+```bash
+python scripts/make_figures.py
+```
+
+`tests/tlw/figures/test_published_numbers.py` recomputes each published headline from its artifact
+and fails if a figure and a document ever disagree. That test is the reason the claim above can be
+made at all: the previous version of the figure script contained no run-log reads and only
+hand-copied literals.

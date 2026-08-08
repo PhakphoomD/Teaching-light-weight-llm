@@ -27,7 +27,7 @@ Shorthand below: `PY` = `C:\Users\ham25\.conda\envs\tlw\python.exe`.
 - Run an experiment: `$env:EXPERIMENT_PARAMS_SEED="42"; & PY run.py --config experiments/teaching-loop/1-baseline.yml`
   (the seed is the run's identity and comes from the environment, so one config drives all its seeds)
 - Reproduce a headline: `& PY -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B --comparison B-A`
-- WixQA analyses: `& PY scripts/wixqa_analyze.py` · `& PY scripts/wixqa_dose_analyze.py`
+- WixQA analyses: `& PY scripts/wixqa/analyze_three_seeds.py` · `& PY scripts/wixqa/analyze_dose_response.py`
 - Tests: `& PY -m pytest tests/ -q`
 - Clean dataset: `& PY -m tools.dataset.cli --all` (or invoke the `run-pipeline` skill)
 - Rebuild what a clone lacks: `& PY scripts/dataset/fetch_wixqa.py` · `& PY -m tools.rag.cli`

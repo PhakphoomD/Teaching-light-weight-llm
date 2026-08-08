@@ -117,7 +117,7 @@
 
 | File | Lines | Role | Importers (Evidence) | Verdict |
 |---|---|---|---|---|
-| `prepare_medical_dataset.py` | 363 | Script: load Medical_Q&A CSVs, clean, deduplicate, export JSONL | Standalone script (called via `python scripts/prepare_medical_dataset.py`) | **ALIVE** |
+| `prepare_medical_dataset.py` | 363 | Script: load Medical_Q&A CSVs, clean, deduplicate, export JSONL | Standalone script (called via `python scripts/dataset/prepare_medquad.py`) | **ALIVE** |
 | `split_medical_by_source.py` | 100 | Script: split JSONL by domain/source into medical_by_source/ | Standalone script | **ALIVE** |
 | `estimate_cost.py` | 206 | Script: estimate token costs for Groq API calls across hyperparameter grid | Analysis script | **ALIVE** |
 | `analyze_lhs_strategy.py` | 197 | Script: hyperparameter exploration (Latin Hypercube Sampling + Grid Search) | Analysis script | **ALIVE** |

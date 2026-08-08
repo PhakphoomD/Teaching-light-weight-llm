@@ -3,9 +3,9 @@
 consistent Groq judge, (2) test the strong-reasoner (70B) selective-RAG gate.
 
 Polls a tiny Groq call until it succeeds (cap reset), then runs, in order:
-  1. scripts/rejudge.py --only-nulls   -> re-judge the null-corrupted 7B runs
+  1. scripts/rag/rejudge.py --only-nulls   -> re-judge the null-corrupted 7B runs
      (8b-instant pool; --only-nulls is idempotent/resumable if it partially fails)
-  2. scripts/selective_rag_sim.py --gate groq:llama-3.3-70b-versatile --seed 42
+  2. scripts/rag/selective_simulation.py --gate groq:llama-3.3-70b-versatile --seed 42
      (separate 70B pool; 125 calls fit its 100K TPD)
   3. python -m src.tlw.analysis --runs-dir runs_rag --rag  -> the clean 4-arm table
 
@@ -61,10 +61,10 @@ def main() -> int:
         return 1
 
     # 1. re-judge the null-corrupted 7B runs on one consistent Groq judge
-    run([PY, "scripts/rejudge.py", "--runs-dir", "runs_rag", "--pattern", "trackB_p3_7b*",
+    run([PY, "scripts/rag/rejudge.py", "--runs-dir", "runs_rag", "--pattern", "trackB_p3_7b*",
          "--judge", "groq:llama-3.1-8b-instant", "--pass-threshold", "1.0", "--only-nulls"])
     # 2. strong-gate (70B) selective-RAG test on one seed (fits the 70B 100K TPD)
-    run([PY, "scripts/selective_rag_sim.py", "--runs-dir", "runs_rag",
+    run([PY, "scripts/rag/selective_simulation.py", "--runs-dir", "runs_rag",
          "--corpus", "indexes/medquad-diabetes-train", "--gate", "groq:llama-3.3-70b-versatile", "--seed", "42"])
     # 3. the clean 4-arm RAG table
     run([PY, "-m", "src.tlw.analysis", "--runs-dir", "runs_rag", "--rag"])

@@ -83,7 +83,7 @@ scripts — is named in a private vocabulary nobody outside the project can read
 
 - **evidence:** identical literal
   `ROOT = Path("C:/Users/ham25/Desktop/Torrens_Assessment/ITA602/Teaching-light-weight-llm-based-project")`
-  at `scripts/wixqa_analyze.py:21`, `wixqa_baseline.py:16`, `wixqa_build_index.py:17`,
+  at `scripts/wixqa/analyze_three_seeds.py:21`, `wixqa_baseline.py:16`, `wixqa_build_index.py:17`,
   `wixqa_dose_analyze.py:23`, `wixqa_grounding_compare.py:24`, `wixqa_grounding_ladder.py:34`,
   `wixqa_judge.py:22`, `wixqa_rag.py:17`, `wixqa_repair_empty.py:20`,
   `wixqa_retriever_ladder.py:32`, `wixqa_run3seed.py:32`, `wixqa_run3seed_retriever.py:26`,
@@ -174,8 +174,8 @@ scripts — is named in a private vocabulary nobody outside the project can read
 - **evidence:** the example the user rejected —
   `runs_wixqa/rag_bge_chunk_chunk2400_selfrefine_pilot__seed42.jsonl`. Decoding it required
   reading source: `bge_chunk` = "bge-base-en-v1.5 encoder over 180-word article chunks"
-  (`scripts/wixqa_retriever_ladder.py:13,40,194`); `chunk2400` = "2400-character grounding window
-  centred on the matched chunk" (`scripts/wixqa_run3seed_retriever.py:43-44`:
+  (`scripts/wixqa/build_retriever_ladder.py:13,40,194`); `chunk2400` = "2400-character grounding window
+  centred on the matched chunk" (`scripts/wixqa/run_three_seeds_retriever.py:43-44`:
   `GROUNDINGS = {"head900": (900, False), … "chunk2400": (2400, True)}`). **The token `chunk`
   therefore carries two unrelated meanings inside one filename.** Same class of problem:
   `armA`…`armD` (`src/tlw/loop/strategies.py:99,120,274,284` — the docstrings say what they
@@ -231,7 +231,7 @@ scripts — is named in a private vocabulary nobody outside the project can read
 
 ### [MINOR] 11 — an undocumented sub-experiment: judge boundary calibration
 
-- **evidence:** `scripts/build_calibration.py` + `scripts/calibration_report.py` +
+- **evidence:** `scripts/calibration/build_probe.py` + `scripts/calibration/report.py` +
   `data/calibration/boundary_set.jsonl` (119 KB). Zero hits across `docs/`, `README.md`,
   `.claude/rules/`. `build_calibration.py:50` reads `runs_reliability/*/rounds.jsonl`.
 - **fix:** a one-paragraph note + a todo line, or archive. Needs a user decision. — owner:
@@ -308,8 +308,8 @@ scripts — is named in a private vocabulary nobody outside the project can read
 **Files opened:** `.claude/rules/{00-index,structure,decisions,todo,schema,agents}.md`,
 `.claude/settings.json`, `.claude/hooks/guard.py` (grep), `.gitignore`, `README.md:88-149`,
 `README.md:537-611`, `docs/audit/CODE_MAP.md:1-12`, `docs/RAG_RELIABILITY_ANALYSIS.md:1-30`,
-`docs/plan/README.md:1-40`, `scripts/wixqa_analyze.py:1-60`, `scripts/wixqa_selfrefine.py:1-70`,
-`scripts/wixqa_run3seed_retriever.py:43-63`, `scripts/wixqa_retriever_ladder.py:10-40,188-215`,
+`docs/plan/README.md:1-40`, `scripts/wixqa/analyze_three_seeds.py:1-60`, `scripts/wixqa/run_self_refine.py:1-70`,
+`scripts/wixqa/run_three_seeds_retriever.py:43-63`, `scripts/wixqa/build_retriever_ladder.py:10-40,188-215`,
 `tools/rag/cli.py:1-30`, `tests/conftest.py`, `tests/tlw/conftest.py`,
 `tests/tlw/analysis/conftest.py:1-12`, `tests/tlw/loop/conftest.py:1-12`,
 `tests/rag/test_builder.py:1-12`, `src/tlw/analysis/loaders.py:136-161`,
@@ -774,7 +774,7 @@ steps × {seed13, seed42, seed123} plus 2 pilots = 17 destination paths for 17 s
 collisions. The seed-42 files that currently break the pattern (`baseline_norag.jsonl`,
 `rag_top3.jsonl` — the ADR-030 published draw) land on `1-no-rag/seed42.jsonl` and
 `2-rag-basic/seed42.jsonl`, which is what they always were. **Bonus:** this deletes the hardcoded
-per-seed filename map at `scripts/wixqa_analyze.py:32-35`, replacing it with `f"{step}/seed{s}.jsonl"`.
+per-seed filename map at `scripts/wixqa/analyze_three_seeds.py:32-35`, replacing it with `f"{step}/seed{s}.jsonl"`.
 
 ### Study 8 — `runs/calibration/` (8 files) → `runs/judge-calibration/`
 
@@ -934,31 +934,31 @@ Underscores because PEP 8 (rule 2); English words because rule 1:
 
 | before | after |
 |---|---|
-| `scripts/wixqa_baseline.py` | `scripts/wixqa/run_without_rag.py` |
-| `scripts/wixqa_rag.py` | `scripts/wixqa/run_with_rag.py` |
-| `scripts/wixqa_build_index.py` | `scripts/wixqa/build_index.py` |
-| `scripts/wixqa_judge.py` | `scripts/wixqa/score_answers.py` |
-| `scripts/wixqa_run3seed.py` | `scripts/wixqa/run_three_seeds.py` |
-| `scripts/wixqa_run3seed_retriever.py` | `scripts/wixqa/run_three_seeds_with_retriever.py` |
-| `scripts/wixqa_retriever_ladder.py` | `scripts/wixqa/compare_retrievers.py` |
-| `scripts/wixqa_grounding_ladder.py` | `scripts/wixqa/compare_context_windows.py` |
-| `scripts/wixqa_grounding_compare.py` | `scripts/wixqa/compare_two_runs.py` |
-| `scripts/wixqa_selfrefine.py` | `scripts/wixqa/run_with_self_refine.py` |
-| `scripts/wixqa_repair_empty.py` | `scripts/wixqa/regenerate_empty_answers.py` |
-| `scripts/wixqa_analyze.py` | `scripts/wixqa/analyze_three_seeds.py` |
-| `scripts/wixqa_dose_analyze.py` | `scripts/wixqa/analyze_dose_response.py` |
-| `scripts/build_lora_data.py` | `scripts/lora/build_training_data.py` |
-| `scripts/train_lora.py` | `scripts/lora/train.py` |
-| `scripts/eval_lora.py` | `scripts/lora/evaluate.py` |
-| `scripts/rag_faithfulness.py` | `scripts/rag_medquad/score_faithfulness.py` |
-| `scripts/selective_rag_sim.py` | `scripts/rag_medquad/simulate_selective_rag.py` |
-| `scripts/rejudge.py` | `scripts/rag_medquad/rescore_answers.py` |
-| `scripts/reliability_analysis.py` | `scripts/rag_medquad/analyze_reliability.py` |
-| `scripts/build_calibration.py` | `scripts/judge_calibration/build_boundary_set.py` |
-| `scripts/calibration_report.py` | `scripts/judge_calibration/report.py` |
-| `scripts/prepare_medical_dataset.py` | `scripts/dataset/prepare_medquad.py` |
-| `scripts/split_medical_by_source.py` | `scripts/dataset/split_by_source.py` |
-| `scripts/assess_all.py` | `scripts/dataset/assess_all.py` |
+| `scripts/wixqa/run_baseline.py` | `scripts/wixqa/run_without_rag.py` |
+| `scripts/wixqa/run_rag.py` | `scripts/wixqa/run_with_rag.py` |
+| `scripts/wixqa/build_index.py` | `scripts/wixqa/build_index.py` |
+| `scripts/wixqa/judge.py` | `scripts/wixqa/score_answers.py` |
+| `scripts/wixqa/run_three_seeds.py` | `scripts/wixqa/run_three_seeds.py` |
+| `scripts/wixqa/run_three_seeds_retriever.py` | `scripts/wixqa/run_three_seeds_with_retriever.py` |
+| `scripts/wixqa/build_retriever_ladder.py` | `scripts/wixqa/compare_retrievers.py` |
+| `scripts/wixqa/build_grounding_ladder.py` | `scripts/wixqa/compare_context_windows.py` |
+| `scripts/wixqa/analyze_grounding.py` | `scripts/wixqa/compare_two_runs.py` |
+| `scripts/wixqa/run_self_refine.py` | `scripts/wixqa/run_with_self_refine.py` |
+| `scripts/wixqa/repair_empty.py` | `scripts/wixqa/regenerate_empty_answers.py` |
+| `scripts/wixqa/analyze_three_seeds.py` | `scripts/wixqa/analyze_three_seeds.py` |
+| `scripts/wixqa/analyze_dose_response.py` | `scripts/wixqa/analyze_dose_response.py` |
+| `scripts/lora/build_data.py` | `scripts/lora/build_training_data.py` |
+| `scripts/lora/train.py` | `scripts/lora/train.py` |
+| `scripts/lora/evaluate.py` | `scripts/lora/evaluate.py` |
+| `scripts/rag/faithfulness.py` | `scripts/rag_medquad/score_faithfulness.py` |
+| `scripts/rag/selective_simulation.py` | `scripts/rag_medquad/simulate_selective_rag.py` |
+| `scripts/rag/rejudge.py` | `scripts/rag_medquad/rescore_answers.py` |
+| `scripts/rag/reliability.py` | `scripts/rag_medquad/analyze_reliability.py` |
+| `scripts/calibration/build_probe.py` | `scripts/judge_calibration/build_boundary_set.py` |
+| `scripts/calibration/report.py` | `scripts/judge_calibration/report.py` |
+| `scripts/dataset/prepare_medquad.py` | `scripts/dataset/prepare_medquad.py` |
+| `scripts/dataset/split_by_source.py` | `scripts/dataset/split_by_source.py` |
+| `scripts/dataset/assess_all.py` | `scripts/dataset/assess_all.py` |
 | `scripts/finish_when_groq_ready.py` | `scripts/archive/wait_for_groq_quota.py` |
 | `scripts/{analyze_lhs_strategy,estimate_cost,compare_judges,compare_students}.py` | `scripts/archive/<same name>` |
 
@@ -1019,7 +1019,7 @@ Do this **before** any move: it is what makes every later move testable.
 | 3.1 | Create the 7 study directories under `runs/` | nothing |
 | 3.2 | `git mv` the 8 sibling roots + `runs/trackA_*` + `runs/calibration/` in, applying §C.4's names | see 3.4–3.6 |
 | 3.3 | Write one `manifest.json` per condition directory + one `README.md` per study | nothing (additive) — **this is what lets the folder names be short** |
-| 3.4 | Update path literals: `scripts/build_calibration.py:50`, `eval_lora.py:107`, `finish_when_groq_ready.py:64,67,70`, `rejudge.py:91`, `reliability_analysis.py:53`, `selective_rag_sim.py:83`, `wixqa_analyze.py:27` **and the filename map at `:32-35`**, `wixqa_baseline.py:57`, `wixqa_dose_analyze.py:27`, `wixqa_grounding_ladder.py:38`, `wixqa_rag.py:52`, `wixqa_run3seed.py:42`, `wixqa_run3seed_retriever.py:36`, `wixqa_selfrefine.py:47` | 15 literals + 1 map |
+| 3.4 | Update path literals: `scripts/calibration/build_probe.py:50`, `eval_lora.py:107`, `finish_when_groq_ready.py:64,67,70`, `rejudge.py:91`, `reliability_analysis.py:53`, `selective_rag_sim.py:83`, `wixqa_analyze.py:27` **and the filename map at `:32-35`**, `wixqa_baseline.py:57`, `wixqa_dose_analyze.py:27`, `wixqa_grounding_ladder.py:38`, `wixqa_rag.py:52`, `wixqa_run3seed.py:42`, `wixqa_run3seed_retriever.py:36`, `wixqa_selfrefine.py:47` | 15 literals + 1 map |
 | 3.5 | Update docstring usage examples: `rejudge.py:15`, `selective_rag_sim.py:15`, `wixqa_judge.py:16-17`, `wixqa_grounding_compare.py:16-17`, `wixqa_repair_empty.py:13`, `wixqa_run3seed_retriever.py:161`, `wixqa_selfrefine.py:163`, `reliability_analysis.py:12`, `finish_when_groq_ready.py:10`, `build_calibration.py:11` | 10 docstrings |
 | 3.6 | Update doc reproduce commands: `docs/RAG_LAW.md:320,323,326-330`, `RAG_RESULTS.md:201-209`, `WIXQA_RESULTS.md:35,98,103,104,340-342`, `TRACK_A_RESULTS.md:159`, `PRODUCT_RESULTS.md:111`, `RAG_RELIABILITY_ANALYSIS.md:4,126` | ~22 lines |
 | 3.7 | Rename + regroup `experiments/*.yml` per §C.4. **Leave every `params.arm` value alone** (`A`/`B`/`C`/`D` are registry keys — `strategies.py:99,120,274,284`) | `experiments/README.md` + any doc quoting a config path |

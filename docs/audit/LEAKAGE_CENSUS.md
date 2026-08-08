@@ -42,7 +42,7 @@ can seal each one with a test. No files modified except this one (§ Must-NOT-do
 | L14 | Debug logger records `ground_truth` verbatim per-question for later analysis: `self.debug_logger.start_question(..., ground_truth=ground_truth)` → written to `logs/simplified/debug/*.json` | `simplified_teaching_loop.py:281-285`; `src/simplified/debug_logger.py:82-94, 252-272` | **LOG-ONLY** | MINOR | LEGAL (write-once evidence, never read back into a prompt) — but see §4, these logs are how L7 was *caught*, so keep them |
 | L15 | Terminal UI displays a truncated GT string to the human operator during a run | `src/simplified/terminal_ui.py:147-172` | **LOG-ONLY** (console, not fed back to model) | MINOR | LEGAL |
 | L16 | `src/eval/metrics.py` / `src/eval/reports.py` / `tools/dataset/judge.py` accept a `ground_truth` dict for **offline** text-metric computation (BLEU/ROUGE/F1) and dataset-quality judging — not part of the live loop's student path | `src/eval/metrics.py:144-483`; `src/eval/reports.py` (docstring only, no functional ref) | **SCORE-PATH** (offline analysis) | — | LEGAL |
-| L17 | `scripts/compare_students.py` explicitly computes proximity to "the reference answer" **without showing it to the model** (comment states "§0.2" awareness) | `scripts/compare_students.py:5` | **SCORE-PATH** | — | LEGAL, self-documented |
+| L17 | `scripts/calibration/compare_students.py` explicitly computes proximity to "the reference answer" **without showing it to the model** (comment states "§0.2" awareness) | `scripts/calibration/compare_students.py:5` | **SCORE-PATH** | — | LEGAL, self-documented |
 | L18 | Notebook `notebooks/experiment.ipynb` deliberately **pre-seeds** a memory JSONL with GT-as-feedback (`"source": "ground_truth_injection"`) before running P6B/P6C — this is a controlled demonstration of L4/L6, not a hidden production path, but it is the literal mechanism behind ADR-001's "P6C 100% = memorization" claim | `notebooks/experiment.ipynb` cells ~2871-2876, ~3210-3254 | **MEMORY-STORED** (research artifact) | BLOCKER (as demonstration) / not a live-loop bug since it required manual injection | Deliberately illegal-for-measurement, legal-as-a-diagnostic-experiment (ADR-001 evidence) |
 
 ---
@@ -230,7 +230,7 @@ Commands run:
 - `Grep "ground_truth|gt_memory|ground_truth_memory" logs/` → 218 files (mostly per-round debug JSON, expected/benign per L14)
 - Targeted `Grep` with content mode + line numbers on: `debug_logger.py`, `prompt_loader.py`,
   `simplified_experiment_runner.py`, `src/eval/metrics.py`, `terminal_ui.py`, `src/eval/reports.py`,
-  `tools/dataset/judge.py`, `scripts/compare_students.py`, `scripts/analyze_lhs_strategy.py`,
+  `tools/dataset/judge.py`, `scripts/calibration/compare_students.py`, `scripts/analyze_lhs_strategy.py`,
   `scripts/estimate_cost.py` — confirmed all non-loop hits are docstrings/comments or offline
   (non-student-facing) analysis code
 - `Bash wc -l logs/experiments/phase6/gt_memory_store.jsonl logs/experiments/phase6/ground_truth_memory.json` → 32 / 7841 lines

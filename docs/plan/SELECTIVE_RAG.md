@@ -78,7 +78,7 @@ answer + its pass/fail. So we can **simulate** verify-then-ground without re-run
 If selective ≫ baseline → the gate works → build it as a real arm. If selective ≈ baseline/always-on
 → the gate is too weak → try a stronger gate model or a better retriever (aspect-aware re-rank),
 or report that cheap selective RAG is not reachable on this testbed (an honest negative, like §2).
-`scripts/selective_rag_sim.py` implements this simulation (gate model configurable).
+`scripts/rag/selective_simulation.py` implements this simulation (gate model configurable).
 
 ### Results so far (2026-07-16/17)
 
