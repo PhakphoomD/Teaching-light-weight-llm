@@ -27,7 +27,7 @@ for every one**, cites the real Phase-2 numbers that decided the teacher style, 
 
 Everything else → **ARCHIVE** (moved to `config/archive/prompts_config_legacy.yml` in P2, not now).
 Two variants are **RETIRE/quarantine, never revive**: `student.last_chance` and `teacher.difficult_question`
-(confirmed §0.2 leaks — LEAKAGE_CENSUS L1, L7).
+(confirmed §0.2 leaks — LEAKAGE_AUDIT L1, L7).
 
 ---
 
@@ -48,7 +48,7 @@ ORCA passed **0.90 vs 0.50 (principle) vs 0.40 (CoT)**, in the **fewest rounds (
 roughly **half the teacher token cost** (43k vs 79k/89k). This is the single strongest empirical
 signal in the prompt logs → **orca is the surviving teacher style; principle and CoT are archived losers.**
 (Note: P2B was the exact `cot` run whose `difficult_question` template produced the confirmed GT
-echo — LEAKAGE_CENSUS L7/Trace C — so the losing style is also the unsafe one.)
+echo — LEAKAGE_AUDIT L7/Trace C — so the losing style is also the unsafe one.)
 
 ### 1b. Student style: "minimal" was the design intent
 
@@ -60,7 +60,7 @@ for small models** — and the code's own default. The verbose `structured_*`/`r
 and the Constitutional-AI `principle_rewrite` never won anything measurable → archived as unvalidated
 ablation variants.
 
-### 1c. Anti-leakage (§0.2, LEAKAGE_CENSUS) is a hard filter on KEEP eligibility
+### 1c. Anti-leakage (§0.2, LEAKAGE_AUDIT) is a hard filter on KEEP eligibility
 
 `{ground_truth}` appears in 21 templates (`Grep ground_truth config/prompts_config.yml`). Rules applied:
 - **Student-visible template with `{ground_truth}` → cannot be a KEEP** (BLOCKER). Only `student.last_chance`
@@ -72,7 +72,7 @@ ablation variants.
   (`:369` `Example: {ground_truth}`, L7, production-confirmed) and `template_feedback`
   (`:512` `Example: {ground_truth}`) both fail this → RETIRE / archive.
 - **Judge:** `blind_judge` GT-FREE (measure-mode student judge, §0.2 clean). `comparison_judge` sees GT
-  but only in the score path, never student-visible (LEAKAGE_CENSUS L10, legal) → KEEP as diagnostic only.
+  but only in the score path, never student-visible (LEAKAGE_AUDIT L10, legal) → KEEP as diagnostic only.
 
 ---
 
@@ -86,7 +86,7 @@ ablation variants.
 | S4 | `first_attempt` | `76-80` | first (minimal) | `DEFAULT_PROMPT_KEYS[0]` (`loop:66`); `active` option (`:731`) | no | **KEEP → `student.minimal.first`** |
 | S5 | `refinement` | `83-88` | refine (minimal) | `DEFAULT_PROMPT_KEYS[1]` (`loop:66`); consumes single `{feedback}` | no | **KEEP → `student.minimal.refine`** |
 | S6 | `refinement_no_feedback` | `91-97` | refine fallback | none found (grep) | no | ARCHIVE (redundant w/ S4) |
-| S7 | `last_chance` | `101-103` | GT-hint | `build_ground_truth_hint_prompt` (`src/prompts/student.py:118-133`), L1/L2/L3 | **YES** | **RETIRE — §0.2 BLOCKER, quarantine (LEAKAGE_CENSUS L1)** |
+| S7 | `last_chance` | `101-103` | GT-hint | `build_ground_truth_hint_prompt` (`src/prompts/student.py:118-133`), L1/L2/L3 | **YES** | **RETIRE — §0.2 BLOCKER, quarantine (LEAKAGE_AUDIT L1)** |
 | S8 | `simple_minimal` | `106-109` | first (minimal) | Phase-1.1 analysis (comment `:105`) | no | ARCHIVE (near-dup of S4) |
 | S9 | `simple_minimal_refine` | `111-116` | refine | Phase-1.1 (comment `:105`) | no | ARCHIVE (near-dup of S5) |
 | S10 | `structured_first` | `119-125` | first | `PROMPT_STRATEGY_MAP["structured"]` (`loop:61`) | no | ARCHIVE (unvalidated ablation, §1b) |
@@ -107,7 +107,7 @@ and `:155-181` (style branch). Anything not reachable from a `feedback_style` va
 | T3 | `stop_decision` | `239-269` | yes (`stop_decision`, `tf.py:159`) | **none — GT-free** | ARCHIVE (utility prompt, not a feedback style; GT-free → candidate seed for §5 blind skeleton) |
 | T4 | `cot_first_time` | `272-300` | yes (`cot`, `tf.py:86`) | `[Target Answer]` teacher-only | ARCHIVE (CoT lost 0.40, §1a) |
 | T5 | `cot_refinement` | `303-335` | yes (`cot`, `tf.py:86`) | `[Target Answer]` teacher-only | ARCHIVE (CoT lost) |
-| T6 | `difficult_question` | `338-373` | yes (`cot` round≥4, `tf.py:172-176`) | `[Target Answer]` **+ `Example: {ground_truth}` in OUTPUT** | **RETIRE — §0.2 BLOCKER, quarantine (LEAKAGE_CENSUS L7, production-confirmed `logs/simplified/debug/20251130_024301.json:4460`)** |
+| T6 | `difficult_question` | `338-373` | yes (`cot` round≥4, `tf.py:172-176`) | `[Target Answer]` **+ `Example: {ground_truth}` in OUTPUT** | **RETIRE — §0.2 BLOCKER, quarantine (LEAKAGE_AUDIT L7, production-confirmed `logs/simplified/debug/20251130_024301.json:4460`)** |
 | T7 | `cot_short` | `378-386` | no (graveyard) | `Target: {ground_truth}` + asks to show format | ARCHIVE (unwired ablation; echo-risk) |
 | T8 | `cot_short_refine` | `388-396` | no | echo-risk | ARCHIVE |
 | T9 | `cot_example` | `399-407` | no | `Correct answer: {ground_truth}` + "Use format" | ARCHIVE (echo-risk) |
@@ -136,14 +136,14 @@ prompts resolved via `get_metrics_prompt` (`prompt_loader.py:134-158`).
 | J1 | `blind_judge` | `628-649` | no | measure (student-blind) | **KEEP → `judge.blind`** (primary correctness judge, T1.4 §3 blind-first) |
 | J2 | `blind_judge_strict` | `603-613` | no | measure | ARCHIVE (calibration variant — revive in T2.3 calibration if needed) |
 | J3 | `blind_judge_lenient` | `615-625` | no | measure | ARCHIVE (calibration variant) |
-| J4 | `comparison_judge` | `677-701` | yes (score path) | diagnostic (`reference_match`) | **KEEP → `judge.comparison`** (never student-visible; LEAKAGE_CENSUS L10 legal) |
+| J4 | `comparison_judge` | `677-701` | yes (score path) | diagnostic (`reference_match`) | **KEEP → `judge.comparison`** (never student-visible; LEAKAGE_AUDIT L10 legal) |
 | J5 | `comparison_judge_strict` | `652-662` | yes | diagnostic | ARCHIVE (calibration variant) |
 | J6 | `comparison_judge_lenient` | `664-674` | yes | diagnostic | ARCHIVE (calibration variant) |
 
 > Note: `judge.blind` is the pass/fail correctness metric per T1.4 §2 ("two metrics, never merged").
 > `judge.comparison` is a **diagnostic column only** and must never gate the loop nor reach the student.
 > The current hybrid weights (`comparison 0.35 + semantic 0.25 + rouge 0.10 = 70%` reference-proximity,
-> LEAKAGE_CENSUS §2) are the ADR-001 defect; T1.4/T2.3 own the fix — this catalog only supplies the
+> LEAKAGE_AUDIT §2) are the ADR-001 defect; T1.4/T2.3 own the fix — this catalog only supplies the
 > two prompt names, not the weighting.
 
 ---

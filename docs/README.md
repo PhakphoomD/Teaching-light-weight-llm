@@ -14,6 +14,7 @@ confidence intervals, on a codebase rebuilt so that its own evaluation cannot le
 | 4 | [RAG_RESULTS.md](RAG_RESULTS.md) | RAG where the model already knows the domain: **no effect** (−0.005), and why that null is structural. | ~5 min |
 | 5 | [PRODUCT_RESULTS.md](PRODUCT_RESULTS.md) | LoRA fine-tuning on reference answers: **−0.292**, it hurts — and exactly why. | ~4 min |
 | 6 | [RAG_RELIABILITY_ANALYSIS.md](RAG_RELIABILITY_ANALYSIS.md) | Does RAG help *reliability* on the hard tail, rather than the average? | ~4 min |
+| 7 | [LEAKAGE_AUDIT.md](LEAKAGE_AUDIT.md) | How the answer key reached the student in the original system — all eighteen paths, why 70% of its score was resemblance rather than correctness, and the six mechanisms that closed them. | ~7 min |
 
 ## If you only read one thing
 
@@ -32,8 +33,7 @@ prompt, not which retriever produced it* — and backs every claim with a number
 
 | Path | What it is |
 |---|---|
-| `plan/` | Task specifications and design documents — one per task (`T*.md`), plus the specs behind each decision. How the work was planned before it was run. |
-| `audit/` | The audits that started the rebuild: the code map, the ground-truth leakage census, the environment review. |
+| `plan/` | Working notes: the task specifications and design documents written before each piece of work was run. Kept locally, not published — what they decided is in the ADR log, and what they produced is in the documents above. |
 | `archive/` | Superseded documents, kept with a banner explaining what was wrong and which ADR corrected it. Retained deliberately — the correction is part of the honest record. |
 
 ## The rules everything here follows

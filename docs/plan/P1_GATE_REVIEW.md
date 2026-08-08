@@ -35,9 +35,9 @@ a small honest number (+5–10 pp) is success, a suspicious ~100% is failure (AD
 |---|---|---|
 | 843-line monolith `simplified_teaching_loop.py`, run() spans 214–742 (`CODE_MAP.md:25`) | 7 single-responsibility blocks under `src/tlw/`, wired by registries | `structure.md` §C |
 | Config drift: weights comment ≠ live dict (`config/simplified_config.yml:45-53`); `pass_threshold` hidden under `teacher:` (`:27`); hardcoded abs paths (`phase6/configs/*.yml:42-43`) | `config/base.yml` single source; thresholds only in slot F; loader resolves paths; fail-loud validation | `schema.md` V1/V3/V5, ADR-016 |
-| Score = 70% reference-proximity fused with correctness (`LEAKAGE_CENSUS.md:73-76`) | Two never-merged columns: `correctness` (blind, headline) vs `reference_match` (diagnostic); weights = `{blind_score: 1.0}` | `EVAL_SPEC.md:73-92` |
-| Memory stores raw teacher feedback incl. verbatim GT, retrieved unconditionally round 1 → "leaks forward in time" (`LEAKAGE_CENSUS.md` L4/L6, P6C 100%) | Memory stores a bounded `teaching_note` only; store-time GT tripwire makes an answer-key *impossible to write*; fresh per-run store; arms A/B = `none` | `schema.md` §Memory v2, ADR-018 |
-| 42 prompts, one confirmed GT-echo leak live in a CoT style (`LEAKAGE_CENSUS.md` L7) | 7 curated presets; `difficult_question` + `last_chance` quarantined, forbidden as registry keys | `PROMPT_CATALOG.md:16-30` |
+| Score = 70% reference-proximity fused with correctness (`LEAKAGE_AUDIT.md:73-76`) | Two never-merged columns: `correctness` (blind, headline) vs `reference_match` (diagnostic); weights = `{blind_score: 1.0}` | `EVAL_SPEC.md:73-92` |
+| Memory stores raw teacher feedback incl. verbatim GT, retrieved unconditionally round 1 → "leaks forward in time" (`LEAKAGE_AUDIT.md` L4/L6, P6C 100%) | Memory stores a bounded `teaching_note` only; store-time GT tripwire makes an answer-key *impossible to write*; fresh per-run store; arms A/B = `none` | `schema.md` §Memory v2, ADR-018 |
+| 42 prompts, one confirmed GT-echo leak live in a CoT style (`LEAKAGE_AUDIT.md` L7) | 7 curated presets; `difficult_question` + `last_chance` quarantined, forbidden as registry keys | `PROMPT_CATALOG.md:16-30` |
 | 3 P2/P3 competencies unowned; `.claude/` untracked; guard false-blocks `2>&1`; `.env` Write-hole | stats folded into qa-engineer; guard fixes shipped; P3 roles deferred by design | `CLAUDE_ENV_AUDIT.md`, ADR-021 |
 
 ---
@@ -58,7 +58,7 @@ coherent.** Confirmed alignments and every mismatch (fixed or escalated) below.
 - **Slot F ↔ eval spec.** `EVAL_SPEC.md:286-308` resolves cleanly into slot F; `mode ∈ {blind,
   gt_comparing}`, `weights: {blind_score: 1.0}` (sum = 1.0, satisfies V1), judge family ≠ student
   family (V2) — all consistent with `schema.md:71,106` and the Judge seam (`structure.md:113`).
-- **Leakage seals ↔ specs.** All three specs reference the same `LEAKAGE_CENSUS.md` seal numbers
+- **Leakage seals ↔ specs.** All three specs reference the same `LEAKAGE_AUDIT.md` seal numbers
   for the same fixes (memory §2 tripwire = seal #2; eval §1 = seals #1/#3; V2/V6 = seals #5/#6).
 
 **Mismatches found — FIXED (trivial):** **none.** No typo/naming/broken-cross-reference errors
@@ -90,7 +90,7 @@ cross-references all line up. Nothing met the "trivial fix" bar, so no P1 output
 
 ## STEPS — leakage seal → owning P2 task (every seal has an owner)
 
-Every one of the six `LEAKAGE_CENSUS.md:116-148` seal requirements is owned by a named P2 task.
+Every one of the six `LEAKAGE_AUDIT.md:116-148` seal requirements is owned by a named P2 task.
 Seals #5/#6 correctly land in T2.1 (config-load validation), not T2.3/4/5 — noted, consistent
 with `schema.md` V2/V6.
 

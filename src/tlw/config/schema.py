@@ -111,7 +111,7 @@ REQUIRED_KEYS: Tuple[str, ...] = (
     "eval.metrics.weights",
 )
 
-# V6 — memory-store denylist (LEAKAGE_CENSUS seal #6): GT-seeded historical
+# V6 — memory-store denylist (LEAKAGE_AUDIT seal #6): GT-seeded historical
 # artifacts may never feed a measured run.
 MEMORY_PATH_DENYLIST: Tuple[str, ...] = ("phase6", "gt_memory", "ground_truth")
 

@@ -118,7 +118,8 @@ Teaching-light-weight-llm-based-project/
 │   ├── EXPERIMENT_RESULTS.md  the full record — objectives, decisions, every measurement (ADR-036)
 │   ├── TRACK_A_RESULTS.md · RAG_RESULTS.md · WIXQA_RESULTS.md · PRODUCT_RESULTS.md
 │   ├── RAG_RELIABILITY_ANALYSIS.md
-│   ├── plan/ · audit/         task specs, design docs, P0 audits
+│   ├── LEAKAGE_AUDIT.md       the eighteen paths and the six seals (was audit/LEAKAGE_CENSUS.md)
+│   ├── plan/                  working notes — task specs and design docs, kept local, not published
 │   └── archive/               SUPERSEDED docs, each with a banner saying what was wrong
 │                              (incl. RAG_LAW.md, superseded by EXPERIMENT_RESULTS.md — ADR-036,
 │                               and v1-notebook-narrative.md recovered from the deleted notebook)

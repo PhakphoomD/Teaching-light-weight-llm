@@ -4,7 +4,7 @@ Proves, with mocked student/teacher/judge (no API calls), that no
 student-bound or judge-bound prompt ever carries the reference answer in
 arms A/B/C, and that arm D confines GT to the teacher-bound prompt only —
 even structurally defending against a misbehaving teacher that tries to
-echo it back (the L7/Trace-C failure mode, LEAKAGE_CENSUS.md).
+echo it back (the L7/Trace-C failure mode, LEAKAGE_AUDIT.md).
 
 See DoD accounting at the bottom of this file's companion report for the
 full census-item -> test mapping (also restated in the T2.4 spoke report).
@@ -149,7 +149,7 @@ def test_arm_c_blind_teacher_prompt_never_contains_gt_even_when_available(make_c
 
 
 def test_no_ground_truth_hint_mechanism_in_loop_source():
-    """Grep-proof DoD (LEAKAGE_CENSUS seal #4): no CODE IDENTIFIER for the
+    """Grep-proof DoD (LEAKAGE_AUDIT seal #4): no CODE IDENTIFIER for the
     retired L1/L3/L7 mechanisms exists anywhere in the loop block (prose
     mentions in docstrings/comments describing what was NOT ported are
     fine and expected — an actual function/variable/string literal that

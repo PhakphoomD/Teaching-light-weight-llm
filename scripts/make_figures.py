@@ -257,7 +257,7 @@ def tab_decisions() -> None:
 def tab_leakage_census() -> None:
     """The audit that found the original result was invalid.
 
-    Authored from `docs/audit/LEAKAGE_CENSUS.md` with its line citations rather
+    Authored from `docs/LEAKAGE_AUDIT.md` with its line citations rather
     than recomputed -- a census of code paths is a reading of the code, and the
     honest form of that is a citation the reader can open.
     """
@@ -326,7 +326,7 @@ def tab_leakage_census() -> None:
         "*shown* it while being measured — so a teacher seeing the answer is legal and a memory "
         "store handing that answer back to the student is not. The second table is what the rebuild "
         "put in place, and the design rule behind all six is the same: make the failure impossible "
-        "to reintroduce rather than remembering not to. Source: docs/audit/LEAKAGE_CENSUS.md.",
+        "to reintroduce rather than remembering not to. Source: docs/LEAKAGE_AUDIT.md.",
         table(["path", "what it does", "who sees the answer", "verdict", "where"], paths)
         + "\n\n### The six seals, and why each is structural rather than procedural\n\n"
         + table(["seal", "how it holds"], seals),
@@ -517,7 +517,7 @@ def fig_v1_metric() -> None:
         "memory store kept it as 'feedback', which the student then read back. A high number under "
         "that arrangement is what the arrangement was built to produce. This chart is about the "
         "metric, not the scores: the old and new pass rates measure different things and are never "
-        "put on a shared axis. Source: docs/audit/LEAKAGE_CENSUS.md, logs/experiments/.",
+        "put on a shared axis. Source: docs/LEAKAGE_AUDIT.md, logs/experiments/.",
     )
 
 

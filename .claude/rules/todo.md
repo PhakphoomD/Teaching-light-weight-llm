@@ -19,7 +19,7 @@ make the log agree with the repository by falsifying the history. For where a pa
 ## DONE — P0: Inspect the house (read-only, parallel-safe)
 - [x] **T0.1** Code map — every file: role + verdict (EXEMPLAR/ALIVE/MESSY/DEAD) → `docs/audit/CODE_MAP.md` *(owner: housekeeping)* — done 2026-07-13: 44 files mapped; 5 DEAD confirmed (1,415 ln ≈ 26% of src/); 1 MESSY (teaching_loop `run()` 214–742); ⚠️ tools/ untracked in git
 - [x] **T0.2** `.claude/` environment audit — is the crew fit for the new direction? → `docs/audit/CLAUDE_ENV_AUDIT.md` *(owner: main thread)* — done 2026-07-13: PASS-WITH-NOTES; BLOCKER = `.claude/`+plan+tools untracked in git; gaps = stats/RAG/LoRA ownership; guard works (tested live) but `.env` Write hole + `2>&1` false block
-- [x] **T0.3** Ground-truth leakage census → `docs/audit/LEAKAGE_CENSUS.md` *(owner: qa-engineer)* — done 2026-07-13:
+- [x] **T0.3** Ground-truth leakage census → `docs/LEAKAGE_AUDIT.md` *(owner: qa-engineer)* — done 2026-07-13:
   18 paths classified; confirmed known L1-L5 (explicit GT-hint, off by config only); found 2 new
   BLOCKERs beyond the hub's starting list — L6 (memory-retrieval into student prompt is a structural,
   always-on leak, not gated by `enable_last_chance`) and L7 (`difficult_question` CoT template tells

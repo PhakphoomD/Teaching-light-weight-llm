@@ -5,7 +5,7 @@ Read-first list: round bookkeeping (a list of per-round records) and
 early-stop-on-pass. NONE of its ground-truth-hint machinery is ported —
 LAST_CHANCE (L1-L3, L5), the "one last chance" forced round (L3), and the
 GT-as-feedback memory write (L4) do not exist anywhere in this module or its
-callers (LEAKAGE_CENSUS seal #4: "must not carry these branches forward as
+callers (LEAKAGE_AUDIT seal #4: "must not carry these branches forward as
 toggleable dead code" — they are simply absent, not off-by-config).
 
 `assert_gt_free` is a structural, defense-in-depth check (on top of, never

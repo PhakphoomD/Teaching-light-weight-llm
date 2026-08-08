@@ -1,5 +1,5 @@
 """T2.4 preset-block tests: the ADR-020 survivor set resolves correctly, and
-the two quarantined leak templates (LEAKAGE_CENSUS L1/L7) can never be
+the two quarantined leak templates (LEAKAGE_AUDIT L1/L7) can never be
 reached through the registry, no matter what."""
 
 import pytest
@@ -86,7 +86,7 @@ def test_orca_student_and_orca_teacher_are_distinct_registry_entries():
     assert build_preset("orca_student").__class__ is OrcaStudentPreset
 
 
-# --- Quarantine: LEAKAGE_CENSUS L1 (student.last_chance) / L7 (teacher.difficult_question) ---
+# --- Quarantine: LEAKAGE_AUDIT L1 (student.last_chance) / L7 (teacher.difficult_question) ---
 
 
 def test_quarantined_keys_are_the_two_confirmed_leaks():

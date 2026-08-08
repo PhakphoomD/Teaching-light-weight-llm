@@ -102,7 +102,7 @@ The pre-renovation project reported **25% → 83% → 100%** (ADR-001). This run
 
 - The **real** effect of iterating is **+9 points from self-refinement** (A 82% → B 91%), not
   tens of points. The rest of the old headline was inflation: the student was shown the reference
-  answer (ground-truth leakage, LEAKAGE_CENSUS L1/L4/L6/L7) and the metric rewarded copying the
+  answer (ground-truth leakage, LEAKAGE_AUDIT L1/L4/L6/L7) and the metric rewarded copying the
   reference, not correctness.
 - The old "100%" (P6C) was memorisation via a ground-truth memory store — retired structurally in
   v2 (the memory tripwire, T2.5).

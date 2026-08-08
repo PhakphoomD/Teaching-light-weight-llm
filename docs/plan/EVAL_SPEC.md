@@ -8,7 +8,7 @@
 This spec is the complete measurement protocol for the 4-arm ablation (ADR-002). It is
 *measurement only* — it does not change code (P1). It tells P2 (T2.3/T2.4/T2.6/T2.7/T2.8)
 exactly what to build and run. Every number below is arithmetic you can re-derive from the
-cited caps; every integrity rule cites §0 or `LEAKAGE_CENSUS.md`.
+cited caps; every integrity rule cites §0 or `LEAKAGE_AUDIT.md`.
 
 ---
 
@@ -45,9 +45,9 @@ Rules that bind every arm:
 - **Student is the same model in all arms** (the thing under test). Only the between-round
   feedback differs. Same decoding params, same seeds, same prompts for the answering step.
 - **A and B use `memory.type = none`** and never write to any store (T1.3 arm rules;
-  seals the L6/Trace-B structural leak class, `LEAKAGE_CENSUS.md:164-167`, by construction).
+  seals the L6/Trace-B structural leak class, `LEAKAGE_AUDIT.md:164-167`, by construction).
 - **C and D** may write teacher **notes** (never GT) if T1.3's memory design is on; those
-  notes are subject to the store-time GT tripwire (seal #2, `LEAKAGE_CENSUS.md:124-126`,
+  notes are subject to the store-time GT tripwire (seal #2, `LEAKAGE_AUDIT.md:124-126`,
   built in T2.5). **Eval position (recommended headline):** run the headline C−B with
   `memory.type = none` for **all** arms so feedback lives only in-context within a question's
   rounds — this removes cross-question memory-retrieval as a confound and keeps C−B a clean
@@ -63,7 +63,7 @@ Rules that bind every arm:
 feedback → answer). Feedback each round is carried **in-context** into the next student prompt
 (round-to-round), which is *not* a leak as long as the feedback text is GT-free — that GT-free
 guarantee is enforced by seal #1 (no-raw-GT-substring test on every student-bound prompt,
-`LEAKAGE_CENSUS.md:118-123`) and seal #3 (teacher-template lint, `:127-133`). Arm D's teacher
+`LEAKAGE_AUDIT.md:118-123`) and seal #3 (teacher-template lint, `:127-133`). Arm D's teacher
 *sees* GT to reason, but its returned feedback string must still pass the same GT-substring
 gate before it reaches the student — otherwise D degenerates into the explicit
 ground-truth-hint cheat (L1/L7) rather than a clean "teacher-informed-by-GT" ceiling.
@@ -74,7 +74,7 @@ ground-truth-hint cheat (L1/L7) rather than a clean "teacher-informed-by-GT" cei
 
 The core error in ADR-001 was folding "is it correct?" and "does it look like the reference?"
 into one hybrid score that was **70% reference-proximity** (`comparison 0.35 + semantic 0.25 +
-rouge 0.10`, reproduced from live config in `LEAKAGE_CENSUS.md:50-76`). Track-A keeps them in
+rouge 0.10`, reproduced from live config in `LEAKAGE_AUDIT.md:50-76`). Track-A keeps them in
 **separate columns** and lets only the first decide pass/fail.
 
 | Metric | What it is | Sees GT? | Decides pass/fail? | Reported as |
@@ -329,7 +329,7 @@ usage; arm D sets `arm: D` (teacher sees GT for feedback, still `mode: blind` fo
 | Option | Role |
 |---|---|
 | **Blind (judge sees Q + answer only)** — *hub leaning, recommended primary* | zero GT in the score path → measures *correctness*, not reference-match; this is the headline pass/fail |
-| **GT-comparing-but-independent (a second judge that sees GT)** | **secondary diagnostic column only** — maps to the legal score-path L10 (`LEAKAGE_CENSUS.md:38`); reported next to `reference_match`, never fed back to the student, never the headline |
+| **GT-comparing-but-independent (a second judge that sees GT)** | **secondary diagnostic column only** — maps to the legal score-path L10 (`LEAKAGE_AUDIT.md:38`); reported next to `reference_match`, never fed back to the student, never the headline |
 - **Recommendation:** **blind is the primary/headline** correctness judge; a GT-comparing
   independent judge may be added purely as a diagnostic column (alongside `reference_match`) to
   show how blind-correctness and reference-agreement diverge. It must never enter the pass/fail

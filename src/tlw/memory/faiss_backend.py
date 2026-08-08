@@ -194,7 +194,7 @@ class FaissMemory(MemoryBackend):
             if bad in lowered:
                 raise ValueError(
                     f"seed_from '{seed_from}' matches denylisted term '{bad}' "
-                    "(Config Contract V6, LEAKAGE_CENSUS seal #6) — refusing to seed."
+                    "(Config Contract V6, LEAKAGE_AUDIT seal #6) — refusing to seed."
                 )
         seed_path = Path(seed_from)
         if not seed_path.exists():

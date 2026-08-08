@@ -18,7 +18,7 @@ import yaml
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 _PROMPTS_DIR = _PROJECT_ROOT / "config" / "prompts"
 
-# Quarantined preset keys (LEAKAGE_CENSUS L1/L7, ADR-020 §0/§7): confirmed
+# Quarantined preset keys (LEAKAGE_AUDIT L1/L7, ADR-020 §0/§7): confirmed
 # §0.2 leaks. They must never resolve through this loader even if a future
 # hand-edit of config/prompts/*.yml reintroduces the key name by accident.
 QUARANTINED_KEYS = frozenset({"last_chance", "difficult_question"})
@@ -45,7 +45,7 @@ def _check_no_quarantined_keys(role: str, data: Dict[str, Any]) -> None:
         if style in QUARANTINED_KEYS:
             raise RuntimeError(
                 f"Quarantined preset style '{style}' found in "
-                f"config/prompts/{role}.yml (LEAKAGE_CENSUS L1/L7) — must "
+                f"config/prompts/{role}.yml (LEAKAGE_AUDIT L1/L7) — must "
                 "never be registry-resolvable (ADR-020)."
             )
         if isinstance(variants, dict):
@@ -53,7 +53,7 @@ def _check_no_quarantined_keys(role: str, data: Dict[str, Any]) -> None:
                 if variant in QUARANTINED_KEYS:
                     raise RuntimeError(
                         f"Quarantined preset variant '{style}.{variant}' found "
-                        f"in config/prompts/{role}.yml (LEAKAGE_CENSUS L1/L7) "
+                        f"in config/prompts/{role}.yml (LEAKAGE_AUDIT L1/L7) "
                         "— must never be registry-resolvable (ADR-020)."
                     )
 

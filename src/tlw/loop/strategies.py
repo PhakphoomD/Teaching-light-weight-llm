@@ -3,7 +3,7 @@
 Each arm decides ONLY what feedback source feeds the student between
 rounds; scoring is always delegated to the judge seam (no scoring logic
 lives here, per T2.4 "Must NOT do"). No arm has a ground-truth-hint
-fallback in any form — the legacy L1-L5 mechanism (LEAKAGE_CENSUS.md) does
+fallback in any form — the legacy L1-L5 mechanism (LEAKAGE_AUDIT.md) does
 not exist in this module at all, structurally, not just off-by-default.
 
 Registers "A"/"B"/"C"/"D" into STRATEGY_REGISTRY on import (T2.2 pattern),
@@ -29,7 +29,7 @@ _DEFAULT_TEACHER_PRESET = "orca"
 
 
 def _reference_match(answer: str, ground_truth: Optional[str]) -> Optional[Dict[str, float]]:
-    """Diagnostic-only, legal score-path use of GT (EVAL_SPEC §2, LEAKAGE_CENSUS
+    """Diagnostic-only, legal score-path use of GT (EVAL_SPEC §2, LEAKAGE_AUDIT
     L10-L12) — never fed back to the student, never gates pass/fail. `None`
     when no GT was supplied (the default for a headline arm run)."""
     if not ground_truth:

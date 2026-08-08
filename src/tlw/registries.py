@@ -1,7 +1,7 @@
 """Registries for every Config Contract slot (T2.2) — the plugin seams.
 
 Generalizes the provider factory pattern (src/providers/factory.py, EXEMPLAR
-per CODE_MAP.md:65) to slots C/D/E/F: a seam interface (method names per
+per docs/archive/CODE_MAP.md) to slots C/D/E/F: a seam interface (method names per
 structure.md §D — signatures are finalized by the owning P2 task) + a Registry
 instance per slot. Adding an implementation = write a class + @register("name"),
 zero runner edits.

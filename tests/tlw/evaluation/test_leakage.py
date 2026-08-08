@@ -1,4 +1,4 @@
-"""T2.3 leakage tests (LEAKAGE_CENSUS seal #1 + #5, extended to the judge).
+"""T2.3 leakage tests (LEAKAGE_AUDIT seal #1 + #5, extended to the judge).
 
 1. BlindJudge.score() cannot leak a reference answer into the judge prompt,
    because its signature has no parameter to carry one — proven structurally
@@ -68,7 +68,7 @@ def test_planted_reference_never_reaches_the_judge_prompt():
     assert "QUESTION:" in prompt
     assert "ANSWER:" in prompt
     # No bracketed reference/target-answer block (contrast the LEGAL
-    # teacher-only `[Target Answer] {ground_truth}` pattern, LEAKAGE_CENSUS
+    # teacher-only `[Target Answer] {ground_truth}` pattern, LEAKAGE_AUDIT
     # L9 — the judge prompt must never carry an equivalent block).
     assert "[REFERENCE" not in prompt.upper()
     assert "[TARGET" not in prompt.upper()

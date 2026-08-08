@@ -7,7 +7,7 @@ PASS iff score >= 3 (normalized pass_threshold = 0.75, base.yml).
 §0.2 by construction: `score()` takes only (question, answer, mode) — there
 is no parameter through which a reference/ground-truth string could reach
 the prompt this module builds. Grep-proof: this file contains no
-`ground_truth` identifier anywhere (correctness-path code, LEAKAGE_CENSUS
+`ground_truth` identifier anywhere (correctness-path code, LEAKAGE_AUDIT
 seal #1 spirit extended to the judge).
 
 Registered into JUDGE_REGISTRY under "blind" on import of this module

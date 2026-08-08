@@ -195,7 +195,7 @@ def _check_v6_memory_denylist(cfg: Dict[str, Any], errors: List[str]) -> None:
     if hits:
         errors.append(
             f"V6 — memory.seed_from = {seed_from!r} matches denylist {hits} "
-            f"(§0.2, LEAKAGE_CENSUS seal #6: GT-seeded artifacts are quarantined)"
+            f"(§0.2, LEAKAGE_AUDIT seal #6: GT-seeded artifacts are quarantined)"
         )
 
 

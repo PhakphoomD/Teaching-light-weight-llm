@@ -57,7 +57,7 @@ Paired with `*.ids.json` (array mapping FAISS row → id) + `*.index` (binary em
 
 **One run = one config file = six slots, each resolved through a registry, defaults layered, nothing hardcoded.** This is the backbone of every P2 block (T2.1–T2.6) and of future fine-tuning work: swap models / memory / presets / judges by editing YAML only. Loader + validation are **implemented in T2.1** — this section is the spec they must satisfy.
 
-**Why now (drift this kills):** the current `config/simplified_config.yml` already rotted — the metric-weights comment (`config/simplified_config.yml:45-46`) claims `comparison(0.3), semantic(0.2), exact(0.1)` while the live dict (`config/simplified_config.yml:47-53`) is `comparison_score: 0.35, semantic_sim: 0.25`, `exact_match` commented out (§0.1 doc/value drift, per LEAKAGE_CENSUS §2); the eval `pass_threshold` hides under `teacher:` (`config/simplified_config.yml:27`) instead of under eval; and historical run configs hardcode a stale absolute path outside the repo root (`logs/experiments/phase6/configs/P6A-NoMemory-Baseline.yml:42-43`, §0.3). The contract fixes each structurally: single source of defaults, thresholds owned by slot F, path resolution in the loader.
+**Why now (drift this kills):** the current `config/simplified_config.yml` already rotted — the metric-weights comment (`config/simplified_config.yml:45-46`) claims `comparison(0.3), semantic(0.2), exact(0.1)` while the live dict (`config/simplified_config.yml:47-53`) is `comparison_score: 0.35, semantic_sim: 0.25`, `exact_match` commented out (§0.1 doc/value drift, per LEAKAGE_AUDIT §2); the eval `pass_threshold` hides under `teacher:` (`config/simplified_config.yml:27`) instead of under eval; and historical run configs hardcode a stale absolute path outside the repo root (`logs/experiments/phase6/configs/P6A-NoMemory-Baseline.yml:42-43`, §0.3). The contract fixes each structurally: single source of defaults, thresholds owned by slot F, path resolution in the loader.
 
 ## Slot table
 
@@ -102,12 +102,12 @@ eval:                                                       # F — judge + thre
 
 ## Validation rules (specified now, implemented in T2.1 loader — fail-loud)
 
-- **V1 — Metric weights sum to 1.0 ± ε** (ε = 1e-6). `sum(eval.metrics.weights.values())` must ≈ 1.0. Prevents silent mis-scaling; documents intent explicitly instead of relying on runtime normalization (LEAKAGE_CENSUS §2 notes `metrics.py` normalizes anyway, which *masks* a wrong config — validation surfaces it).
-- **V2 — Judge family ≠ student family (§0.2).** Families per `providers.md`: **Llama** = {`llama3.1:8b`, `llama-3.1-8b-instant`, `llama-3.3-70b-versatile`}; **Qwen** = {`qwen2.5:7b-instruct`, `qwen2.5:3b`, `qwen/qwen3-32b`, `qwen/qwen3.6-27b`}. `family(eval.judge.model)` must ≠ `family(student.model)`. Fail-loud at load (LEAKAGE_CENSUS seal #5). Teacher family is unconstrained (it is not the measurement).
+- **V1 — Metric weights sum to 1.0 ± ε** (ε = 1e-6). `sum(eval.metrics.weights.values())` must ≈ 1.0. Prevents silent mis-scaling; documents intent explicitly instead of relying on runtime normalization (LEAKAGE_AUDIT §2 notes `metrics.py` normalizes anyway, which *masks* a wrong config — validation surfaces it).
+- **V2 — Judge family ≠ student family (§0.2).** Families per `providers.md`: **Llama** = {`llama3.1:8b`, `llama-3.1-8b-instant`, `llama-3.3-70b-versatile`}; **Qwen** = {`qwen2.5:7b-instruct`, `qwen2.5:3b`, `qwen/qwen3-32b`, `qwen/qwen3.6-27b`}. `family(eval.judge.model)` must ≠ `family(student.model)`. Fail-loud at load (LEAKAGE_AUDIT seal #5). Teacher family is unconstrained (it is not the measurement).
 - **V3 — Unknown keys rejected.** Any key not in the slot table above → hard error (no silent typo-drift; a mistyped `pass_treshold` must fail, not vanish).
 - **V4 — `seed` mandatory for experiment runs (§0.3).** Missing `params.seed` → hard error. Reproducibility is non-negotiable.
 - **V5 — `eval.pass_threshold` must live under slot F only.** A `pass_threshold` (or any threshold) appearing under `teacher:` → hard error, pointing the author to slot F. Directly retires the `config/simplified_config.yml:27` misplacement.
-- **V6 — Memory-store denylist (§0.2, LEAKAGE_CENSUS seal #6).** `memory` storage paths matching `phase6` / containing `gt_memory` / `ground_truth` in the filename → hard error (quarantines GT-seeded historical artifacts from any measured run).
+- **V6 — Memory-store denylist (§0.2, LEAKAGE_AUDIT seal #6).** `memory` storage paths matching `phase6` / containing `gt_memory` / `ground_truth` in the filename → hard error (quarantines GT-seeded historical artifacts from any measured run).
 - **V7 — Enum/type validation** per the slot table: `provider`, `memory.type`, `params.arm`, `eval.mode` must be in their allowed sets; numeric ranges enforced (`0 ≤ threshold ≤ 1`, `top_k > 0`, `max_rounds > 0`).
 - **V8 — Arm×memory cross-check (P1 gate (e), ADR-022).** `params.arm ∈ {A, B}` REQUIRES `memory.type: none` — a measured baseline must not accumulate notes; any other combination → hard error naming this rule. For arms C/D both values are legal but mean different experiments: `none` = the **headline** run (ADR-022 (c)); `faiss` = the **C′/D′ memory-on ablation** — the runner records which in the run id/summary so the two can never be conflated (§0.1).
 
@@ -121,9 +121,9 @@ eval:                                                       # F — judge + thre
 
 # Memory v2 contract (honest memory: notes-not-answers) — ADR-018, Accepted (P1 gate, ADR-022)
 
-**One core rule: memory stores what *worked* (reusable teaching notes), never the *answer*.** This is the structural fix for ADR-001's "100% = the system quoting its own answer key" and for the always-on retrieval leak (LEAKAGE_CENSUS L4/L6). It is slot **D** of the Config Contract, realized through the **MemoryBackend** seam (`structure.md` §D:111). Interface + tripwire are **implemented in T2.5**; this section is the spec they must satisfy. Deliberately single-user, single-machine, local-first (no multi-user/prod scale, per T1.3 Must-NOT).
+**One core rule: memory stores what *worked* (reusable teaching notes), never the *answer*.** This is the structural fix for ADR-001's "100% = the system quoting its own answer key" and for the always-on retrieval leak (LEAKAGE_AUDIT L4/L6). It is slot **D** of the Config Contract, realized through the **MemoryBackend** seam (`structure.md` §D:111). Interface + tripwire are **implemented in T2.5**; this section is the spec they must satisfy. Deliberately single-user, single-machine, local-first (no multi-user/prod scale, per T1.3 Must-NOT).
 
-**Why the old shape was unsafe.** Today `FAISSMemory` stores a free `teaching_feedback` string with **no content check** (`src/simplified/memory.py:305-395` store; `:237-303` `get_best_feedback`), and the loop injects it into a student prompt in round 1 unconditionally (`simplified_teaching_loop.py:295-300, 368-376`). So any GT-bearing string — whether seeded (`logs/experiments/phase6/gt_memory_store.jsonl`, L18), echoed by a teacher template (L7), or promoted from a last-chance pass (L4) — becomes a persistent, retrievable answer key that "leaks forward in time" across runs (LEAKAGE_CENSUS §4 Trace B, confirmed `phase6/summary.jsonl` P6C `memory_hit_rate:1.0, pass_rate:1.0`). v2 makes that shape *impossible to write*.
+**Why the old shape was unsafe.** Today `FAISSMemory` stores a free `teaching_feedback` string with **no content check** (`src/simplified/memory.py:305-395` store; `:237-303` `get_best_feedback`), and the loop injects it into a student prompt in round 1 unconditionally (`simplified_teaching_loop.py:295-300, 368-376`). So any GT-bearing string — whether seeded (`logs/experiments/phase6/gt_memory_store.jsonl`, L18), echoed by a teacher template (L7), or promoted from a last-chance pass (L4) — becomes a persistent, retrievable answer key that "leaks forward in time" across runs (LEAKAGE_AUDIT §4 Trace B, confirmed `phase6/summary.jsonl` P6C `memory_hit_rate:1.0, pass_rate:1.0`). v2 makes that shape *impossible to write*.
 
 **What to keep from v1.** The success-aware ranking (`success_rate > final_score > attempts`, `src/simplified/memory.py:282-291`), FAISS `IndexFlatIP` cosine search over normalized MiniLM embeddings (`:104-105, 168-183`), embedding-hash ids (`:185-198`), and JSONL-for-inspection persistence are good ideas and are retained. What changes is **the payload** (a bounded teaching note, never GT) and **the write path** (a store-time tripwire + arm gating).
 
@@ -165,7 +165,7 @@ Field notes:
 
 ## 2. Forbidden-content rule (as schema) — the store-time tripwire
 
-**Hard schema invariant:** `teaching_note` MUST NOT contain the reference answer, verbatim or near-verbatim. This is not advisory prose — it is a **write-time gate inside `MemoryBackend.store()`** that rejects any offending episode and logs it. Seals LEAKAGE_CENSUS L4, L6 (memory side), L7 (memory side), L8, L18 structurally (a compliant store *cannot* persist an answer key). Test lands in **T2.5** (unit) + **T2.3** (integration), per LEAKAGE_CENSUS seal #2.
+**Hard schema invariant:** `teaching_note` MUST NOT contain the reference answer, verbatim or near-verbatim. This is not advisory prose — it is a **write-time gate inside `MemoryBackend.store()`** that rejects any offending episode and logs it. Seals LEAKAGE_AUDIT L4, L6 (memory side), L7 (memory side), L8, L18 structurally (a compliant store *cannot* persist an answer key). Test lands in **T2.5** (unit) + **T2.3** (integration), per LEAKAGE_AUDIT seal #2.
 
 **Preferred design — GT never enters memory's call signature.** The cleanest guarantee is that `store()` does **not accept `ground_truth` as a parameter at all** (contrast v1, whose caller passes GT-bearing strings freely). The loop distills a note *before* calling memory; the tripwire below is defense-in-depth for when GT is available at the call site (e.g. arm D) and must be checked against.
 
@@ -183,7 +183,7 @@ Field notes:
 
 ## 3. Retrieval contract
 
-`retrieve(query, top_k)` returns **guidance notes only**, ranked, and its output is injected **only into refinement-round prompts, never presented as answer text**. Mirrors LEAKAGE_CENSUS seal #1 (no student-bound prompt may contain GT — and a v2 note structurally cannot).
+`retrieve(query, top_k)` returns **guidance notes only**, ranked, and its output is injected **only into refinement-round prompts, never presented as answer text**. Mirrors LEAKAGE_AUDIT seal #1 (no student-bound prompt may contain GT — and a v2 note structurally cannot).
 
 1. **Search:** embed `query` (same encoder as store), FAISS top-k over the index (v1 `search`, `src/simplified/memory.py:200-235`).
 2. **Similarity floor:** keep only candidates with `cosine ≥ similarity_threshold` (slot D, default 0.75 — v1 default kept).
@@ -221,7 +221,7 @@ Method names align **exactly** with `structure.md` §D:111 (the seam is authorit
 
 ## Alignment recap (what this seals / satisfies)
 
-- LEAKAGE_CENSUS seal #2 (store-time tripwire) → §2; seal #1 (no GT in student prompts) → §3 (notes are structurally GT-free); seal #6 (historical-artifact quarantine) → §5 seed-store + Config V6.
+- LEAKAGE_AUDIT seal #2 (store-time tripwire) → §2; seal #1 (no GT in student prompts) → §3 (notes are structurally GT-free); seal #6 (historical-artifact quarantine) → §5 seed-store + Config V6.
 - Config Contract slot D (`type ∈ {faiss, rag, none}`, `embedding`, `top_k`, `similarity_threshold`) → §4 backend + §3 retrieval; adds optional `min_success_rate`, `max_episodes`, `gt_similarity_max`, `gt_substring_shingle`, `seed_from`.
 - `structure.md` §D MemoryBackend seam (`store`/`retrieve`/`update_outcome`/`stats`) → §4, names matched exactly.
 - ADR-001 root cause (memory-as-answer-key) → retired by §1 payload change + §2 invariant + §5 store-only-what-worked.
