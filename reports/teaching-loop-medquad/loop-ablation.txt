@@ -1,0 +1,45 @@
+# question: Does an iterative teacher-student loop make a small model better?
+# regenerate: python -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B --comparison B-A
+
+==============================================================================
+Track-A analysis  --  memory.type = none
+arms present: A, B, C, D
+------------------------------------------------------------------------------
+Descriptive per-arm pass-rate (Wilson 95% CI):
+  arm A: 0.821  [0.779, 0.857]  (n=375, k=308)
+  arm B: 0.912  [0.879, 0.937]  (n=375, k=342)
+  arm C: 0.915  [0.882, 0.939]  (n=375, k=343)
+  arm D: 0.940  [0.903, 0.963]  (n=250, k=235)
+------------------------------------------------------------------------------
+Headline deltas (paired cluster bootstrap, 95% CI) + McNemar p:
+  B-A: B-A: +0.091 [+0.051, +0.133] (95% paired cluster bootstrap, n_clusters=125, resamples=10000) -- CI excludes 0
+      McNemar: b=43 c=9 p=0.0000
+      per-seed deltas: seed 13: +0.112, seed 42: +0.088, seed 123: +0.072
+  C-B: C-B: +0.003 [-0.021, +0.029] (95% paired cluster bootstrap, n_clusters=125, resamples=10000) -- NO SIGNIFICANT EFFECT (CI crosses 0)
+      McNemar: b=16 c=15 p=1.0000
+      per-seed deltas: seed 13: -0.016, seed 42: -0.032, seed 123: +0.056
+------------------------------------------------------------------------------
+correctness (HEADLINE) vs reference_match (DIAGNOSTIC ONLY, never merged, ADR-019):
+  arm A: correctness_pass_rate=0.821   reference_match: semantic_sim=0.715  rouge_l=0.192
+  arm B: correctness_pass_rate=0.912   reference_match: semantic_sim=0.698  rouge_l=0.194
+  arm C: correctness_pass_rate=0.915   reference_match: semantic_sim=0.691  rouge_l=0.198
+  arm D: correctness_pass_rate=0.940   reference_match: semantic_sim=0.704  rouge_l=0.202
+------------------------------------------------------------------------------
+Rounds-to-pass distribution:
+  arm A: 1: 308, never: 67
+  arm B: 1: 309, 2: 26, 3: 7, never: 33
+  arm C: 1: 301, 2: 32, 3: 10, never: 32
+  arm D: 1: 210, 2: 21, 3: 4, never: 15
+------------------------------------------------------------------------------
+Token cost per arm (student+teacher+judge):
+  arm A: total=273090  student=99308  teacher=0  judge=173782
+  arm B: total=465975  student=239429  teacher=0  judge=226546
+  arm C: total=492633  student=189735  teacher=71487  judge=231411
+  arm D: total=302387  student=111458  teacher=45218  judge=145711
+------------------------------------------------------------------------------
+Memory-note usage per arm:
+  arm A: memory_hit_rate=0.000 (0/375 rounds)  episodes_stored=0  rejects=0
+  arm B: memory_hit_rate=0.000 (0/481 rounds)  episodes_stored=0  rejects=0
+  arm C: memory_hit_rate=0.000 (0/491 rounds)  episodes_stored=0  rejects=0
+  arm D: memory_hit_rate=0.000 (0/309 rounds)  episodes_stored=0  rejects=0
+==============================================================================

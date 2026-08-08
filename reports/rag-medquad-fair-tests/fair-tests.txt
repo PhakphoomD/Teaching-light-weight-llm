@@ -1,0 +1,51 @@
+# question: is the MedQuAD retrieval null just a weak retriever or too small a library?
+# regenerate: run src.tlw.analysis --rag over each variant directory in
+#             runs/rag-medquad-fair-tests/ separately (pooling the two would average
+#             a reranker test with a corpus-size test, which measure different things)
+
+### matching-question-type-only
+==============================================================================
+RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE
+labels present: 3B+RAG
+------------------------------------------------------------------------------
+Descriptive per-label pass-rate (Wilson 95% CI):
+  3B+RAG  : 0.760  [0.678, 0.826]  (n=125, k=95)
+------------------------------------------------------------------------------
+Headline delta (paired cluster bootstrap, 95% CI) + McNemar p:
+  3B+RAG - 3B: SKIPPED -- no runs found for RAG label '3B'
+  3B+RAG - 7B: SKIPPED -- no runs found for RAG label '7B'
+  7B+RAG - 7B: SKIPPED -- no runs found for RAG label '7B+RAG'
+------------------------------------------------------------------------------
+Three SEPARATE columns, never merged (ADR-019):
+  label     correctness   faithfulness(diag)   reference_match(diag)   grounding_filtered
+  3B+RAG         0.760                n/a   sem=0.711 rouge=0.215       13
+------------------------------------------------------------------------------
+Token cost per label (student+judge; judge incl. faithfulness calls):
+  3B+RAG  : total=168182  student=106270  judge=61912
+==============================================================================
+*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
+==============================================================================
+
+### much-bigger-library
+==============================================================================
+RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE
+labels present: 3B+RAG
+------------------------------------------------------------------------------
+Descriptive per-label pass-rate (Wilson 95% CI):
+  3B+RAG  : 0.816  [0.739, 0.874]  (n=125, k=102)
+------------------------------------------------------------------------------
+Headline delta (paired cluster bootstrap, 95% CI) + McNemar p:
+  3B+RAG - 3B: SKIPPED -- no runs found for RAG label '3B'
+  3B+RAG - 7B: SKIPPED -- no runs found for RAG label '7B'
+  7B+RAG - 7B: SKIPPED -- no runs found for RAG label '7B+RAG'
+------------------------------------------------------------------------------
+Three SEPARATE columns, never merged (ADR-019):
+  label     correctness   faithfulness(diag)   reference_match(diag)   grounding_filtered
+  3B+RAG         0.816                n/a   sem=0.709 rouge=0.221        8
+------------------------------------------------------------------------------
+Token cost per label (student+judge; judge incl. faithfulness calls):
+  3B+RAG  : total=170205  student=107799  judge=62406
+==============================================================================
+*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
+==============================================================================
+

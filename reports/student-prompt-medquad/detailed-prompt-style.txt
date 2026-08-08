@@ -1,0 +1,29 @@
+# question: Does the student prompt style matter?
+# regenerate: python -m src.tlw.analysis --runs-dir runs/student-prompt-medquad
+
+==============================================================================
+Track-A analysis  --  memory.type = none
+arms present: A
+------------------------------------------------------------------------------
+Descriptive per-arm pass-rate (Wilson 95% CI):
+  arm A: 0.840  [0.766, 0.894]  (n=125, k=105)
+------------------------------------------------------------------------------
+Headline deltas (paired cluster bootstrap, 95% CI) + McNemar p:
+  B-A: SKIPPED -- no runs found for arm 'B' at memory.type='none'
+  C-B: SKIPPED -- no runs found for arm 'C' at memory.type='none'
+  D-C: SKIPPED -- no runs found for arm 'D' at memory.type='none'
+------------------------------------------------------------------------------
+correctness (HEADLINE) vs reference_match (DIAGNOSTIC ONLY, never merged, ADR-019):
+  arm A: correctness_pass_rate=0.840   reference_match: semantic_sim=0.716  rouge_l=0.172
+------------------------------------------------------------------------------
+Rounds-to-pass distribution:
+  arm A: 1: 105, never: 20
+------------------------------------------------------------------------------
+Token cost per arm (student+teacher+judge):
+  arm A: total=84684  student=31668  teacher=0  judge=53016
+------------------------------------------------------------------------------
+Memory-note usage per arm:
+  arm A: memory_hit_rate=0.000 (0/125 rounds)  episodes_stored=0  rejects=0
+==============================================================================
+*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
+==============================================================================

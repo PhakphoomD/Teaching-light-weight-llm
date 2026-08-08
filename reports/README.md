@@ -42,8 +42,17 @@ python scripts/wixqa/analyze_three_seeds.py
 python scripts/wixqa/analyze_dose_response.py
 ```
 
-> **Status:** populated. Every study above has its report here, and `figures/` + `tables/`
-> regenerate from the same logs with one command.
+Each report carries its question and its regeneration command as the first two lines of the file.
+
+> **Status.** All eight study directories are populated, and every value in them was recomputed
+> from `runs/` — none was transcribed. Two things a reader should know before using them:
+>
+> - The **reliability** report is the full 125-question × 8-seed sweep. `RAG_RELIABILITY_ANALYSIS.md`
+>   was written while that sweep was still running and its headline table is the earlier 5-seed
+>   pilot on two selected subsets. The two are not directly comparable — different sets, different
+>   metric — and the document has not yet been updated to fold the completed sweep in.
+> - The **fair-tests** report deliberately keeps its two variants apart. Pooling them would average
+>   a reranker test with a corpus-size test, which answer different questions.
 
 ## Presentation
 

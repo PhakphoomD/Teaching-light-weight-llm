@@ -1,9 +1,21 @@
 # Why RAG helps reliability on knowledge gaps but hurts pass@k — mechanism + literature
 
-**Status:** analysis (2026-07-21). Numbers below are the **5-seed pilot** (13 genuine-gap + 35
-broad hard-tail questions); a **full-125 × 8-seed sweep** (`runs/rag-medquad-reliability/`, no selection bias)
-is running to firm them up. This document explains *why* the pattern occurs, grounded in published
-work, and states the statistical care taken.
+**Status:** analysis (2026-07-21), **not yet updated with the sweep it was waiting for.** The
+numbers in §1 are the **5-seed pilot** on two selected subsets (13 genuine-gap + 35 broad
+hard-tail questions). The **full 125-question × 8-seed sweep** it says is running has since
+completed — `runs/rag-medquad-reliability/`, recomputed in
+[`reports/rag-medquad-reliability/per-attempt-vs-dependable.txt`](../reports/rag-medquad-reliability/per-attempt-vs-dependable.txt).
+
+The sweep **agrees with this document's direction and is far stronger than its pilot suggests**:
+on all 125 questions with no selection bias, the share of questions answered dependably (correct on
+every one of four held-out seeds) is **0.550 without retrieval and 0.238 with it, Δ −0.312
+[−0.384, −0.242]**, and the loss is concentrated exactly where the mechanism below predicts — on
+the questions the model already answered reliably (easy stratum −0.541), not on the gaps (−0.045,
+interval spanning zero). §1's own framing therefore stands, but its numbers are the pilot's and
+should be read as such until this document is rewritten around the sweep.
+
+What follows explains *why* the pattern occurs, grounded in published work, and states the
+statistical care taken.
 
 ---
 

@@ -1,0 +1,75 @@
+# question: is the judge trustworthy enough to measure any of this?
+# regenerate: read runs/judge-calibration/*/*.json (both key shapes -- see the note below)
+
+==============================================================================
+Judge calibration probes -- is either candidate judge trustworthy enough to measure?
+==============================================================================
+
+Two candidate judges were probed against a four-class boundary set: answers built to
+be GOOD, WRONG, TRUNCATED, and PLAUSIBLE_WRONG (subtly incorrect but well-formed).
+A usable judge passes the good ones, fails the wrong ones, and -- the hard part --
+fails the plausible-wrong ones.
+
+NOTE ON KEY NAMES: the two candidates were probed by different versions of the probe
+script, which stored their results under different key names ('summary'/'judge_model'
+for the Groq candidate, 'local_summary'/'local_judge_model' for the local one). Reading
+only one shape silently drops the other candidate; both are read here.
+
+judge                        seed    good   wrong   trunc   plaus   kappa  verdict
+----------------------------------------------------------------------------------
+groq/llama-3.1-8b-instant      42   0.950   0.100   0.775   0.925   0.411  FAIL
+ollama/llama3.1:8b            123   0.250   0.050   0.250   0.300   0.213  FAIL
+ollama/llama3.1:8b             42   0.975   0.100   0.900   0.950   0.346  FAIL
+ollama/llama3.1:8b             42   0.250   0.050   0.250   0.200   0.120  FAIL
+
+Columns are pass rates, so for 'wrong' and 'plaus' LOWER is better. The decisive column
+is 'plaus': a judge that passes a subtly-wrong answer cannot separate correct from
+plausible, which is the whole job. Both candidates fail it.
+
+runs/judge-calibration/groq-llama-8b/probe_fallback_8binstant_seed42_n40_1783953647.json
+  judge : groq/llama-3.1-8b-instant   seed 42   n 40
+    gate discrimination_ge_0.6              True
+    gate good_pass_rate_ge_0.80             True
+    gate null_rate_lt_0.02                  True
+    gate plausible_wrong_pass_rate_le_0.30  False
+    gate wrong_pass_rate_le_0.15            True
+    discrimination (good - wrong)        0.787
+    kappa vs the 70B reference           0.411
+    note: ADR-022(d) fallback after local llama3.1:8b (Ollama) probe failed gates
+
+runs/judge-calibration/local-llama-8b/probe_seed123_n40_1784002100.json
+  judge : ollama/llama3.1:8b   seed 123   n 40
+    gate discrimination_ge_0.6              False
+    gate good_pass_rate_ge_0.80             False
+    gate null_rate_lt_0.02                  True
+    gate plausible_wrong_pass_rate_le_0.30  True
+    gate wrong_pass_rate_le_0.15            True
+    discrimination (good - wrong)        0.125
+    kappa vs the 70B reference           0.213
+
+runs/judge-calibration/local-llama-8b/probe_seed42_n40_1783952270.json
+  judge : ollama/llama3.1:8b   seed 42   n 40
+    gate discrimination_ge_0.6              False
+    gate good_pass_rate_ge_0.80             True
+    gate null_rate_lt_0.02                  True
+    gate plausible_wrong_pass_rate_le_0.30  False
+    gate wrong_pass_rate_le_0.15            True
+    discrimination (good - wrong)        0.519
+    kappa vs the 70B reference           0.346
+
+runs/judge-calibration/local-llama-8b/probe_seed42_n40_1784002100.json
+  judge : ollama/llama3.1:8b   seed 42   n 40
+    gate discrimination_ge_0.6              False
+    gate good_pass_rate_ge_0.80             False
+    gate null_rate_lt_0.02                  True
+    gate plausible_wrong_pass_rate_le_0.30  True
+    gate wrong_pass_rate_le_0.15            True
+    discrimination (good - wrong)        0.125
+    kappa vs the 70B reference           0.120
+
+4 evaluable probes (n=40). Smaller probe files in the same directories are
+smoke runs and budget-truncated retries; they are excluded rather than averaged in.
+
+Outcome: neither candidate passed. The protocol was changed rather than the probe --
+the pass bar was raised to 'correct AND complete' and one judge was held fixed across
+every arm, so a comparison between arms stays valid even where an absolute level does not.

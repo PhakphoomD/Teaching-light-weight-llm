@@ -33,7 +33,7 @@ prompt, not which retriever produced it* — and backs every claim with a number
 
 | Path | What it is |
 |---|---|
-| `plan/` | Working notes: the task specifications and design documents written before each piece of work was run. Kept locally, not published — what they decided is in the ADR log, and what they produced is in the documents above. |
+| `plan/` | The task specifications and design documents written before each piece of work was run. Most are instructions to an executor and are of no use to a reader, but not all: several are cited by the reports above as the protocol that was fixed before a run, and five are cited as evidence inside Accepted decisions in the ADR log. How this directory is split is being settled; until then it is published whole rather than pruned on an assumption. |
 | `archive/` | Superseded documents, kept with a banner explaining what was wrong and which ADR corrected it. Retained deliberately — the correction is part of the honest record. |
 
 ## The rules everything here follows
