@@ -1,145 +1,119 @@
-# experiments/ — Track-A run configs (T2.6)
+# experiments/ — one YAML per run condition
 
-One YAML per run = **slot overrides only** over `config/base.yml` (ADR-016
-Layering rule 2). The runner (`src/tlw/runner.py`, invoked via root `run.py`)
-merges `base.yml` → this file → any `EXPERIMENT_*` env override, validates the
-result (V1–V8, `.claude/rules/schema.md`), and runs it.
+Each file is **slot overrides only** over `config/base.yml` — never a full config. The runner
+(`src/tlw/runner.py`, invoked through root `run.py`) merges `base.yml` → this file →
+any `EXPERIMENT_*` environment override, validates the result against the Config Contract
+(V1–V8, `.claude/rules/schema.md`), and runs it. A reader should be able to see an
+experiment's *intent* from its diff, not hunt through a wall of settings.
 
-## Usage
+Files are grouped by the **question each study answers**, and named so the condition is
+readable without opening anything (ADR-034). The exact settings live in the file; the
+directory name says what it is for.
 
-```
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop-teacher-feedback-7b.yml
-```
-
-Flags (CLI-only — dataset selection is deliberately **not** a config slot,
-T2.6 build decision 3, no slot G):
-- `--config PATH` (required) — an `experiments/*.yml` override file.
-- `--data PATH` — dataset JSONL (default: `data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_heldout.jsonl`,
-  the real Track-A measurement set). **Smoke/dry runs MUST pass the `_train.jsonl`
-  split instead — never the held-out set (§0.2).**
-- `--limit N` — only run the first N records (deterministic: file order, no
-  shuffling — same `(path, limit)` always yields the same records).
-
-Outputs land under `runs/<run_id>/` (repo-root `runs/`, never
-`logs/experiments/` — that dir is immutable evidence, guard-blocked for
-writes, ADR-012):
-- `config_used.json` — the fully-merged, resolved config for this run.
-- `rounds.jsonl` — one line per round per question.
-- `summary.jsonl` — one line, `.claude/rules/schema.md` experiment-summary shape.
-- `memory/` — only created when `memory.type != none`.
-
-`run_id = <config-stem>__seed<seed>__<UTC timestamp>`.
-
-## Naming convention (ADR-016)
-
-`experiments/<track><phase>_<arm>_<slug>.yml`, e.g. `teaching-loop-teacher-feedback-7b.yml`.
-`<track>` = `trackA`/`trackB`; `<phase>` = `p2`, `p3`, …; `<arm>` = `armA`..`armD`
-(ADR-002); `<slug>` = short domain/variant tag.
-
-## The four headline configs (this task)
-
-All four inherit `config/base.yml`'s P1-gate defaults (ADR-022) unchanged —
-student `qwen2.5:7b-instruct` (local/Ollama), teacher Groq `qwen/qwen3-32b`,
-preset `minimal`/`orca`, judge local `llama3.1:8b` (blind), `memory.type: none`
-for ALL FOUR (headline is memory-off across the board, ADR-022 (c)). Each file
-overrides only `params.arm` + `params.seed`:
-
-| File | Arm | What differs from base.yml | Teacher calls? | Memory |
-|---|---|---|---|---|
-| `teaching-loop-baseline-7b.yml` | A — baseline | `params.arm: A` | none (1 pass) | none |
-| `teaching-loop-self-refine-7b.yml` | B — self-refine | `params.arm: B` | none (student self-critiques) | none |
-| `teaching-loop-teacher-feedback-7b.yml` | C — blind-teacher (the treatment) | `params.arm: C` | yes, blind (no GT) | none |
-| `teaching-loop-teacher-sees-answer-7b.yml` | D — sighted-teacher (leakage ceiling) | `params.arm: D` | yes, sees GT (its own prompt only, §0.2) | none |
-
-**Headline claim = `pass_rate(C) − pass_rate(B)`** with a 95% CI (EVAL_SPEC.md
-§4.3) — computed by T2.8 from the `summary.jsonl`/`rounds.jsonl` these produce,
-run on the real 125-question held-out set across the 3 pre-registered seeds
-(`{13, 42, 123}`, EVAL_SPEC.md §4.1). D is always the "leakage ceiling" —
-context, never a claimed result.
-
-## Fallback flags (robustness for the long Groq-primary full run, 2026-07-15)
-
-`--teacher-fallback provider:model` and `--judge-fallback provider:model`
-wrap that slot's primary client in a retry-with-backoff + fallback wrapper
-(`src/tlw/runner.py::_FallbackClient`): a failing call is retried on the
-primary a few times (honoring a parsed `Retry-After` hint when the error
-text carries one, else exponential backoff), and only THEN switches to the
-fallback client for that one call. Off by default (no flag = plain client,
-no retry). Every fallback hit is counted into `summary.jsonl`'s
-`teacher_fallback` / `judge_fallback` blocks, and the configured pair is
-recorded verbatim (`teacher_fallback_configured` / `judge_fallback_configured`)
-so a run where fallback fired a lot is visible, not hidden (§0.1). These are
-CLI-only, deliberately outside the six-slot Config Contract (same precedent
-as `--data`, T2.6 build decision 3) — fallback is a runtime resilience
-concern, not experiment identity. Never point either flag at a 70B (hub
-instruction — can't run on an 8GB card); when no fallback is configured, an
-exhausted primary degrades to a null/error result instead of raising, so one
-bad call never aborts a multi-hour run.
-
-`--teacher-fallback-model <model>` (T2.6 original, local-only) still works as
-a deprecated alias for `--teacher-fallback local:<model>`.
-
-## The four FULL-RUN configs (fast-judge design, hub 2026-07-15)
-
-`trackA_full_arm{A,B,C,D}_diabetes.yml` — the configs actually used for the
-pre-registered 125×3-seed measurement. They diverge from the four `_p2_`
-headline files above in three ways, all aimed at making the ~22h run fast
-and non-degenerate (T2.7 pilot findings, `.claude/rules/todo.md`):
-
-| Slot | `_p2_` headline files | `_full_` files | Why |
-|---|---|---|---|
-| student | local `qwen2.5:7b-instruct` | local `qwen2.5:3b` | product floor (ADR-015); Groq has no small Qwen so it MUST be local |
-| judge | local `llama3.1:8b` | **Groq** `llama-3.1-8b-instant` | frees the 8GB GPU so the 3B student never judge-cohosts -> ~2-3x faster locally; still Llama family != Qwen student (§0.2/V2) |
-| `eval.pass_threshold` | 0.75 (score>=3) | **1.0 (score>=4)** | the T2.7 headroom-pilot bar — "correct AND complete" restores headroom (baseline ~67-73% vs the old ceiling-effect ~100%) |
-
-`params.seed` is deliberately NOT set in these files — supply it per
-invocation via `EXPERIMENT_PARAMS_SEED` (schema.md Layering rule 4) so the
-same file drives all 3 pre-registered seeds `{13, 42, 123}` without editing.
-Teacher/memory stay at `config/base.yml`'s defaults (Groq `qwen/qwen3-32b`;
-`memory.type: none` — headline is memory-off for all four arms, ADR-022 (c)).
+## Running one
 
 ```
 $env:EXPERIMENT_PARAMS_SEED = "42"
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackA_full_armC_diabetes.yml `
+& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop/3-teacher-feedback.yml `
   --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
 ```
 
-Smoke/dry runs of these files MUST still pass `--data
-data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit N`
-(never the heldout set, §0.2) — see each file's header for the exact command.
+**The seed is supplied by the environment, not the file.** `params.seed` is the run's
+identity, so the same config drives all three pre-registered seeds `{13, 42, 123}` without
+being edited (schema.md layering rule 4). Validation rule V4 rejects a run with no seed.
 
-## Track-B RAG ablation configs (P3-A, T3.3/T3.5 — ADR-026)
+### Flags
 
-`trackB_p3_{3b,3bRAG,7b,7bRAG}_diabetes.yml` — the four-arm RAG ablation
-(RAG_SPEC §3). Each is single-pass (`arm A`, `max_rounds 1` — retrieval is the
-only variable) and uses the **same judge + bar as the Track-A full run** (Groq
-`llama-3.1-8b-instant`, `pass_threshold 1.0` = score≥4) so the RAG number is
-directly comparable to Track A (RAG_SPEC §4.1).
+| Flag | What it does |
+|---|---|
+| `--config PATH` | required — the override file |
+| `--data PATH` | dataset JSONL. Default is the 125-question Diabetes held-out set. **Smoke runs must pass `*_train.jsonl` instead — never the held-out set (§0.2).** |
+| `--limit N` | first N records only, in file order, no shuffling — so `(path, limit)` always yields the same records |
+| `--runs-dir PATH` | output root. Used to keep the side studies out of the headline directory, e.g. `--runs-dir runs/rag-medquad-fair-tests` |
+| `--teacher-fallback provider:model` | retry-with-backoff, then fall back for that one call. Off by default. Never point it at a 70B — it cannot run on an 8 GB card |
+| `--judge-fallback provider:model` | same for the judge slot. The §0.2 family check (V2) runs against the config-declared **primary** judge; a runtime fallback is resilience, not experiment identity |
+| `--no-faithfulness` | skips the inline RAG groundedness diagnostic so the correctness judge stays inside the daily token cap. It is computed offline afterwards, and it is a diagnostic — never the headline |
 
-| File | Student | Retrieval (slot D) | Role |
-|---|---|---|---|
-| `trackB_p3_3b_diabetes.yml` | `qwen2.5:3b` | `none` | floor |
-| `trackB_p3_3bRAG_diabetes.yml` | `qwen2.5:3b` | `rag` (`indexes/diabetes_train`, floor 0.35) | **headline treatment** |
-| `trackB_p3_7b_diabetes.yml` | `qwen2.5:7b-instruct` | `none` | ceiling reference |
-| `trackB_p3_7bRAG_diabetes.yml` | `qwen2.5:7b-instruct` | `rag` | does RAG still help a stronger model? |
+Every fallback that fires is counted into `summary.jsonl` (`teacher_fallback`, `judge_fallback`)
+alongside the configured pair, so a run that leaned on fallback is visible rather than hidden (§0.1).
 
-**Headline = `pass_rate(3B+RAG) − pass_rate(3B)`** with 95% paired
-cluster-bootstrap CI (`src/tlw/analysis`), 125 held-out × 3 seeds `{13,42,123}`
-(supply via `EXPERIMENT_PARAMS_SEED`). The `rag` backend requires a prebuilt,
-held-out-free index (`python -m tools.rag.cli`, T3.2). RAG runs **must** target
-the held-out set (a `--data ..._train.jsonl` RAG run trips RAG-L3 by design —
-a train query retrieves its own answer). Run e.g.:
+### What a run writes
 
-```
-$env:EXPERIMENT_PARAMS_SEED = "42"
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/trackB_p3_3bRAG_diabetes.yml `
-  --judge-fallback local:llama3.1:8b
-```
+`runs/<study>/<config-stem>__seed<N>__<UTC timestamp>/`, containing `config_used.json` (the
+fully merged config), `rounds.jsonl` (one line per round per question), `summary.jsonl`
+(one line, shape in `.claude/rules/schema.md`), and `memory/` only when `memory.type != none`.
+Never `logs/experiments/` — that directory is immutable evidence from the pre-renovation
+system and is guard-blocked for writes (ADR-012).
 
-## Not built here (future experiment files, not required by T2.6)
+---
 
-- `trackA_p2_armCprime_diabetes.yml` / `armDprime` — the **C′/D′ memory-on
-  ablation** (`memory: { type: faiss }` override). Memory's marginal value =
-  `C′ − C`, its own separate number (ADR-022 (c), schema.md Memory v2 §5).
-- Seed sweeps (`{13, 123}`) — same files, override `params.seed` (or set
-  `EXPERIMENT_PARAMS_SEED=13` and reuse the same file, schema.md Layering rule 4).
+## The studies
+
+### `teaching-loop/` — does an iterative teacher-student loop teach a small model?
+
+The pre-registered four-arm ablation. All four differ from `base.yml` in the same three ways
+— student `qwen2.5:3b` (the product floor), judge Groq `llama-3.1-8b-instant` (off the local
+GPU so the student is not competing with it), and `pass_threshold: 1.0`, meaning judge score
+≥ 4, "correct **and** complete". That bar came from the T2.7 pilot: at ≥ 3 every arm scored
+about 100% and the ablation could not have shown anything.
+
+| File | Arm | What it measures |
+|---|---|---|
+| `1-baseline.yml` | A | one attempt, no feedback |
+| `2-self-refine.yml` | B | the model critiques and rewrites its own answer |
+| `3-teacher-feedback.yml` | C | a larger model critiques it, **without** seeing the reference |
+| `4-teacher-sees-answer.yml` | D | the teacher is shown the reference — a leakage ceiling, not a result |
+
+Headline = `pass_rate(C) − pass_rate(B)` with a 95% paired cluster-bootstrap interval.
+Memory is `none` for all four (ADR-022 (c)), so the comparison isolates teacher feedback.
+
+### `pilots/` — the pre-registration pilots
+
+The same four arms at 3B and 7B, run before the full measurement to check that the loop
+engaged and the bar left headroom. They set `params.seed` inline because a pilot is a single
+run, not a seeded protocol. They live one directory deeper on purpose: `discover_runs` scans
+one level, so a headline command structurally cannot pool a pilot into a result (ADR-034).
+
+### `rag-medquad/` — does retrieval help a model that already knows the domain?
+
+Single-pass (`arm: A`, `max_rounds: 1`) so retrieval is the only variable, over a held-out-free
+index built by `python -m tools.rag.cli`. Judge and bar are identical to the loop study, which
+is what makes the two comparable.
+
+| File | Student | Retrieval |
+|---|---|---|
+| `small-model-no-rag.yml` | `qwen2.5:3b` | none — this run is reused as the loop study's arm A |
+| `small-model-with-rag.yml` | `qwen2.5:3b` | `indexes/medquad-diabetes-train`, top-3, floor 0.35 |
+| `large-model-no-rag.yml` | `qwen2.5:7b-instruct` | none |
+| `large-model-with-rag.yml` | `qwen2.5:7b-instruct` | same index |
+
+A RAG run **must** target the held-out set. Pointing one at `*_train.jsonl` trips the RAG-L3
+filter by design, because a training query retrieves its own answer.
+
+### `rag-medquad-fair-tests/` — is that null an artifact of a weak retriever or a small library?
+
+`matching-question-type-only.yml` reranks so only same-question-type passages survive;
+`much-bigger-library.yml` swaps in the 24×-larger seven-domain index. Both single seed.
+
+### `student-prompt/` — does the student prompt matter?
+
+`detailed-prompt-style.yml` is the baseline with one change: the ORCA student preset instead
+of MINIMAL. Note the preset registry is one flat namespace, so the student variant registers
+as `orca_student` — plain `orca` is the *teacher* preset.
+
+### `lora/` — superseded
+
+`generate-training-data.yml` was written to use the loop as an offline data factory and then
+abandoned: self-refine does not engage on the near-ceiling training split, so there was no
+signal to distil. The adapter that was actually trained and evaluated used standard gold-SFT
+built by `scripts/lora/build_data.py`, which calls no model at all. The file is kept because
+the abandoned recipe is part of the record.
+
+---
+
+## Adding one
+
+Name the directory after the question and the file after the condition, in words a reader who
+has never seen this repository can decode — `much-bigger-library.yml`, not `bigcorpus2.yml`.
+Use ordinals only where step N+1 genuinely contains step N. Put only the diff in the file, and
+a header comment saying what it is testing and why.

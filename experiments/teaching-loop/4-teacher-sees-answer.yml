@@ -1,7 +1,7 @@
 # experiments/teaching-loop/4-teacher-sees-answer.yml
 # FULL-RUN arm D (sighted teacher — "leakage ceiling", NOT a claimed result) —
 # fast-judge design, hub 2026-07-15. Diffs from config/base.yml — see
-# trackA_full_armA_diabetes.yml header for full rationale (student=local
+# 1-baseline.yml header for full rationale (student=local
 # qwen2.5:3b, judge=Groq llama-3.1-8b-instant, pass bar score>=4). Teacher =
 # base default (Groq qwen/qwen3-32b); arm D's OWN teacher prompt may legally
 # see ground truth (§0.2) — the runner scopes `ground_truth` into `params`

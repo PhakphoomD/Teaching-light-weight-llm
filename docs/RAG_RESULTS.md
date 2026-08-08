@@ -16,7 +16,7 @@ Four-arm ablation was planned; this run reports the **headline pair** (the user-
 
 | Arm | Student | Retrieval (slot D) | Role |
 |---|---|---|---|
-| **3B** | `qwen2.5:3b` (local) | none | baseline (reused from Track A, `trackA_full_armA`) |
+| **3B** | `qwen2.5:3b` (local) | none | baseline (reused from Track A, arm A — `small-model-no-rag`) |
 | **3B+RAG** | `qwen2.5:3b` (local) | `rag`, top-k 3, floor 0.35 | **the treatment** |
 
 - **Single-pass** answering (`arm A`, `max_rounds 1`) so retrieval is the *only* variable — no
@@ -193,10 +193,11 @@ only; the story is unaffected).
 HF_HUB_OFFLINE=1 python -m tools.rag.cli \
   --source  data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl \
   --exclude data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_heldout.jsonl \
-  --out     indexes/diabetes_train
-# 2. 3B+RAG, per seed ∈ {13,42,123} (reuse trackA_full_armA as the 3B baseline):
+  --out     indexes/medquad-diabetes-train
+# 2. 3B+RAG, per seed ∈ {13,42,123} (the 3B baseline is the Track-A arm-A run,
+#    copied into this study as small-model-no-rag):
 EXPERIMENT_PARAMS_SEED=<seed> HF_HUB_OFFLINE=1 \
-  python run.py --config experiments/trackB_p3_3bRAG_diabetes.yml \
+  python run.py --config experiments/rag-medquad/small-model-with-rag.yml \
   --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_heldout.jsonl \
   --no-faithfulness --judge-fallback local:llama3.1:8b --runs-dir runs/rag-medquad
 # 3. Headline + tug-of-war:
@@ -205,6 +206,6 @@ python -m src.tlw.analysis --runs-dir runs/rag-medquad --rag
 HF_HUB_OFFLINE=1 python scripts/rag/faithfulness.py --runs-dir runs/rag-medquad --judge local:llama3.1:8b
 ```
 
-All numbers above were computed from `runs/rag-medquad/trackB_p3_3bRAG_diabetes__seed{13,42,123}__*/` and
-the reused `runs/rag-medquad/trackA_full_armA_diabetes__seed{13,42,123}__*/` (3B baseline) on 2026-07-16
+All numbers above were computed from `runs/rag-medquad/small-model-with-rag__seed{13,42,123}__*/` and
+the reused `runs/rag-medquad/small-model-no-rag__seed{13,42,123}__*/` (3B baseline) on 2026-07-16
 via `src/tlw/analysis` (paired cluster bootstrap + exact McNemar + Wilson).

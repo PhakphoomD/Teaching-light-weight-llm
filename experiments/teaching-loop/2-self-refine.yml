@@ -1,6 +1,6 @@
 # experiments/teaching-loop/2-self-refine.yml
 # FULL-RUN arm B (self-refine) — fast-judge design, hub 2026-07-15.
-# Diffs from config/base.yml — see trackA_full_armA_diabetes.yml header for full
+# Diffs from config/base.yml — see 1-baseline.yml header for full
 # rationale (student=local qwen2.5:3b, judge=Groq llama-3.1-8b-instant, pass
 # bar score>=4). Arm B never calls the teacher (student self-critiques).
 # params.seed supplied per-run via EXPERIMENT_PARAMS_SEED (not hardcoded here).

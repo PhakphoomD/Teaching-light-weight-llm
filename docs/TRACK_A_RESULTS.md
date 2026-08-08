@@ -147,14 +147,19 @@ ADR-003 anticipated. This result redirects P3 effort to where the measured value
 ### Reproduce
 
 ```
-# per seed ∈ {13,42,123}, per arm ∈ {A,B,C,D}:
+# per seed ∈ {13,42,123}, per arm config ∈ {1-baseline, 2-self-refine,
+# 3-teacher-feedback, 4-teacher-sees-answer}:
 EXPERIMENT_PARAMS_SEED=<seed> \
-  python run.py --config experiments/trackA_full_arm<ARM>_diabetes.yml \
+  python run.py --config experiments/teaching-loop/<CONFIG>.yml \
   --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_heldout.jsonl \
   --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
 # then the headline stats (paired cluster bootstrap + McNemar + Wilson):
-python -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B   # (filter to trackA_full_* / heldout)
+python -m src.tlw.analysis --runs-dir runs/teaching-loop-medquad --comparison C-B
 ```
 
-All numbers above were computed directly from `runs/trackA_full_arm{A,B,C,D}_diabetes__seed{13,42,123}__*/`
+The pre-registration pilots live one directory deeper, in `runs/teaching-loop-medquad/pilots/`, which
+`discover_runs` cannot reach — so a headline command structurally cannot pool them (ADR-034).
+
+All numbers above were computed directly from
+`runs/teaching-loop-medquad/{1-baseline,2-self-refine,3-teacher-feedback,4-teacher-sees-answer}__seed{13,42,123}__*/`
 `summary.jsonl` + `rounds.jsonl` on 2026-07-15/16 using `src/tlw/analysis/stats.py`.

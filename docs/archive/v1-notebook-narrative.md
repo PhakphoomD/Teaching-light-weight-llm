@@ -9,7 +9,7 @@
 >
 > **Read it as evidence, not as findings.** Every result asserted below was later re-measured and
 > most did not survive; the corrections are in
-> [reports/tables/tab-04-v1-retraction.md](../../reports/tables/tab-04-v1-retraction.md). The value
+> [reports/tables/tab-04-v1-claims-vs-logs.md](../../reports/tables/tab-04-v1-claims-vs-logs.md). The value
 > here is the *intent* — what each phase was trying to establish, and why the design looked
 > reasonable to the person writing it. That is what makes the failure legible rather than merely
 > embarrassing.
@@ -157,7 +157,7 @@ is worth +0.152 on a domain the model does not know. The instinct was sound; the
 
 *These rates are the basis of the cost figures in the retired write-up. They are reproduced here
 because the token counts alone are not a cost — recomputed spend appears in
-[reports/tables/tab-18-what-it-cost.md](../../reports/tables/tab-18-what-it-cost.md).*
+[reports/tables/tab-18-compute-and-cost.md](../../reports/tables/tab-18-compute-and-cost.md).*
 
 > **Projection analysis: scaling to 1,000 questions.** Based on our experimental results, this
 > section projects the expected performance, token usage and costs when scaling to 1,000 medical

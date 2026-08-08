@@ -1,6 +1,7 @@
 # experiments/rag-medquad/small-model-no-rag.yml
 # RAG ablation arm "3B" (no retrieval) — the baseline the RAG lift is measured
-# against (RAG_SPEC §3, ADR-026). Identical settings to trackA_full_armA except
+# against (RAG_SPEC §3, ADR-026). Identical settings to
+# experiments/teaching-loop/1-baseline.yml except
 # it is pinned single-pass (max_rounds 1) and named for the P3 ablation.
 #
 # Diffs from config/base.yml:

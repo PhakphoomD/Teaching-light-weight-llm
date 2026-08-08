@@ -76,7 +76,7 @@ raising the hit-rate must raise the aggregate toward the 0.400 gold-retrieved an
   gold). §0.2-legal for a closed domain: only the **judge** sees the gold; the student stays blind. Family
   Llama ≠ student family Qwen.
 - **Prompts, retrieval config, and judge are byte-identical to the ADR-030 scripts**
-  (`scripts/wixqa_{baseline,rag}.py`); the only new variable across the three runs is the seed.
+  (`scripts/wixqa/run_{baseline,rag}.py`); the only new variable across the three runs is the seed.
 - **Stats** = the pre-registered `src/tlw/analysis/stats.py` (paired cluster bootstrap, 10k resamples,
   seed 0 + exact McNemar + Wilson) — the same machinery behind Track-A and `docs/RAG_RESULTS.md`.
 
@@ -134,7 +134,7 @@ T3.9 · **Status:** DONE 2026-07-24 — **GATE = GO**, `bge_chunk` advances to T
 Purely offline de-risk (the T2.7-pilot discipline applied to retrieval): rank stronger retrievers over the
 SAME 6,221-article KB by **article-level hit-rate@k** (gold KB article in the top-k articles), **no LLM
 generation, no judge calls**. Deterministic (exact FAISS IP + deterministic BM25); tool
-`scripts/wixqa/build_retriever_ladder.py`; table `indexes/retriever_ladder/hitrate_table.json`. KB-only seal
+`scripts/wixqa/build_retriever_ladder.py`; table `reports/rag-wixqa/retriever-hitrate.json`. KB-only seal
 re-verified (indexed items = 6,221 KB articles; gold article-ids used only to SCORE; QA answers never
 indexed; each variant re-asserts it at load).
 
