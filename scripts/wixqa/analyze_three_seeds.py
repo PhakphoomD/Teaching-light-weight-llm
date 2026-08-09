@@ -34,11 +34,18 @@ STEPS = {"baseline": "1-no-rag", "rag": "2-rag-basic"}
 
 
 def load(arm, seed):
-    """idx -> record, for one arm+seed run file."""
-    p = RUNS / STEPS[arm] / f"seed{seed}.jsonl"
-    if not p.is_file():
-        return None
-    return {d["idx"]: d for d in (json.loads(l) for l in p.open(encoding="utf-8") if l.strip())}
+    """idx -> record, for one arm+seed run file.
+
+    Prefers the full run file; falls back to the `-analysis` twin, which carries
+    the same rows without the generated text and is the one a clone has (the
+    full file is gitignored -- see scripts/export_analysis_rows.py).
+    """
+    step = RUNS / STEPS[arm]
+    for name in (f"seed{seed}.jsonl", f"seed{seed}-analysis.jsonl"):
+        p = step / name
+        if p.is_file():
+            return {d["idx"]: d for d in (json.loads(l) for l in p.open(encoding="utf-8") if l.strip())}
+    return None
 
 
 def passed(score):

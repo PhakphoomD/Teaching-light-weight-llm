@@ -1,0 +1,1 @@
+{"run_id":"trackA_p2_armA_diabetes__seed42__20260713T145721Z","arm":"A","memory_type":"none","seed":42,"question_id":"diabetes-00000","question_idx":1,"domain":"diabetes","round":1,"score":4,"normalized_score":1.0,"passed":true,"memory_used":false,"teacher_called":false,"reference_match":{"semantic_sim":0.8072468042373657,"rouge_l":0.13714285714285715}}

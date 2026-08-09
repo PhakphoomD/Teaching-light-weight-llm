@@ -99,17 +99,31 @@ def _read_first_jsonl_record(path: Path) -> Dict[str, Any]:
 
 
 def load_rounds(run_dir: Path) -> List[Dict[str, Any]]:
-    """All rows of `rounds.jsonl` for one run, in file order (one line per
-    round per question -- runner.py `run_experiment`)."""
-    rounds_path = Path(run_dir) / "rounds.jsonl"
+    """All rows of one run's per-round log, in file order (one line per round
+    per question -- runner.py `run_experiment`).
+
+    Prefers `rounds.jsonl`, the full record the runner writes. Falls back to
+    `rounds-analysis.jsonl`, which carries the same rows with the generated text
+    removed (question, answer, feedback, grounding block) and is the file a
+    clone actually has: `rounds.jsonl` is gitignored because it is 15 MB of
+    model output, while the scoring columns every published number is computed
+    from are 2 MB and tracked. `scripts/export_analysis_rows.py` writes it.
+
+    Both files carry every field the analysis and figure layers read, so no
+    caller needs to know which one it got.
+    """
+    run_dir = Path(run_dir)
     rows: List[Dict[str, Any]] = []
-    if not rounds_path.is_file():
+    for name in ("rounds.jsonl", "rounds-analysis.jsonl"):
+        path = run_dir / name
+        if not path.is_file():
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    rows.append(json.loads(line))
         return rows
-    with open(rounds_path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                rows.append(json.loads(line))
     return rows
 
 

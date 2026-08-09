@@ -50,7 +50,12 @@ def load_variant(v):
     """Return {seed: {idx: passed_bool}} for judged records, + hit-rate + gold mask."""
     per_seed, absent = {}, []
     for s in SEEDS:
-        p = RUNS / v["step"] / f"seed{s}.jsonl"
+        step = RUNS / v["step"]
+        p = step / f"seed{s}.jsonl"
+        if not p.is_file():
+            # the analysis twin: same rows without the generated text, and the
+            # one a clone has (scripts/export_analysis_rows.py)
+            p = step / f"seed{s}-analysis.jsonl"
         if not p.is_file():
             absent.append(s)
             continue

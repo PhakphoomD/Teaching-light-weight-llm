@@ -4,10 +4,10 @@
 
 | rung | pass >= 3 | Wilson 95% | pass >= 4 | mean score | score <= 1 | words | cells |
 |---|---|---|---|---|---|---|---|
-| No retrieval | 0.163 | [0.136, 0.195] | 0.000 | 1.76 | 0.342 | 68 | 600 |
-| Retrieval (MiniLM over whole articles) | 0.315 | [0.279, 0.353] | 0.010 | 1.93 | 0.335 | 141 | 600 |
-| Retrieval (BGE over 180-word chunks) | 0.340 | [0.303, 0.379] | 0.007 | 1.98 | 0.298 | 152 | 600 |
-| ...plus a wider, chunk-centred grounding window | 0.470 | [0.430, 0.510] | 0.007 | 2.18 | 0.232 | 144 | 600 |
+| No retrieval | 0.163 | [0.136, 0.195] | 0.000 | 1.76 | 0.342 | 0 | 600 |
+| Retrieval (MiniLM over whole articles) | 0.315 | [0.279, 0.353] | 0.010 | 1.93 | 0.335 | 0 | 600 |
+| Retrieval (BGE over 180-word chunks) | 0.340 | [0.303, 0.379] | 0.007 | 1.98 | 0.298 | 0 | 600 |
+| ...plus a wider, chunk-centred grounding window | 0.470 | [0.430, 0.510] | 0.007 | 2.18 | 0.232 | 0 | 600 |
 
 ### Split by whether retrieval found the answer
 

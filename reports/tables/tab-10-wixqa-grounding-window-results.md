@@ -10,7 +10,7 @@
 | pass rate (score >= 4) | 0.007 | 0.007 | +0.000 | [-0.005, +0.005] | 1 | recomputed |
 | mean judge score | 1.98 | 2.18 | +0.20 | -- | -- | recomputed |
 | share scoring <= 1 | 0.298 | 0.232 | -0.067 | -- | -- | recomputed |
-| answer length (words) | 152 | 144 | -8 | -- | -- | recomputed |
+| answer length (words) | 0 | 0 | +0 | -- | -- | recomputed |
 | reference coverage (continuous) | 0.361 | 0.403 | +0.042 | [+0.032, +0.053] | -- | from the committed printout |
 | extraction ratio | 0.88 | 0.61 | -0.27 | -- | -- | from the committed printout |
 

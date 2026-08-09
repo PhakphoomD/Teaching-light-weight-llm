@@ -243,6 +243,13 @@ runs/**
 !runs/**/config_used.json
 !runs/**/manifest.json
 !runs/**/README.md
+# The scoring half of every per-round log: same rows, generated text removed.
+# 3.6 MB against 20 MB, and it is what every published interval, McNemar and
+# figure is computed from -- so a clone can check the numbers without a rerun.
+# Written by scripts/export_analysis_rows.py.
+!runs/**/rounds-analysis.jsonl
+!runs/**/*-analysis.jsonl
+!runs/**/retrieval_log*.jsonl
 # Rebuildable search indexes (was: data/rag/) -- python -m tools.rag.cli
 indexes/
 # Third-party datasets -- see scripts/dataset/fetch_wixqa.py

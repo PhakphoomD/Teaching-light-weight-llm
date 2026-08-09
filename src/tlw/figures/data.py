@@ -196,13 +196,30 @@ def wixqa_records(step: str) -> List[Dict[str, Any]]:
     if not step_dir.is_dir():
         raise MissingEvidence(f"missing WixQA step directory: {step_dir}")
     rows: List[Dict[str, Any]] = []
-    for seed_file in sorted(step_dir.glob("seed*.jsonl")):
+    for seed_file in _wixqa_seed_files(step_dir):
         for row in _read_jsonl(seed_file):
             row.setdefault("seed", int(re.sub(r"\D", "", seed_file.stem) or 0))
             rows.append(row)
     if not rows:
         raise MissingEvidence(f"no judged records under {step_dir}")
     return rows
+
+
+def _wixqa_seed_files(step_dir: Path) -> List[Path]:
+    """One file per seed, preferring the full run file over its analysis twin.
+
+    A step directory can hold both `seed13.jsonl` (gitignored, carries the
+    generated text) and `seed13-analysis.jsonl` (tracked, same rows without it).
+    Globbing `seed*.jsonl` would match both and count every record twice, so
+    the seed is resolved first and the file chosen second.
+    """
+    by_seed: Dict[str, Path] = {}
+    for path in sorted(step_dir.glob("seed*.jsonl")):
+        seed = re.sub(r"\D", "", path.stem)
+        is_twin = path.stem.endswith("-analysis")
+        if seed not in by_seed or not is_twin:
+            by_seed[seed] = path
+    return [by_seed[s] for s in sorted(by_seed)]
 
 
 def wixqa_gold_retrieved(step: str) -> Dict[int, bool]:
