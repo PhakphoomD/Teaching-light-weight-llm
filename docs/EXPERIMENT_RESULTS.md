@@ -73,9 +73,10 @@ an axis of *change*, which is the only thing comparable between them.
 | [8. General discussion](#8-general-discussion) | the law, the recurring pattern, and the literature reconciled |
 | [9. Implications for building](#9-implications-for-building) | seven recommendations |
 | [10. Limitations](#10-limitations) | what these numbers cannot support |
-| [11. What broke in the project itself](#11-what-broke-in-the-project-itself) | six failures of its own credibility |
+| [11. What broke in the project itself](#11-what-broke-in-the-project-itself) | seven failures of its own credibility |
 | [12. How the work was governed](#12-how-the-work-was-governed) | and where the working documents went |
 | [13. Reproduction and appendices](#13-reproduction-and-appendices) | commands and where everything lives |
+| [14. Contribution and tool use](#14-contribution-and-tool-use) | who did what, and how AI tooling was used |
 
 ---
 
@@ -191,6 +192,17 @@ What is checkable is the consequence of having written them:
 
 A protocol written after the fact does not contain forecasts that embarrass its author, and does not
 stop its author from collecting the data they wanted.
+
+**And where a protocol was not followed, that is on its face rather than in this paragraph.** The
+teaching-loop protocol departed from its own specification in three ways, each recorded as a dated
+amendment on the document itself and summarised in the register's *Followed?* column: the pass bar
+was raised from score ≥ 3 to ≥ 4 after the pilot showed every arm passing on the first round; the
+judge-calibration gate failed and the run proceeded anyway with one judge held fixed; and the
+student model changed from 7B to 3B. The first of those is a threshold changed after seeing data,
+which is exactly the move this report criticises in its own retracted predecessor
+([§7.0](#70-study-0--the-original-system-re-analysed-against-its-own-logs)) — the difference is that here it is
+declared, applied identically to all four arms, and the comparison it feeds is a difference rather
+than a level.
 
 ### 2.4 What would have counted as success
 
@@ -472,6 +484,17 @@ aborted rather than quietly rerun, which is why arm D has two seeds where every 
 Clustering on the question rather than the cell is the choice that matters: the three seeds of one
 question are not independent observations, and treating them as if they were would produce intervals
 about a third too narrow.
+
+**The bootstrap interval is the primary statistic; the McNemar p-value is secondary, and here is
+why.** McNemar's test assumes each discordant pair is an independent observation. The pairs here are
+(question, seed) cells, so each question contributes up to three of them, and correlated pairs
+counted as independent inflate the effective sample size. The p-values are therefore
+**anti-conservative** — smaller than a correctly clustered test would give. The direction of that
+bias is known and it is stated rather than corrected: a clustered variant exists [[32](#references)],
+but the bootstrap interval already accounts for the clustering, and every conclusion in this report
+is drawn from the interval. Where the two disagree, the interval is what stands. Nothing here rests
+on a p-value near a threshold — the effects that are called real have intervals excluding zero by a
+wide margin, and the ones called null have intervals straddling it.
 
 An interval published from an earlier resampling draw can differ in the third decimal from a later
 one. The RNG seed is stated so either can be reproduced, and the difference is resampling noise
@@ -1245,6 +1268,21 @@ bootstrap over questions [[27](#references)].
   ([Table 16](../reports/tables/tab-16-predictions-vs-outcomes.md)).
 - **"Extraction" is a derived ratio**, not a directly observed quantity, and inherits the noise of both
   its parts.
+- **No correction was applied for testing many comparisons.** This report states twenty-six
+  confidence intervals, and the tables behind it carry more, each at the conventional 95% level.
+  Across that many comparisons some would be expected to exclude zero by chance alone. Three things
+  limit what that costs here, and none of them removes it. First, the primary comparison in each
+  study was named in its protocol before the run rather than chosen afterwards, so the headline
+  results are not the survivors of a search. Second, the effects that carry the argument are large
+  relative to their intervals — +0.152, +0.130 and −0.292 would survive any reasonable correction.
+  Third, most of what was measured came back null and is reported that way
+  (**Table 15**, [*Null Results*](../reports/tables/tab-15-null-results.md), twenty-six entries),
+  which is the opposite of the pattern selective reporting produces. The estimates most exposed are
+  the small secondary ones — the retriever's +0.025 in Study 5 — and those are already described as
+  not significant on their own.
+- **Statistical significance is not effect size, and neither is practical value.** A result can clear
+  an interval and still be too small to matter to a product; §9 argues from the sizes, not the
+  p-values.
 ---
 
 ## 11. What broke in the project itself
@@ -1252,7 +1290,7 @@ bootstrap over questions [[27](#references)].
 **Table 19.** [*Methodology and Integrity*](../reports/tables/tab-19-methodology-and-integrity.md) —
 the guardrails, including the ones that caught something
 
-A guardrail nobody has ever tripped is untested. Eleven fired. Six are worth naming here because they
+A guardrail nobody has ever tripped is untested. Eleven fired. Seven are worth naming here because they
 are defects in the project's *own* credibility rather than in a result:
 
 - **The results could not be reproduced from a clone.** Thirteen scripts hardcoded an absolute path
@@ -1275,7 +1313,15 @@ tests, pilots moved where the discovery function cannot reach them, named regres
 comparator and the aggregation, and a function that refuses to return if it finds fewer than two
 calibration candidates.
 
-**One near-miss is worth more than the six.** During a repository restructure, an audit recommended
+- **An agent's "there is nothing there" was repeated without being checked.** An automated audit
+  reported that the project's original notebook held no prose worth keeping, and that conclusion was
+  passed on without the file being opened. It held twenty-four cells of design rationale, including
+  the clearest surviving account of *why* the leakage looked reasonable when it was written. The
+  notebook had already been deleted; the prose was recovered verbatim from git history and published
+  as [an appendix](archive/v1-notebook-narrative.md). Nothing measured changed, but the project came
+  within one commit of discarding the best explanation of its own central mistake.
+
+**One near-miss is worth more than the seven.** During a repository restructure, an audit recommended
 deleting a run directory on the grounds that nothing referenced it by name. An independent
 pre-execution check found that a published table was recomputed from exactly those files, and the
 deletion was cancelled. *"No references to the directory name" is not the same as "no published number
@@ -1415,6 +1461,89 @@ step and a hosted judge for another; nothing in this report does.
 
 ---
 
+## 14. Contribution and tool use
+
+### 14.1 Who did what
+
+This is single-author work. Phakphoom Deesuwan is the sole contributor and holds every role in the
+CRediT taxonomy [[34](#references)] that applies: conceptualisation, methodology, software,
+validation, formal analysis, investigation, data curation, writing, visualisation, and project
+administration. The taxonomy is normally used to divide credit between people; stating it for one
+person is worth the two lines because it also states where responsibility sits — including for the
+errors in §11, none of which are attributable to anyone else.
+
+The work ran from **2025-11-25 to 2026-08-09**, in two phases separated by the audit. The original
+system was built and run in November 2025; it was audited on 2026-07-10, and the rebuild that
+retracted and replaced it ran from then to August 2026
+(**Table 21**, [*Project Timeline*](../reports/tables/tab-21-project-timeline.md), dated from run
+logs and the decision record rather than from memory). The repository's main line of development
+carries 35 commits; 50 exist across all branches, including the preserved pre-audit history.
+
+No funding, no institutional review, and no human participants. There are no competing interests to
+declare.
+
+### 14.2 How AI tooling was used
+
+I designed and ran this study. An AI coding assistant (Anthropic's Claude, used through Claude Code)
+did a large share of the typing, the searching and the routine analysis, working to instructions I
+set and under constraints I wrote down before the work started. Disclosing that is now standard
+practice for scholarly work [[33](#references)], and the useful form of the disclosure is not "AI was
+used" but *which content, which action, which oversight*. So:
+
+| Where | What the assistant did | What I did |
+|---|---|---|
+| **Code** | wrote most of `src/`, `scripts/`, `tools/` and the tests to a specification | set the architecture (six configurable slots, one registry per seam), reviewed every module, and rejected the ones that did not fit it |
+| **Experiments** | executed the runs, collected the logs, computed the statistics | chose the questions, the arms, the seeds and the stopping rules — before each run, in the protocols in [`docs/protocol/`](protocol/README.md) |
+| **Analysis** | recomputed every published figure and table from the logs | decided what counted as the headline statistic, and what counted as a null |
+| **Writing** | drafted this report and the README from the results and the decision log | set the structure and the argument, verified every number against its source, and wrote the judgements |
+| **The models under test** | — | Qwen2.5 (3B and 7B) and Llama 3.1 8B are the *subjects* of the experiments, not tools that helped run them; they never saw a reference answer on any measured path (§5.6) |
+
+**The constraints came first, and they are checkable.** Before the rebuild started — and in direct
+response to what the audit had just found — I wrote six rules: numbers must match their source log;
+the reference answer never reaches the student or the scorer; every run is seeded and reproducible
+from one command; every claim cites a file or a command; the interpreter is pinned; and an accepted
+decision cannot be quietly edited. They live in
+[`.claude/rules/00-index.md`](../.claude/rules/00-index.md) §0.
+
+Two of them are enforced by machinery rather than by anyone remembering. A pre-execution hook
+([`.claude/hooks/guard.py`](../.claude/hooks/guard.py)) refuses any command that would run an
+unpinned interpreter or write into the raw data and the experiment logs; the assistant cannot
+proceed past it, and the block cites the rule it enforced. The leakage rule is enforced inside the
+code itself, by a guard that aborts a run rather than warning about it — and it has fired on a real
+echo (§5.6). The rest are enforced by tests. That is the difference between directing a tool and
+being carried by one: the rules were written before the work they govern, they are adversarial to
+the result rather than convenient for it, and the tool was not free to ignore them.
+
+**Three decisions were mine, went against what the tooling proposed, and changed the result.**
+
+1. **An audit recommended deleting two run directories on the grounds that nothing referenced them
+   by name.** I checked what depended on their *contents* rather than their name and found that a
+   published reliability table was recomputed directly from them. Deleting them would have stripped
+   the evidence out from under a number that is still cited. Both were kept and merely relocated;
+   the decision is recorded as an amendment to
+   [`.claude/rules/decisions.md`](../.claude/rules/decisions.md), ADR-034, clause 5. "No references
+   to this name" is not the same claim as "no published number depends on this data."
+2. **The plan called for a narrative notebook as the final deliverable. I cancelled it** and wrote
+   two documents instead — this one and the README. A notebook has to be executed before it can be
+   read, GitHub renders Markdown immediately, and a third telling of the same results is a third
+   place for the numbers to disagree with each other. ADR-036.
+3. **The project's own scope had drifted, and I corrected it before the write-up.** Every retrieval
+   run up to that point had been single-pass; the loop had only ever been measured *without*
+   retrieval. The system this project is about is the two together, and it had never been run. That
+   became Study 6 — which returned a null, and is reported as one. ADR-032.
+
+**And one place where the tooling failed, which is the most useful thing in this section.** An
+automated audit reported that the old notebook contained "no prose worth salvaging," and I repeated
+that conclusion without opening the file. It was wrong: the notebook held twenty-four cells of design
+rationale, including the clearest surviving explanation of *why* the leakage looked reasonable at the
+time it was written. It was recovered verbatim from git history and is published as
+[an appendix](archive/v1-notebook-narrative.md). The lesson generalises past this project, and it is
+the same discipline the rest of the report runs on: an agent reporting "there is nothing there" is a
+claim to be verified, not a result to be repeated. Section 11 exists because that discipline
+occasionally failed, and §11 is the list of what it cost.
+
+---
+
 ## References
 
 Numbered as cited above. The same list, annotated with what each work claims and what happened when it
@@ -1454,6 +1583,9 @@ report appears there.
 29. Cleveland, W. S., McGill, R. (1984). *Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods*. JASA 79(387):531-554. doi:10.2307/2288400.
 30. Appelbaum, M., Cooper, H., Kline, R. B., et al. (2018). *Journal Article Reporting Standards for Quantitative Research in Psychology: The APA Publications and Communications Board Task Force Report*. American Psychologist 73(1):3-25. doi:10.1037/amp0000191.
 31. Pineau, J., Vincent-Lamarre, P., Sinha, K., et al. (2021). *Improving Reproducibility in Machine Learning Research (A Report from the NeurIPS 2019 Reproducibility Program)*. JMLR 22(164):1-20. arXiv:2003.12206.
+32. Eliasziw, M., Donner, A. (1991). *Application of the McNemar Test to Non-Independent Matched Pair Data*. Statistics in Medicine 10(12):1981-1991. doi:10.1002/sim.4780101211.
+33. International Committee of Medical Journal Editors (2023). *Recommendations for the Conduct, Reporting, Editing, and Publication of Scholarly Work in Medical Journals* (§II.A.4, artificial intelligence). <https://www.icmje.org/recommendations/>.
+34. Brand, A., Allen, L., Altman, M., Hlava, M., Scott, J. (2015). *Beyond Authorship: Attribution, Contribution, Collaboration, and Credit*. Learned Publishing 28(2):151-155. doi:10.1087/20150211.
 
 ---
 

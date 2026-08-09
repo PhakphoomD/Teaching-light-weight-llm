@@ -1,0 +1,52 @@
+name: tests
+
+# The claim this job defends is narrow and worth stating: a fresh clone of this
+# repository, with nothing but the pinned dependencies, passes its own test
+# suite. That was not true until recently — 35 tests were red on a clean
+# checkout and two headline assertions skipped silently with a green exit code,
+# because the data they read was gitignored. A local run cannot catch that
+# class of defect; only a clone can.
+#
+# Deliberately not here: anything that calls a hosted model. No API key is
+# needed and nothing in CI can cost money or drift with a provider. Two tests do
+# build a real FAISS index, which downloads the MiniLM sentence encoder once
+# (about 90 MB); that download is cached between runs.
+
+on:
+  push:
+    branches: [main, B2]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch: sentence-transformers needs it, the tests never
+          # touch a GPU, and the default wheel drags in ~2 GB of CUDA.
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+
+      - name: Cache the sentence encoder
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-minilm-${{ hashFiles('requirements.txt') }}
+
+      - name: Run the test suite
+        run: pytest -q --tb=short

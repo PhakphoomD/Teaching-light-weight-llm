@@ -41,15 +41,15 @@ retrieval rung executed; the run returned 0.340.
 
 ## The register
 
-| Protocol | Written | First in git | Study it governs | Ran | Outcome vs prediction |
-|---|---|---|---|---|---|
-| [teaching-loop-protocol](2026-07-13-teaching-loop-protocol.md) | 2026-07-13 | 2026-07-16 | Does an iterative loop teach a small model? | 2026-07-15 | headline C−B statistic and its interval used exactly as specified |
-| [rag-medquad-protocol](2026-07-16-rag-medquad-protocol.md) | 2026-07-16 | 2026-08-07 | Does retrieval help a model that already knows the domain? | 2026-07-16 | two secondary questions it posed both answered no |
-| [wixqa-dose-response-plan](2026-07-24-wixqa-dose-response-plan.md) | 2026-07-24 | 2026-08-07 | Is retrieval quality the bottleneck? | 2026-07-24 | the dose-response it specified was observed |
-| [wixqa-hit-rate-instrument](2026-07-24-wixqa-hit-rate-instrument.md) | 2026-07-24 | 2026-08-07 | Instrument hit rate, harden to three seeds | 2026-07-24 | hit rate reproduced the earlier single-seed draw exactly |
-| [wixqa-retriever-gate](2026-07-24-wixqa-retriever-gate.md) | 2026-07-24 | 2026-08-07 | Rank retrievers offline, then gate | 2026-07-24 | gate opened; it pre-committed to reporting a ceiling had it not |
-| [wixqa-dose-response-run](2026-07-25-wixqa-dose-response-run.md) | 2026-07-25 | 2026-08-07 | Run the winner end to end | 2026-07-25 | **0.337 predicted, 0.340 measured** |
-| [wixqa-grounding-and-loop-plan](2026-07-25-wixqa-grounding-and-loop-plan.md) | 2026-07-25 | 2026-08-07 | Fix delivery, then add the loop | 2026-08-06 | **both predictions wrong**; its stop rule fired |
+| Protocol | Written | First in git | Study it governs | Ran | Followed? | Outcome vs prediction |
+|---|---|---|---|---|---|---|
+| [teaching-loop-protocol](2026-07-13-teaching-loop-protocol.md) | 2026-07-13 | 2026-07-16 | Does an iterative loop teach a small model? | 2026-07-15 | **three deviations**, see its amendment | the C−B statistic and its interval were computed exactly as specified; the pass bar, the judge gate and the student model were not |
+| [rag-medquad-protocol](2026-07-16-rag-medquad-protocol.md) | 2026-07-16 | 2026-08-07 | Does retrieval help a model that already knows the domain? | 2026-07-16 | as written | two secondary questions it posed both answered no |
+| [wixqa-dose-response-plan](2026-07-24-wixqa-dose-response-plan.md) | 2026-07-24 | 2026-08-07 | Is retrieval quality the bottleneck? | 2026-07-24 | as written | the dose-response it specified was observed |
+| [wixqa-hit-rate-instrument](2026-07-24-wixqa-hit-rate-instrument.md) | 2026-07-24 | 2026-08-07 | Instrument hit rate, harden to three seeds | 2026-07-24 | as written | hit rate reproduced the earlier single-seed draw exactly |
+| [wixqa-retriever-gate](2026-07-24-wixqa-retriever-gate.md) | 2026-07-24 | 2026-08-07 | Rank retrievers offline, then gate | 2026-07-24 | as written | gate opened; it pre-committed to reporting a ceiling had it not |
+| [wixqa-dose-response-run](2026-07-25-wixqa-dose-response-run.md) | 2026-07-25 | 2026-08-07 | Run the winner end to end | 2026-07-25 | as written | **0.337 predicted, 0.340 measured** |
+| [wixqa-grounding-and-loop-plan](2026-07-25-wixqa-grounding-and-loop-plan.md) | 2026-07-25 | 2026-08-07 | Fix delivery, then add the loop | 2026-08-06 | as written; part of the body is post-run and says so | **both predictions wrong**; its stop rule fired |
 
 **First in git** is the commit that first contains the file, from
 `git log --diff-filter=A --follow`. Where it is later than **Ran**, that is stated rather than

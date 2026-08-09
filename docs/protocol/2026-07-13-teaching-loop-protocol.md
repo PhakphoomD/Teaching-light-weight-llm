@@ -1,5 +1,38 @@
 # Track-A Evaluation Design Spec (T1.4)
 
+> **Amendment, 2026-08-09 — three things specified here were changed before the run, and the run
+> reported below followed the changed version.** The body is left exactly as written; this is the
+> register of what departed from it, so the protocol cannot be read as if it had been followed.
+>
+> **1. The pass bar moved from score ≥ 3 to score ≥ 4.** At ≥ 3 the pilot returned a pass rate of
+> essentially 1.0 for every arm on the first round, so no arm ever reached a second round and the
+> headline comparison would have been zero by construction rather than by measurement. The bar was
+> raised to "correct **and** complete", which restored headroom. This is a threshold changed after
+> seeing pilot data, and it is the single largest deviation here. What protects the comparison is
+> that the bar is identical across all four arms and C − B is a difference; what it costs is that
+> the absolute levels in §7 are not comparable to any number computed at ≥ 3 — including the
+> retracted 25% → 83%, which used a different threshold again
+> ([Figure 6](../../reports/figures/fig-06-pass-threshold-sensitivity.png)).
+>
+> **2. The judge gate specified in §5 failed, and the run went ahead anyway.** Both candidate judges
+> were probed against a calibration set and neither met the agreement threshold this document set
+> ([Table 17](../../reports/tables/tab-17-judge-calibration-probes.md)). The alternative — a
+> larger judge — was priced at roughly ten days of free-tier quota for one pass. The decision taken
+> was to proceed with one fixed judge held constant across every arm, raise the pass bar as above,
+> and state the limitation wherever the numbers appear rather than let it be inferred. It is stated
+> in §10 of the report. A gate that fires and is then overridden is a weaker instrument than a gate
+> that is met, and this one was overridden.
+>
+> **3. The student model changed from 7B to 3B.** §2 specifies `qwen2.5:7b-instruct`. The runs used
+> `qwen2.5:3b`, for two reasons that arrived together: the 7B saturated the easy MedQuAD questions
+> even at the raised bar, and the 3B is the size the product argument is actually about — a model
+> that fits on an ordinary laptop. The 7B was kept as the second point of the comparison in Study 2
+> rather than dropped.
+>
+> Sources: [Table 19](../../reports/tables/tab-19-methodology-and-integrity.md) and the decision log
+> ([`.claude/rules/decisions.md`](../../.claude/rules/decisions.md), ADR-022 and ADR-024).
+
+
 **Phase:** P1 (docs only) · **Owner:** program-architect + qa-engineer · **Status:** Proposed (locks at P1 gate ✋)
 **Depends on:** T0.3 (leakage census), T1.1 (config contract §slot F)
 **Pre-registered headline:** **loop effect = C − B, reported with a 95% CI.** A small honest number

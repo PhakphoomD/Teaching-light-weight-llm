@@ -1362,6 +1362,29 @@ LITERATURE: List[Dict[str, str]] = [
          tested="seeds and resampling counts, compute and cost, and an artifact index — all reported "
                 "rather than assumed",
          verdict="applied"),
+    dict(key="eliasziw1991", authors="Eliasziw, M., Donner, A.", year="1991",
+         title="Application of the McNemar Test to Non-Independent Matched Pair Data",
+         venue="Statistics in Medicine 10(12):1981-1991", id="doi:10.1002/sim.4780101211",
+         role="statistics",
+         tested="named as the correction the p-values here do not apply — the pairs are clustered "
+                "by question, so the McNemar p-values are anti-conservative and the bootstrap "
+                "interval is the primary statistic",
+         verdict="cited as a stated limitation, not applied"),
+    dict(key="icmje2023", authors="International Committee of Medical Journal Editors", year="2023",
+         title="Recommendations for the Conduct, Reporting, Editing, and Publication of Scholarly "
+               "Work in Medical Journals",
+         venue="ICMJE (§II.A.4, artificial intelligence)",
+         id="https://www.icmje.org/recommendations/", role="reporting",
+         tested="the form of the AI-tooling disclosure in §14.2 — which content, which action, "
+                "which oversight, rather than a bare acknowledgement",
+         verdict="applied"),
+    dict(key="brand2015", authors="Brand, A., Allen, L., Altman, M., Hlava, M., Scott, J.",
+         year="2015",
+         title="Beyond Authorship: Attribution, Contribution, Collaboration, and Credit",
+         venue="Learned Publishing 28(2):151-155", id="doi:10.1087/20150211", role="reporting",
+         tested="the CRediT roles claimed in §14.1, stated for a single author so that "
+                "responsibility for the errors in §11 is unambiguous",
+         verdict="applied"),
 ]
 
 

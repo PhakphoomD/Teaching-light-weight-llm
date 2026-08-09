@@ -1,5 +1,8 @@
 # Teaching Lightweight LLMs
 
+[![tests](https://github.com/PhakphoomD/Teaching-light-weight-llm/actions/workflows/tests.yml/badge.svg)](https://github.com/PhakphoomD/Teaching-light-weight-llm/actions/workflows/tests.yml)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+
 **What actually makes a small local language model better at one specialised domain — and what only
 looks like it does.**
 
@@ -15,8 +18,11 @@ from somewhere nobody had predicted.
 > ⚠️ **An earlier version of this repository reported 25% → 83%, and 100% with "ground-truth
 > memory".** Its own audit found those were artefacts of the reference answer leaking into the
 > evaluation, and of a score that was 70% resemblance rather than correctness. They are retired.
-> How that happened, and how it was found, is [§3 and §4 of the experiment record](docs/EXPERIMENT_RESULTS.md#3-the-original-system-and-what-it-claimed)
-> — it is the most useful part of this project, not the part to skip.
+> How that happened is
+> [Study 0](docs/EXPERIMENT_RESULTS.md#70-study-0--the-original-system-re-analysed-against-its-own-logs),
+> which re-analyses the original system against its own logs; how it was found is the
+> [leakage audit](docs/LEAKAGE_AUDIT.md). Together they are the most useful part of this
+> project, not the part to skip.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reports/figures/fig-01-all-interventions-measured-dark.png">
