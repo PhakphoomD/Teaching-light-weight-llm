@@ -8,7 +8,7 @@
 # `orca.sighted` legally shows GT to the TEACHER ONLY (§0.2) — never ported
 # forward into a student-bound prompt (enforced structurally by
 # src/tlw/loop/core.py:assert_gt_free on every student-bound render).
-# teacher.difficult_question (LEAKAGE_CENSUS L7 — instructs the teacher to
+# teacher.difficult_question (LEAKAGE_AUDIT L7 — instructs the teacher to
 # ECHO GT into its returned text) is deliberately NOT ported and is
 # quarantined; must never be a registry key (ADR-020 §7).
 

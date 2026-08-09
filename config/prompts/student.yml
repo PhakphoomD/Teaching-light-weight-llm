@@ -5,7 +5,7 @@
 # the T1.5 §5b skeleton (arm B, self-refine — new wording, no prior variant).
 #
 # GT-FREE: no {ground_truth} placeholder appears anywhere in this file.
-# student.last_chance (LEAKAGE_CENSUS L1) is deliberately NOT ported — it is
+# student.last_chance (LEAKAGE_AUDIT L1) is deliberately NOT ported — it is
 # quarantined and must never be a registry key (ADR-020 §7).
 
 minimal:
