@@ -446,6 +446,56 @@ artifacts (keep separate). Sequence: T3.15 ∥ T3.16 → T3.17.
 **After P3-C:** final `reconcile-numbers` sweep → merge B2 → main → portfolio push. Research is DONE
 (ADR-024…034); the demo+narrative make it tangible and legible.
 
+## DONE — Closing pass on external review, 2026-08-09
+Two reviewers (a recruiter persona and a senior-researcher persona) read the repository cold. Ten
+findings were triaged as real and all ten are closed; the work is on `B2`, pushed.
+- **A fresh clone did not work.** 35 tests red, both headline assertions `SKIPPED` with a green exit
+  code, `make_figures.py` crashing — because the per-round logs the analysis reads are gitignored.
+  Fixed by exporting a committable twin of every log (`scripts/export_analysis_rows.py`, 82 logs,
+  8,762 rows, 3.6 MB with the free text stripped), tracking the judge-calibration probes, and
+  caching the one value derived from third-party data. **Verified by cloning from GitHub**, not by
+  reasoning about it. The root cause was a skip guard that tested for a *directory* rather than for
+  the *data*; a guard that skips when the layout moves is worse than no guard.
+- **Four claims were wider than their evidence.** `assert_gt_free` covers the framework's answering
+  path, not every path — the WixQA scripts answer outside it and are sealed by never indexing the
+  200 expert answers (now **seal #7**). "At zero inference cost" was true of model calls and false
+  of the prompt (2,640 → 6,175 characters). "The judge" is two judges in two modes, and the WixQA
+  reference-comparing one was never probed at all. The ADR count said thirty-five; it is thirty-six.
+- **The teaching-loop protocol was not followed and the register said it was.** Pass bar ≥3 → ≥4
+  after the pilot, judge gate failed and overridden, student 7B → 3B. Now a dated amendment on the
+  protocol plus a `Followed?` column in `docs/protocol/README.md`, and §2.3 says plainly that
+  raising a threshold after seeing data is the same move this project criticises in its own
+  retracted predecessor.
+- **Two statistical caveats were missing.** McNemar treats correlated (question, seed) pairs as
+  independent → anti-conservative p-values, with the bootstrap interval named as primary; and no
+  multiplicity correction across twenty-six intervals, with three reasons that matters less here
+  and an explicit statement that none of them removes it.
+- **Nothing said who did the work or how.** New **§14** — CRediT roles for a single author, dates and
+  commit counts read from git, and an AI-tooling disclosure in the form the guidance asks for
+  (which content, which action, which oversight), including three decisions that went *against* the
+  tooling and one where an agent's "nothing there" was repeated without checking. That last one is
+  now the seventh entry in §11.
+- **Last mile.** Every documented command told the reader to run one developer's conda interpreter
+  by absolute path while the README boasted the opposite (30 files fixed); the quickstart cloned a
+  directory name the repository does not have; `LICENSE` (MIT) and `NOTICE.md` added, the latter
+  itemising what was changed in MedQuAD because CC BY requires saying so; `ai-loop`/`tlp` env-name
+  typos; 250 lines of unreachable code deleted; every table `*Note.*` now terminates its claim, fixed
+  once in `style.note_line()` rather than at 38 call sites.
+- **CI + determinism.** `.github/workflows/tests.yml` runs pytest on a clean checkout — the only
+  place the clone defect could ever have been caught. SVG output is now byte-identical across runs
+  (fixed hashsalt, no creation timestamp): two consecutive regenerations differ in **0 of 34** files,
+  where before every re-run rewrote all of them and buried the real diffs.
+- **Not done, and why.** `src/providers/gemini_client.py` was reported as dead code and is not: it is
+  registered in `src/providers/__init__.py` and `gemini` is a valid provider in the config schema.
+  Removing it would change the config contract, so it stays and the claim is corrected here.
+- **Data lost during this pass.** 66 of 68 `rounds.jsonl` and the full WixQA seed files were deleted
+  by an unreviewed move-then-clean command and are unrecoverable (never in git, never in the bundle).
+  Impact verified exhaustively: exactly two table cells were affected (answer-word counts in
+  `tab-08` and `tab-10`), both now cached in `reports/rag-wixqa/answer-length-by-rung.json` marked
+  *quoted, not recomputed*; all 19 other tables and every headline number are byte-identical.
+- **Verification.** 401 tests pass; every link and anchor in the eight published documents resolves;
+  17 figures and 21 tables regenerate from committed logs.
+
 ## DONE — Repo restructure (ADR-034) — phases 1–5, 2026-08-07
 Executed after a housekeeping audit (FAIL, 18 findings) + an independent pre-execution safety check
 (`docs/plan/MIGRATION_CHECKLIST.md`, 909 lines, 2 BLOCKERs). Every step verified against a regression
