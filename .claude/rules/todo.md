@@ -496,6 +496,74 @@ findings were triaged as real and all ten are closed; the work is on `B2`, pushe
 - **Verification.** 401 tests pass; every link and anchor in the eight published documents resolves;
   17 figures and 21 tables regenerate from committed logs.
 
+## DONE — External review, both rounds, 2026-08-09
+Two reviewers read the repository cold: a hiring-manager persona screening for a junior-to-mid ML
+engineering role, and a senior-researcher persona auditing rigour. **Every finding below was
+verified independently before it was acted on**, and three turned out larger than reported.
+
+**Recruiter — shortlist.** 5/5 on first impression, ML/statistics, writing and differentiation
+("17 of 20 portfolios show a working RAG demo and no evidence it works; this shows the opposite").
+3.5/5 engineering, 3/5 reproducibility, 2.5/5 signal-to-noise. Its top finding was the one that
+mattered most: **the documented install installed nothing.** `conda env create` resolves only Python
+and PyTorch; the block never ran `pip install -r requirements.txt`, and `pytest` was declared in
+neither file — so the first command a stranger types fails, in a project whose thesis is
+reproducibility, with a CI job whose stated purpose is proving a clean checkout works. Fixed, along
+with `app/` being promised in prose and absent from the repository map, and a 1,600-line report with
+no stated read time. **CI is green.**
+
+**Senior researcher — "honest, competently executed, unusually well instrumented", with one blocker
+and five majors.** 15 of 20 traced numbers reproduced exactly, including discordant-pair counts.
+
+- **BLOCKER — the WixQA seal made a false claim, and it was mine, written the same day.** The audit
+  said the reference is absent from anything the retriever can return. Measured with this project's
+  own twelve-token criterion: **151 of 200 expert answers share a verbatim run with their source
+  article** (median 27, longest 190), and 56.5% carried one inside what the model was shown.
+  `assert_gt_free` would abort three quarters of these runs. **The objection was then settled rather
+  than conceded**: `scripts/wixqa/measure_reference_exposure.py` rebuilds both grounding blocks from
+  the committed logs and splits by whether the wider window revealed new reference text — **+0.077
+  [+0.006, +0.148] where it revealed none**, +0.205 where it did. The finding survives; its published
+  +0.130 is an upper bound. Both halves are in §7.5, §10, Table 22, the README row, and a test.
+- **MAJOR — three drivers crashed, not the two reported.** `GROUNDINGS`, a stopword set and `numpy`
+  stopped being in scope when T3.18 regrouped the scripts; one of them is the command
+  `HOW_TO_REGENERATE.md` gives for the study behind the largest effect. The stopword list was
+  recovered verbatim from the pre-move script because the published coverage figures used exactly it.
+  Nothing under `scripts/` was imported by any test; `tests/test_scripts_load.py` now imports all 66
+  and separately checks for unbound names — that is what found the third.
+- **MAJOR — two published intervals did not match the advertised commands, and §5.7 called it
+  resampling noise.** False: both paths are deterministic. The generator draws cluster *indices*, and
+  two callers keyed the same questions as `"12"` and `12`, so `sorted()` ordered them lexically in one
+  and numerically in the other. Point estimates are order-invariant, which is why every existing check
+  missed it. `paired_cluster_bootstrap` now orders by `str(key)`; the drift test asserts five
+  published intervals and the key-type invariance directly. **No published value changed.**
+- **MAJOR — a third judge configuration scored a headline table.** The reliability sweep used the
+  local `llama3.1:8b`, the *more permissive* of the two failed candidates. §7.3 names it with a
+  verification command; §10 says three, not two.
+- **MAJOR — Table 16 published two of six pre-registered numeric predictions.** Five landed outside
+  range; the two omitted misses both went **low**, on the completeness bar the intervention targeted.
+  Nothing was hidden — the outcomes are in Tables 10, 12, 15 — but the scorecard was favourable in the
+  one table that exists to make being wrong visible. It now scores all six from the runs, count
+  computed.
+- **MINORs fixed:** "every repair landed on a question never answered correctly" was 15 of 37 (the
+  figure beside it already said so); a benefit and its cost quoted on different subsets; a
+  decomposition described as a reproduction; three stale counts.
+
+**Also closed:** `LICENSE` (MIT) and `NOTICE.md`, the latter itemising the MedQuAD changes CC BY
+requires stating **and** Stanford Alpaca — 24 MB under CC BY-NC, the one non-commercial component,
+previously redistributed with no attribution at all. Kept, not deleted: `logs/experiments/phase0-3`
+configs name those files, so they are the input to the retracted result.
+
+**Not accepted:** `src/providers/gemini_client.py` was reported as dead code. It is imported by
+`src/providers/__init__.py` and `gemini` is a valid provider in the config schema; removing it would
+change the config contract. It stays.
+
+**Open, and deliberately so:** no serving path (no Dockerfile, no HTTP endpoint, no latency numbers)
+— the recruiter's single largest gap for an engineering role, and a scope decision for the user, not
+a defect to patch. No linter, formatter, type-checker or `pyproject.toml`. And the WixQA judge is
+still uncalibrated: only the delivery result has been stratified for reference exposure.
+
+**Verified:** 476 tests pass · CI green on a clean checkout · every link and anchor in the eight
+published documents resolves · 17 figures and 22 tables regenerate from committed logs.
+
 ## DONE — Repo restructure (ADR-034) — phases 1–5, 2026-08-07
 Executed after a housekeeping audit (FAIL, 18 findings) + an independent pre-execution safety check
 (`docs/plan/MIGRATION_CHECKLIST.md`, 909 lines, 2 BLOCKERs). Every step verified against a regression
