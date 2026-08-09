@@ -261,3 +261,7 @@ src/simplified/legacy/
 # Working notes: task specifications and design notes written before each piece of work.
 # Substance absorbed into docs/EXPERIMENT_RESULTS.md; full text at commit 64a39cc372a3.
 /docs/plan/
+
+# Subagent working memory: notes each specialist keeps for itself between sessions.
+# Internal to how the work is done, not part of what the work produced.
+/.claude/agent-memory/
