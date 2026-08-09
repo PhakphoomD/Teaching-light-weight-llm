@@ -1,5 +1,19 @@
 # P3-E Capstone Plan (v2) — T3.14 (Loop+RAG) + T3.12 (RAG-Law write-up)
 
+> **Amendment, 2026-08-09 — this document is not purely pre-run, and the reader should know which
+> parts are which.**
+>
+> Written before the runs: §1–§5 and §7, including the predictions in §5 (two of which came out
+> wrong, published as wrong in [Table 16](../../reports/tables/tab-16-predictions-vs-outcomes.md)),
+> and **§6, the decision rules — which fired and stopped the three-seed run.**
+>
+> Appended after the corresponding step ran, and labelled as such where it appears: the Stage-1
+> offline ladder result under §3, and the Stage-2 pilot verdict. Their headings carry their own run
+> dates.
+>
+> Nothing was removed to tidy this up. A plan that gets edited after the result is worth less than
+> one that says where it was edited.
+
 **Status:** planning, revised 2026-07-25 after a pre-run review · **Owners:** ops + qa (T3.14),
 qa + main thread (T3.12) · **Supplements** `T3.14-loop-rag-capstone.md` / `T3.12-rag-law-writeup.md`.
 Every number below traces to a run log or ADR (§0.1/§0.4). **v2 supersedes v1** — v1's plan ran

@@ -1,4 +1,20 @@
-# Selective RAG — design + evidence (P3-B, from ADR-027)
+# Selective retrieval — can the model be told when to retrieve?
+
+> **Note, 2026-08-09.** Two things a reader should know before using the table in §2.
+>
+> **The 70B row was never completed.** It is still marked *pending Groq reset* below, and it stayed
+> that way — the daily token cap was never free at the right moment and the question was overtaken.
+> It is left visible rather than deleted, because a blank row is the honest record of a test that
+> was planned and not run.
+>
+> **The conclusion it points at was reached anyway, by a different route.** A later study asked the
+> same question of a different intervention — whether the model can tell when its *own answer* needs
+> another pass — and got the same shape of answer: an oracle gate would gain 0.038, a gate driven by
+> the model's own self-assessment gained 0.000, and the 3B called its answer complete 59% of the time
+> including when it was wrong. Two independent replications now say the missing component is a
+> reliable gate, not a better intervention.
+>
+> The rest of this document is as it was written on 2026-07-16.
 
 **Status:** design + offline evidence (2026-07-16) · **Owner:** program-architect + qa
 **Premise (ADR-027):** always-on RAG is a **net wash** on the 3B (−0.005) — a tug-of-war that
