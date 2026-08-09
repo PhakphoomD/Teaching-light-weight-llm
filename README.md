@@ -75,8 +75,12 @@ time. Two of those rules exist because of the failure this project is built arou
 come from a different model family than the student, and a baseline arm may not accumulate memory.
 A third guard inspects the prompts on the answering path and aborts the run if the reference answer appears in one.
 
-**And the product those experiments point at**: retrieve over a local index, choose which part of
-the retrieved text to show, answer with a 3B model. Everything but the judge runs on one laptop.
+**And the answering engine those experiments point at** ([`app/`](app/README.md)): retrieve over a
+local index, choose which part of the retrieved text to show, answer with a 3B model. Everything but
+the judge runs on one laptop. It is a library and a batch script, not a deployed service — there is
+no HTTP endpoint, no container, and no latency budget, because the question this project set out to
+answer was whether the intervention works, not how fast it serves. That is the honest boundary of
+what is built here.
 
 ---
 
@@ -168,7 +172,7 @@ adequate ones.** On MedQuAD the two halves were almost exactly equal, which is w
 
 Applied selectively, every one of them is clearly positive. The model cannot make that call itself.
 
-**→ [The full experiment record](docs/EXPERIMENT_RESULTS.md)** — objectives, every decision and why,
+**→ [The full experiment record](docs/EXPERIMENT_RESULTS.md)** — the complete study, about an hour end to end; its abstract and §7 carry the result. Objectives, every decision and why,
 all 17 figures, all 21 tables, 26 null results, and the six guardrails that caught something.
 
 ---
@@ -196,8 +200,13 @@ git clone https://github.com/PhakphoomD/Teaching-light-weight-llm.git
 cd Teaching-light-weight-llm
 conda env create -f environment.yml
 conda activate tlw          # every `python` below means this environment's interpreter
+pip install -r requirements.txt
 ollama pull qwen2.5:3b
 ```
+
+`environment.yml` carries only what conda must resolve — the Python version and the CUDA build of
+PyTorch. Everything else, including the test runner, is in `requirements.txt`, so **both commands are
+required**. The `tests` job in CI runs exactly this pair on a clean checkout for that reason.
 
 > Every command in this README assumes `tlw` is active. Nothing here hardcodes an interpreter path —
 > that was a real defect in this repository once (thirteen scripts pinned to one developer's home
@@ -246,6 +255,8 @@ python scripts/wixqa/analyze_dose_response.py
 
 ```
 run.py                     the entrypoint:  run.py --config experiments/<study>/<condition>.yml
+app/                       the answering engine the results point at — retrieve, choose the
+                           grounding window, answer with a 3B model (library only, no service)
 config/                    authored configuration — base.yml holds every default
 experiments/               one YAML per run condition, grouped by the study it belongs to
 data/                      inputs only; raw MedQuAD is immutable, clean/ is the pipeline product

@@ -49,11 +49,18 @@ openai>=1.40.0
 groq>=0.11.0
 google-genai>=1.46.0
 
+########################################################
+# === Verification: what `pytest tests/ -q` needs === #
+########################################################
+# Not optional. Every claim in docs/ is guarded by a test, and the README tells a
+# stranger to run them — so the runner belongs here, not in a developer's head.
+pytest>=8.0.0
+scipy>=1.13.0              # test_stats.py checks our exact McNemar against scipy's binomtest
+
 ##########################################
 # === Optional / Advanced (commented) === #
 ##########################################
 # bitsandbytes>=0.43.1    # 4/8-bit quant (Linux/Colab preferred; limited on Windows)
 # vllm>=0.5.0             # high-performance inference (Linux + GPU)
 # peft>=0.11.1            # LoRA/QLoRA fine-tuning
-# scipy>=1.13.0           # statistical tests for evaluation
 # jsonlines>=4.0.0        # dataset generation helpers
