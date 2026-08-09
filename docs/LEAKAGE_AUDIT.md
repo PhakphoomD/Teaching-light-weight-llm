@@ -133,18 +133,19 @@ the debug log from that run is the confirmation.
 
 ## §5 What closed each path
 
-The audit ended in six requirements. Each is now a mechanism in the code, not a convention.
+The audit ended in six requirements, and retrieval later added a seventh. Each is now a mechanism in the code, not a convention.
 **The numbering is load-bearing** — a dozen modules and tests cite these as "seal #N", so the
 order below is fixed.
 
 | Seal | What shipped | Closes |
 |---|---|---|
-| **#1** No reference text in any student-bound prompt | `assert_gt_free` (`src/tlw/loop/core.py:56`) inspects the whole prompt before every model call and **aborts the run** rather than logging a warning. The blind judge's signature cannot receive a reference at all, so a leak has to be added deliberately rather than forgotten. | L1, L2, L3, L5, L6, L7 (student side) |
+| **#1** No reference text in any student-bound prompt | `assert_gt_free` (`src/tlw/loop/core.py:56`) inspects every prompt on the framework's answering path before the model is called, and **aborts the run** rather than logging a warning. It is reached where a reference is in scope at all — the sighted-teacher arm and every retrieval run; on the three arms that never hold one it is a no-op, and there the protection is that the reference is not in scope to leak. The blind judge's signature cannot receive a reference at all, so a leak has to be added deliberately rather than forgotten. | L1, L2, L3, L5, L6, L7 (student side) |
 | **#2** A store-time tripwire on memory | `src/tlw/memory/tripwire.py` — three independent checks: exact substring or a ≥12-token shingle (T-1), cosine similarity ≥ 0.80 (T-2), and a length-plus-overlap smell test that catches a lightly reworded full answer (T-3). Red-teamed against the 32 seeded records from the old store, which it rejects 100% of the time. | L4, L6, L7 (memory side), L8, L18 |
 | **#3** Lint the teacher templates | `last_chance` and `difficult_question` are quarantined by name at load time (`src/tlw/prompts/loader.py:24`). Loading a prompt file containing either raises. | L1, L7 at authoring time |
 | **#4** Remove the dead paths, not just default them off | T2.9 deleted the entire legacy core, so there is no toggle left to flip. A test greps for the identifier to keep it that way. | L1–L5 structurally |
 | **#5** Judge independence | Validation rule V2 rejects a configuration whose judge shares a model family with the student, at load, before anything runs. | adjacent risk: a same-family judge shares the student's priors |
 | **#6** Quarantine the seeded artifacts | Validation rule V6 denies any memory seed path matching the phase-6 directory or containing `gt_memory` / `ground_truth`. | L18 |
+| **#7** The support-documentation study is sealed by what is indexed, not by a runtime check | Its retrieval index contains the 6,221 knowledge-base articles and never the 200 expert answers (`src/tlw/wixqa/retrieval.py`). Those scripts answer outside the framework loop, so seal #1 does not run there; the reference is instead absent from everything the retriever can return. | the WixQA studies |
 
 Retrieval, added later, brought the same problem in a new shape and needed its own seals: the
 corpus is built from the training split only and scrubbed twice — 506 records → 448 after

@@ -18,7 +18,7 @@
 # held-out-EXCLUDED index (RAG-L1/L2, verified in the T3.2 build_report.md).
 #
 #   $env:EXPERIMENT_PARAMS_SEED = "42"
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/rag-medquad/small-model-with-rag.yml `
+#   python run.py --config experiments/rag-medquad/small-model-with-rag.yml `
 #     --judge-fallback local:llama3.1:8b
 
 student:

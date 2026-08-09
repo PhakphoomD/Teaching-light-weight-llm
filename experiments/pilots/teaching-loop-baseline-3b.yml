@@ -11,7 +11,7 @@
 # experiment showing C-B is real.
 #
 # Run:
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/teaching-loop-baseline-3b.yml \
+#   python run.py --config experiments/pilots/teaching-loop-baseline-3b.yml \
 #     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 15
 
 student:

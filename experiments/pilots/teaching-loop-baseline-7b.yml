@@ -6,7 +6,7 @@
 # satisfies Config Contract V8 for this arm (arm A/B REQUIRE memory: none).
 #
 # Run:
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/teaching-loop-baseline-7b.yml
+#   python run.py --config experiments/pilots/teaching-loop-baseline-7b.yml
 
 params:
   arm: A

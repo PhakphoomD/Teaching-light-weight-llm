@@ -33,7 +33,7 @@ up as a result.*
 |---|---|
 | **An independent teacher in the loop adds nothing.** | +0.003 [−0.021, +0.029], p = 1.00. The model re-reading and rewriting its own answer is the part that worked (+0.091). |
 | **Retrieval helps if and only if the retrieved text contains the answer.** | −0.005 where the model already knew the domain; **+0.152** where it did not. Split one run by whether the right document was actually retrieved: **+0.273** when it was, +0.004 when it was not. |
-| **How retrieved text is delivered mattered ~5× more than which retriever found it.** | +0.130 from changing which 2,400 characters reach the prompt, against +0.025 from a better retriever — at zero inference cost. |
+| **How retrieved text is delivered mattered ~5× more than which retriever found it.** | +0.130 from changing which 2,400 characters reach the prompt, against +0.025 from a better retriever — with no extra model call, though the grounding block grows from 2,640 to 6,175 characters. |
 | **Fine-tuning on reference answers actively hurt.** | −0.292. The fine-tune worked; it learned the reference corpus's terse style, and terse answers fail a bar that requires completeness. |
 
 **And the unsolved one:** every intervention here helps deficient answers and taxes adequate ones.
@@ -67,7 +67,7 @@ answers, which critiques, which prompt, whether retrieval is attached, the loop 
 and which judge scores it — each resolved through a registry and validated by eight rules at load
 time. Two of those rules exist because of the failure this project is built around: the judge must
 come from a different model family than the student, and a baseline arm may not accumulate memory.
-A third guard inspects every prompt and aborts the run if the reference answer appears in it.
+A third guard inspects the prompts on the answering path and aborts the run if the reference answer appears in one.
 
 **And the product those experiments point at**: retrieve over a local index, choose which part of
 the retrieved text to show, answer with a 3B model. Everything but the judge runs on one laptop.
@@ -186,7 +186,8 @@ all 17 figures, all 21 tables, 26 null results, and the six guardrails that caug
 optional fine-tune. A Groq free-tier key is needed only to re-run judging.
 
 ```bash
-git clone <this-repo> && cd Teaching-light-weight-llm-based-project
+git clone https://github.com/PhakphoomD/Teaching-light-weight-llm.git
+cd Teaching-light-weight-llm
 conda env create -f environment.yml
 conda activate tlw          # every `python` below means this environment's interpreter
 ollama pull qwen2.5:3b
@@ -267,6 +268,15 @@ tests/                     mirrors src/ and tools/
 
 ## Data and licence
 
-MedQuAD — Ben Abacha & Demner-Fushman, *BMC Bioinformatics* 2019, CC BY 4.0.
-WixQA — Cohen et al. 2025, [arXiv:2505.08643](https://arxiv.org/abs/2505.08643), MIT.
+The code, documentation, figures and tables are MIT-licensed ([LICENSE](LICENSE)). The datasets keep
+their own terms, and what was changed in each is recorded in [NOTICE.md](NOTICE.md).
+
+**MedQuAD** — Ben Abacha & Demner-Fushman, *BMC Bioinformatics* 2019, CC BY 4.0. Redistributed here
+in reformatted, cleaned and split form; the changes are itemised in [NOTICE.md](NOTICE.md) as that
+licence requires, and every transform is recorded per record so none of it is destructive.
+
+**WixQA** — Cohen et al. 2025, [arXiv:2505.08643](https://arxiv.org/abs/2505.08643), MIT. Not
+redistributed: [`scripts/dataset/fetch_wixqa.py`](scripts/dataset/fetch_wixqa.py) fetches it from
+the original source, unmodified.
+
 Built with Llama.

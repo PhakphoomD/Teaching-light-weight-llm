@@ -5,12 +5,12 @@ which prompt, whether retrieval is attached, the loop parameters and seed, and
 which judge scores it — lives in the config file. Nothing is hardcoded here or
 in src/tlw/runner.py; changing what is measured means editing YAML, not code.
 
-Usage (the project's conda python only, §0.5 — bare `python` is guard-blocked):
-    & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" run.py \\
+Usage (with the `tlw` conda environment active):
+    python run.py \\
         --config experiments/teaching-loop/3-teacher-feedback.yml
 
     # Smoke run — the train split only, never the held-out set (§0.2):
-    & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" run.py \\
+    python run.py \\
         --config experiments/teaching-loop/1-baseline.yml \\
         --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl \\
         --limit 5

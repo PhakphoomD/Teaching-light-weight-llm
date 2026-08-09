@@ -5,7 +5,7 @@
 # upper bound, reported as a ceiling never as an achievement. See arm-A header.
 #
 # Run:
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/teaching-loop-teacher-sees-answer-3b.yml \
+#   python run.py --config experiments/pilots/teaching-loop-teacher-sees-answer-3b.yml \
 #     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 15
 
 student:

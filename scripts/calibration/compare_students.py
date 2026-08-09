@@ -7,7 +7,7 @@ all-MiniLM-L6-v2 (model-agnostic, favors neither family). Reported as a *referen
 proxy (per ADR-001, proximity != correctness — directional signal), plus length + speed.
 
 Run (repo root, tlw env; Ollama up):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" scripts/calibration/compare_students.py --n 6
+  python scripts/calibration/compare_students.py --n 6
 """
 
 from __future__ import annotations

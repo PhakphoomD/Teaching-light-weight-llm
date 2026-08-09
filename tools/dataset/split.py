@@ -7,7 +7,7 @@ Held-out rules (§0.2 integrity):
 - deterministic (seeded).
 
 Run (repo root, tlw env):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" -m tools.dataset.split \
+  python -m tools.dataset.split \
       --input data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_clean.jsonl --heldout-frac 0.2
 """
 

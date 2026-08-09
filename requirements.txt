@@ -1,7 +1,7 @@
 ###############################################################################
-# AI Teaching Loop System — pip requirements (install AFTER environment.yml)
+# Teaching Lightweight LLMs — pip requirements (install AFTER environment.yml)
 # Install order:
-#   1) conda env create -f environment.yml   && conda activate ai-loop
+#   1) conda env create -f environment.yml   && conda activate tlw
 #   2) (macOS only) pip install torch torchvision torchaudio
 #   3) pip install -r requirements.txt
 ###############################################################################

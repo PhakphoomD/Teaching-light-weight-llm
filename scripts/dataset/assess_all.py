@@ -5,7 +5,7 @@ Uses model-free dims (D1-D3, D5-D7 + volume) by default (--judge none) so the sw
 fast, reproducible, and needs no API. D4 quality can be run per-domain separately.
 
 Run (repo root, tlw env):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" scripts/dataset/assess_all.py --target lora
+  python scripts/dataset/assess_all.py --target lora
 """
 
 from __future__ import annotations

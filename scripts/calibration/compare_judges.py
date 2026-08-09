@@ -10,7 +10,7 @@ A better judge (a) scores GOOD high, WRONG/TRUNCATED low = larger *discriminatio
 and (b) is reasonably fast. We report both, plus inter-judge agreement.
 
 Run (from repo root, tlw env; Ollama daemon must be up):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" scripts/calibration/compare_judges.py --n 8
+  python scripts/calibration/compare_judges.py --n 8
 """
 
 from __future__ import annotations

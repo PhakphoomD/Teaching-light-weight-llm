@@ -326,8 +326,31 @@ def wixqa_catastrophe_rate(step: str) -> float:
 
 
 def wixqa_answer_words(step: str) -> float:
+    """Mean answer length, in words, for one rung of the WixQA ladder.
+
+    This is the one published quantity that reads the generated answers rather
+    than the scores. Those answers were pruned from disk after the scoring
+    columns were extracted, so when they are absent the value is read from
+    `reports/rag-wixqa/answer-length-by-rung.json`, which records what was
+    computed while they were present and says so.
+
+    Silence would be worse than either: before this fallback existed the
+    computation returned 0.0 for every rung and two published tables quietly
+    printed zeros. It raises now rather than averaging an empty list.
+    """
     lengths = [len((r.get("answer") or "").split()) for r in wixqa_records(step)]
-    return sum(lengths) / len(lengths)
+    if lengths and any(lengths):
+        return sum(lengths) / len(lengths)
+
+    cached = ROOT / "reports" / "rag-wixqa" / "answer-length-by-rung.json"
+    if cached.is_file():
+        payload = json.loads(cached.read_text(encoding="utf-8"))
+        key = WIXQA_STEPS.get(step, step)
+        if key in payload:
+            return float(payload[key])
+    raise MissingEvidence(
+        f"no answer text for WixQA step {step!r} and no cached length in {cached}"
+    )
 
 
 SELF_REFINE_PILOT = "pilots/5-rag-plus-self-refine"

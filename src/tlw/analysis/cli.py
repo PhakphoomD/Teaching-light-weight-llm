@@ -1,6 +1,6 @@
 """CLI entrypoint (T2.8 build instruction 4):
 
-    & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" -m src.tlw.analysis \\
+    python -m src.tlw.analysis \\
         --runs-dir runs --comparison C-B [--memory-type none] \\
         [--resamples 10000] [--seed 0]
 

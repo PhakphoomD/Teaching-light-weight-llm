@@ -6,8 +6,8 @@ transparent readiness report for their target (rag / lora / eval). Runs fully lo
 D4 quality (LLM judge) is optional so the default path needs no API.
 
 Install once, then run (repo root, tlw env):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" -m pip install streamlit
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" -m streamlit run tools/dataset/app.py
+  python -m pip install streamlit
+  python -m streamlit run tools/dataset/app.py
 """
 
 from __future__ import annotations

@@ -26,7 +26,7 @@ limited) questions — the honest tug-of-war, not a cherry-pick.
 ```bash
 # Ollama must be running with qwen2.5:3b; the WixQA index must exist
 #   (indexes/wixqa-help-centre/ — rebuild via scripts/wixqa/build_index.py on a fresh clone)
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" app/build_showcase.py --per-set 3
+python app/build_showcase.py --per-set 3
 ```
 
 ## Honest scope

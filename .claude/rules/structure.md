@@ -118,7 +118,7 @@ Teaching-light-weight-llm-based-project/
 │   ├── EXPERIMENT_RESULTS.md  THE report: purpose · objectives · method · Studies 0-7 ·
 │   │                          discussion · limitations. The five per-study reports were
 │   │                          merged into its §7 (ADR-037); nothing else states a headline
-│   ├── LEAKAGE_AUDIT.md       appendix A — the eighteen paths and the six seals
+│   ├── LEAKAGE_AUDIT.md       appendix A — the eighteen paths and the seven seals
 │   ├── protocol/              appendix B — what was fixed before each study ran, dated;
 │   │                          bodies never edited, README.md is the register
 │   ├── plan/                  working notes — untracked by design, recoverable at a stated sha

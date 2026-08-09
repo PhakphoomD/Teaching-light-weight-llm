@@ -4,8 +4,8 @@ Turn a raw Q&A dataset into a **cleaned** dataset + a **readiness report** (fit 
 `rag` / `lora` / `eval`). Transparent, config-driven (`cleaning_config.yaml`), reproducible.
 Backed by `.claude/rules/rubric.md` (dimensions) and `schema.md` (contracts).
 
-All commands run in the `tlw` conda env, from repo root. Use the full-path interpreter (§0.5):
-`& "C:\Users\ham25\.conda\envs\tlw\python.exe" …`
+All commands run from the repository root with the `tlw` conda environment active:
+`python …`
 
 ## Pipeline
 | Stage | Command | Output |

@@ -14,7 +14,7 @@ directory name says what it is for.
 
 ```
 $env:EXPERIMENT_PARAMS_SEED = "42"
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop/3-teacher-feedback.yml `
+python run.py --config experiments/teaching-loop/3-teacher-feedback.yml `
   --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
 ```
 

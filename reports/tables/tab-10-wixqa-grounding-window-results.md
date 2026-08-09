@@ -10,8 +10,8 @@
 | pass rate (score >= 4) | 0.007 | 0.007 | +0.000 | [-0.005, +0.005] | 1 | recomputed |
 | mean judge score | 1.98 | 2.18 | +0.20 | -- | -- | recomputed |
 | share scoring <= 1 | 0.298 | 0.232 | -0.067 | -- | -- | recomputed |
-| answer length (words) | 0 | 0 | +0 | -- | -- | recomputed |
+| answer length (words) | 152 | 144 | -8 | -- | -- | quoted, not recomputed |
 | reference coverage (continuous) | 0.361 | 0.403 | +0.042 | [+0.032, +0.053] | -- | from the committed printout |
 | extraction ratio | 0.88 | 0.61 | -0.27 | -- | -- | from the committed printout |
 
-*Note.* What changed when only the grounding window changed Retrieval was reused byte-for-byte from the previous rung, so the single difference between these two columns is which 2,400 characters of the same retrieved articles were placed in the prompt. 600 judged cells (200 questions x 3 seeds). Most rows are recomputed from the judged records; reference coverage and the extraction ratio are content-overlap metrics computed by the analysis script and are read from its committed printout, marked accordingly. Note the last three rows together: answers got shorter, covered more of the reference, and used a smaller share of what they were shown. Sources: runs/rag-wixqa, reports/rag-wixqa/wider-context-vs-narrow.txt.
+*Note.* What changed when only the grounding window changed. Retrieval was reused byte-for-byte from the previous rung, so the single difference between these two columns is which 2,400 characters of the same retrieved articles were placed in the prompt. 600 judged cells (200 questions x 3 seeds). Most rows are recomputed from the judged records; reference coverage and the extraction ratio are content-overlap metrics computed by the analysis script and are read from its committed printout, marked accordingly. Note the last three rows together: answers got shorter, covered more of the reference, and used a smaller share of what they were shown. Sources: runs/rag-wixqa, reports/rag-wixqa/wider-context-vs-narrow.txt.

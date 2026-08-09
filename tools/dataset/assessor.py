@@ -6,7 +6,7 @@ Mirrors `.claude/rules/rubric.md` (thresholds/weights are here as the single cod
 Deterministic (seeded sampling for the D4 judge). Model-free dims run without any API.
 
 Run (repo root, tlw env):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" -m tools.dataset.assessor \
+  python -m tools.dataset.assessor \
       --input data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_clean.jsonl --target lora
   # add --judge none to skip D4 (no API); --quality-sample N to bound judge calls
 """

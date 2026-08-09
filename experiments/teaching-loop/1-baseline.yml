@@ -22,12 +22,12 @@
 #
 # Run one seed on the real heldout set (never --data ..._train.jsonl for this):
 #   $env:EXPERIMENT_PARAMS_SEED = "42"
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop/1-baseline.yml `
+#   python run.py --config experiments/teaching-loop/1-baseline.yml `
 #     --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
 #
 # Smoke (mechanics only — TRAIN split, tiny --limit, never heldout, §0.2):
 #   $env:EXPERIMENT_PARAMS_SEED = "42"
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/teaching-loop/1-baseline.yml `
+#   python run.py --config experiments/teaching-loop/1-baseline.yml `
 #     --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl --limit 4 `
 #     --teacher-fallback local:qwen2.5:7b-instruct --judge-fallback local:llama3.1:8b
 

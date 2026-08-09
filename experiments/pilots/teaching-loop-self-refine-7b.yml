@@ -6,7 +6,7 @@
 # (Config Contract V8 requires it for arms A/B).
 #
 # Run:
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/teaching-loop-self-refine-7b.yml
+#   python run.py --config experiments/pilots/teaching-loop-self-refine-7b.yml
 
 params:
   arm: B

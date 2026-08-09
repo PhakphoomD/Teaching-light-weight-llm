@@ -1,9 +1,9 @@
 """YAML-backed template loading for the PromptPreset seam (slot C, T2.4).
 
-Generalizes `src/utils/prompt_loader.py`'s `SafeDict` + `str.format_map`
-pattern (structure.md §C: the config block "generalizes prompt_loader.py
-YAML loading" — this module does the same thing one level up, for the
-ADR-020 target layout) into a plain function the presets module composes.
+Generalizes the pre-renovation loader's `SafeDict` + `str.format_map` pattern
+(structure.md §C: the config block "generalizes prompt_loader.py YAML loading")
+into a plain function the presets module composes. That loader was deleted once
+nothing imported it; git history keeps it.
 
 Reads from `config/prompts/{student,teacher}.yml` — the NEW ADR-020 files
 this task authors — never from `config/prompts_config.yml` (frozen, legacy,
@@ -26,7 +26,7 @@ QUARANTINED_KEYS = frozenset({"last_chance", "difficult_question"})
 
 class SafeDict(dict):
     """Dict that renders missing template variables as '' instead of
-    raising KeyError (matches src/utils/prompt_loader.py's SafeDict)."""
+    raising KeyError (the pre-renovation loader's SafeDict did the same)."""
 
     def __missing__(self, key):
         return ""

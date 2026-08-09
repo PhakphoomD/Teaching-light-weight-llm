@@ -1,0 +1,9 @@
+{
+  "1-no-rag": 68,
+  "2-rag-basic": 141,
+  "3-rag-better-retriever": 152,
+  "4-rag-wider-context": 144,
+  "_unit": "mean words per answer",
+  "_note": "Mean answer length per WixQA rung. Computed from the answer text in the run logs while those logs were present; the raw generations were subsequently pruned from disk (only the scoring columns are kept and committed -- see scripts/export_analysis_rows.py), so these four values can no longer be recomputed and are read from here instead. They are the values this project published on 2026-08-09 at commit a1c9610, and the two that also appear in an independent printout agree with it: reports/rag-wixqa/wider-context-vs-narrow.txt records 152 -> 144 for the same pair.",
+  "_status": "quoted, not recomputed"
+}

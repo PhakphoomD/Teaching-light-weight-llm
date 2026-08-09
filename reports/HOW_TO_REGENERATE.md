@@ -8,10 +8,10 @@ Nothing here needs to be run to check a number. It is here so that a reader who 
 committed logs can rebuild them, and so that the operating detail the per-study reports used to
 carry did not disappear when they were merged into §7.
 
-Run Python through the project's environment, not a bare `python` (§0.5):
-`C:\Users\ham25\.conda\envs\tlw\python.exe`. Set `HF_HUB_OFFLINE=1` for anything that embeds — the
-sentence-transformers loader otherwise stalls for about a minute per process when it cannot reach
-huggingface.co.
+Run every command from the repository root with the `tlw` conda environment active, so that
+`python` resolves to that environment's interpreter. Set `HF_HUB_OFFLINE=1` for anything that
+embeds — the sentence-transformers loader otherwise stalls for about a minute per process when it
+cannot reach huggingface.co.
 
 ---
 

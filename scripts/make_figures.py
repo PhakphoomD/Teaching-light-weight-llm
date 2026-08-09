@@ -34,6 +34,7 @@ from src.tlw.figures.panels import Effect, Level, diverging, dot_ci, dumbbell, f
 from src.tlw.figures.style import (  # noqa: E402
     AMBER,
     apa_label,
+    note_line,
     BLUE,
     FIGDIR,
     GREEN,
@@ -302,15 +303,16 @@ def tab_leakage_census() -> None:
          "three independent checks: exact substring, a 12-token shingle, and cosine similarity "
          "above 0.80; red-teamed against the 32 leaked records from the old store, which it "
          "rejects 100% of the time"],
-        ["`assert_gt_free` inspects the whole prompt before every model call",
-         "aborts the run rather than logging a warning — it fired once, on the arm designed to "
-         "leak, and that run is reported as aborted"],
+        ["`assert_gt_free` inspects every prompt on the framework's answering path -- the arm that is shown the reference, and every retrieval run -- before the model is called",
+         "aborts the run rather than logging a warning; it fired once, on the arm designed to leak. The WixQA study runs outside this path and is sealed differently: its retrieval index never contains the 200 expert answers, so there is nothing for a guard to catch"],
         ["the judge must come from a different model family than the student",
          "enforced when the configuration loads, not by convention"],
         ["the retrieval corpus is built from the training split only",
          "506 records → 448 after dropping near-duplicates of held-out answers → **414** after "
          "dropping template twins that share verbatim blocks but not enough cosine similarity "
          "to be caught the first way"],
+        ["the support-documentation study is sealed by what is indexed, not by a runtime check",
+         "its index holds the 6,221 knowledge-base articles and never the 200 expert answers, so the reference is absent from anything the retriever can return"],
         ["any retrieved passage still sharing a 12-token span with the held-out answer is "
          "dropped at run time",
          "dropped and **counted**, so the filter's own activity is reportable rather than silent"],
@@ -318,7 +320,7 @@ def tab_leakage_census() -> None:
     write_table(
         "tab-05-leakage-audit",
         "O2",
-        "Eighteen ways the answer could reach the student, and the six seals that closed them",
+        "Eighteen ways the answer could reach the student, and the seven seals that closed them",
         "The audit that turned a good-looking result into a retracted one. Every row was found by "
         "reading the code rather than by observing a symptom, which matters: three of these paths "
         "were switched off by configuration at the time and would have looked clean in any log. The "
@@ -328,7 +330,7 @@ def tab_leakage_census() -> None:
         "put in place, and the design rule behind all six is the same: make the failure impossible "
         "to reintroduce rather than remembering not to. Source: docs/LEAKAGE_AUDIT.md.",
         table(["path", "what it does", "who sees the answer", "verdict", "where"], paths)
-        + "\n\n### The six seals, and why each is structural rather than procedural\n\n"
+        + "\n\n### The seven seals, and why each is structural rather than procedural\n\n"
         + table(["seal", "how it holds"], seals),
     )
 
@@ -1182,7 +1184,7 @@ def tab_delivery() -> None:
         ["answer length (words)", f"{D.wixqa_answer_words(before):.0f}",
          f"{D.wixqa_answer_words(after):.0f}",
          f"{D.wixqa_answer_words(after) - D.wixqa_answer_words(before):+.0f}",
-         "--", "--", "recomputed"],
+         "--", "--", "quoted, not recomputed"],
         ["reference coverage (continuous)", f"{printout['coverage_before']:.3f}",
          f"{printout['coverage_after']:.3f}", f"{printout['coverage_delta']:+.3f}",
          f"[{printout['coverage_ci'][0]:+.3f}, {printout['coverage_ci'][1]:+.3f}]", "--",
@@ -1814,7 +1816,7 @@ def tab_dataset() -> None:
     write_table(
         "tab-02-medquad-dataset-report",
         "OD",
-        "The dataset, before and after, and whether it was fit to measure on",
+        "The dataset before and after cleaning, and whether it was fit to measure on",
         "**When this happened matters: after the audit, not before the experiments.** The original "
         "runs (November 2025) used an unidentified medical question-answer dump with no held-out "
         "split; everything below — the source, the licence, the cleaning, the 506/125 split — was "
@@ -2300,11 +2302,14 @@ def write_index() -> None:
             lines.append("")
             lines.append(f"![{apa_title}]({slug}.png)")
             lines.append("")
-            lines.append(f"*Note.* {title} {body}")
+            lines.append(note_line(title, body))
             lines.append("")
         for _obj, slug, title, body in tabs:
             label, apa_title = apa_label(slug)
-            lines.append(f"- **{label}.** [*{apa_title}*](../tables/{slug}.md) — {title} {body}")
+            claim = title.rstrip()
+            if claim and claim[-1] not in ".!?:":
+                claim += "."
+            lines.append(f"- **{label}.** [*{apa_title}*](../tables/{slug}.md) — {claim} {body}")
         lines.append("")
     (FIGDIR / "README.md").write_text("\n".join(lines), encoding="utf-8")
     print(f"  idx  reports/figures/README.md  ({len(figures())} figures, {len(tables())} tables)")

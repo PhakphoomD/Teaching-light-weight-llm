@@ -1,6 +1,6 @@
 """CLI for the RAG index builder (T3.2).
 
-Reproducible single command (§0.3), tlw python only (§0.5):
+Reproducible single command (§0.3), with the `tlw` environment active:
 
   python -m tools.rag.cli \
     --source  data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl \

@@ -5,7 +5,7 @@
 #   conda env create -f environment.yml
 #   conda activate tlw
 
-name: tlw # tlp = teaching light weight LLM
+name: tlw # tlw = Teaching Lightweight LLMs
 channels:
   - pytorch
   - nvidia

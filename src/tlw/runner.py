@@ -7,8 +7,8 @@ client/memory/preset/judge/arm from a config and wires them together; every
 block is imported only through its registry (registries.py) or `build_client`
 (src/providers/factory.py) — never constructed by hand, never hardcoded.
 
-Usage (tlw python only, §0.5):
-    & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" run.py \\
+Usage (with the `tlw` conda environment active):
+    python run.py \\
         --config experiments/trackA_p2_armC_diabetes.yml [--data <jsonl>] [--limit N]
 
 Outputs land under `runs/<run_id>/` (repo-root `runs/`, NOT `logs/experiments/`

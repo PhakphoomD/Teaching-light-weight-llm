@@ -7,7 +7,7 @@
 # built, because the headline settled the question without it).
 #
 # Run:
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/pilots/teaching-loop-teacher-feedback-7b.yml
+#   python run.py --config experiments/pilots/teaching-loop-teacher-feedback-7b.yml
 
 params:
   arm: C

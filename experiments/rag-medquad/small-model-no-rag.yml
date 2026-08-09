@@ -17,7 +17,7 @@
 # params.seed supplied per invocation via EXPERIMENT_PARAMS_SEED (all 3 seeds
 # {13,42,123} from this one file). Run on the heldout 125 (never --data train):
 #   $env:EXPERIMENT_PARAMS_SEED = "42"
-#   & "C:\Users\ham25\.conda\envs\tlw\python.exe" run.py --config experiments/rag-medquad/small-model-no-rag.yml `
+#   python run.py --config experiments/rag-medquad/small-model-no-rag.yml `
 #     --judge-fallback local:llama3.1:8b
 
 student:

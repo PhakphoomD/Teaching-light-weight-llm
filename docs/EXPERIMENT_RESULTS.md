@@ -21,8 +21,8 @@ path. Nine interventions were measured; **two worked**. Iterative self-refinemen
 model already knew the domain and **+0.152 [+0.092, +0.213]** where it did not, and the difference
 is attributable, within a single run, to whether the retrieved text contained the answer. The
 largest single gain was not planned: changing *which part* of a correctly retrieved document reached
-the prompt was worth **+0.130 [+0.072, +0.188]** at no inference cost, five times the effect of a
-better retriever. Fine-tuning on reference answers cost **−0.292 [−0.360, −0.224]**.
+the prompt was worth **+0.130 [+0.072, +0.188]**, five times the effect of a better retriever and
+without an extra model call. Fine-tuning on reference answers cost **−0.292 [−0.360, −0.224]**.
 
 An earlier version of this project reported a rise from 25% to 83%, and 100% with a memory of
 reference answers. Those results are retracted here, and the retraction is reported as a result:
@@ -442,7 +442,7 @@ Six mechanisms hold that line, each structural rather than procedural:
 
 | | |
 |---|---|
-| **1** | `assert_gt_free` inspects the whole prompt before every model call and **aborts the run** rather than logging a warning |
+| **1** | `assert_gt_free` inspects every prompt on the framework's answering path — the arm shown the reference, and every retrieval run — before the model is called, and **aborts the run** rather than logging a warning. The WixQA study answers outside this path and is sealed by seal #7 instead |
 | **2** | the memory tripwire in §5.3 — three independent checks, red-teamed at 100% rejection |
 | **3** | the two leaking prompt templates are quarantined by name at load (§5.4) |
 | **4** | the entire legacy implementation was deleted, so there is no configuration flag left to flip |
@@ -992,8 +992,10 @@ Holding retrieval byte-identical and changing only which text reached the prompt
 
 **pass rate 0.340 → 0.470, +0.130 [+0.072, +0.188], p = 3.5×10⁻⁸.**
 
-Five times the retriever's effect, at zero inference cost. Answers also got *shorter* — 152 to 144
-words — so this is better selection of facts, not more text. And the supposed "0.400 model ceiling"
+Five times the retriever's effect, and it buys no extra model call — but it is not free. The mean
+grounding block grows from 2,640 to 6,175 characters ([`context-window-coverage.json`](../reports/rag-wixqa/context-window-coverage.json)), roughly
+2.3 times the context the model must read on every question. Answers nonetheless got *shorter* —
+152 to 144 words — so this is better selection of facts, not more text. And the supposed "0.400 model ceiling"
 rose to 0.534, so it was never a model ceiling.
 
 This is the exploratory finding flagged in §2.1. It was not what the study was designed to measure.
@@ -1195,8 +1197,9 @@ bootstrap over questions [[27](#references)].
    this report and it predicts whether retrieval can pay at all. 0.821 versus 0.163 is the whole
    difference between a null and +0.152.
 2. **Spend the first effort on delivery, not the retriever.** Which text reaches the prompt was worth
-   five times a better retriever here, at no inference cost. Ground on the passage the retriever
-   matched, not the top of the document.
+   five times a better retriever here, and it needs no extra model call — only a larger grounding
+   block (2,640 → 6,175 characters), which is the cheapest currency you have. Ground on the passage
+   the retriever matched, not the top of the document.
 3. **Do not ship always-on self-refinement.** Roughly three times the inference cost for no measurable
    gain, and it damages answers that were already correct.
 4. **Do not fine-tune on reference answers to add knowledge.** It transfers style, and the style may
@@ -1213,9 +1216,18 @@ bootstrap over questions [[27](#references)].
 
 ## 10. Limitations
 
-- **The judge failed its calibration probe** and no better independent option was available within the
-  constraints. Comparisons between arms use one fixed judge and remain valid; absolute levels carry
-  less weight than the differences.
+- **Two different judges scored this report, and neither is calibrated.** The MedQuAD studies use a
+  *blind* judge that sees only the question and the answer; both candidates for that role failed
+  their calibration probe (**Table 17**,
+  [*Judge Calibration Probes*](../reports/tables/tab-17-judge-calibration-probes.md)), and no better
+  independent option existed within the free-tier constraints, so the pass bar was raised instead
+  and one judge was held fixed across every arm. The WixQA studies use a second, *reference-comparing*
+  judge ([`scripts/wixqa/judge.py`](../scripts/wixqa/judge.py) with the rubric in
+  [`src/tlw/wixqa/prompts.py`](../src/tlw/wixqa/prompts.py)), which is a different prompt in a
+  different mode and **was never probed at all** — it inherits none of the blind judge's evidence.
+  Comparisons *within* a testbed use one fixed judge throughout and remain valid on that basis;
+  absolute pass rates carry less weight than the differences, and a pass rate from one testbed should
+  not be read against a pass rate from the other.
 - **One seed for Study 6.** A pre-registered stop rule ended it when the pilot came back flat, so those
   numbers are directional and labelled as such everywhere.
 - **The three rescue attempts in Study 2 are single-seed** and shown in a lighter colour for that
@@ -1278,7 +1290,7 @@ to verify before it destroyed.
 
 Decisions were made in a planning conversation and executed separately, with each durable decision
 written into an append-only log before the work that depended on it. That log is
-[Table 20](../reports/tables/tab-20-decision-log.md) — thirty-five entries, each with its date and
+[Table 20](../reports/tables/tab-20-decision-log.md) — thirty-six entries, each with its date and
 status. An accepted entry is never edited; it is superseded by a later one that says why. So a
 contradiction between two entries is a record of a mind changed by evidence, not an inconsistency.
 
@@ -1398,7 +1410,7 @@ step and a hosted judge for another; nothing in this report does.
 | **C** | [Figures](../reports/figures/README.md) — all 17 with their captions |
 | **D** | [Tables](../reports/tables/) — all 21, every measured value including the nulls |
 | **E** | [Evidence](../reports/README.md) — the committed analysis outputs behind every number |
-| **F** | [Decision log](../.claude/rules/decisions.md) — all thirty-five, in full |
+| **F** | [Decision log](../.claude/rules/decisions.md) — all thirty-six, in full |
 | **G** | [The retired write-up](archive/PROJECT_OVERVIEW_AND_RESULTS.md), with a banner naming each false claim · [the original design rationale, recovered verbatim](archive/v1-notebook-narrative.md) |
 
 ---

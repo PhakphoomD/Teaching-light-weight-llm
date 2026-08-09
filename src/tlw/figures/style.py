@@ -30,6 +30,13 @@ from typing import Callable, Dict, Iterator, List, Tuple
 import matplotlib
 
 matplotlib.use("Agg")
+
+# Two knobs that make a re-run byte-identical rather than merely equivalent: a
+# fixed salt for the element ids matplotlib generates in SVG output, and no
+# creation timestamp in the metadata. Without them every regeneration shows as a
+# diff in all 34 SVGs even when no number moved, which buries the changes that
+# do matter.
+matplotlib.rcParams["svg.hashsalt"] = "tlw-figures"
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -175,10 +182,29 @@ def render(build: Callable[[], "plt.Figure"], slug: str, objective: str, title: 
             fig = build()
             suffix = "" if name == "light" else "-dark"
             for ext in ("png", "svg"):
-                fig.savefig(FIGDIR / f"{slug}{suffix}.{ext}", bbox_inches="tight")
+                # Date: None drops the creation timestamp SVG would otherwise stamp
+                # in; with the fixed hashsalt above, a re-run that changes nothing
+                # produces no diff.
+                fig.savefig(
+                    FIGDIR / f"{slug}{suffix}.{ext}",
+                    bbox_inches="tight",
+                    metadata={"Date": None} if ext == "svg" else None,
+                )
             plt.close(fig)
     _figures.append((objective, slug, title, body))
     print(f"  fig  {slug}")
+
+
+def note_line(title: str, body: str) -> str:
+    """Join a caption's claim and its provenance into one APA *Note* sentence.
+
+    Callers write the claim as a sentence fragment or as a full sentence
+    interchangeably, so the terminal punctuation is added here rather than
+    depended on at every call site."""
+    claim = title.strip()
+    if claim and claim[-1] not in ".!?:":
+        claim += "."
+    return f"*Note.* {claim} {body.strip()}"
 
 
 def write_table(slug: str, objective: str, title: str, body: str, markdown: str) -> None:
@@ -187,7 +213,7 @@ def write_table(slug: str, objective: str, title: str, body: str, markdown: str)
     TABDIR.mkdir(parents=True, exist_ok=True)
     label, apa_title = apa_label(slug)
     header = f"**{label}**\n\n*{apa_title}*\n\n"
-    note = f"\n\n*Note.* {title} {body}\n"
+    note = "\n\n" + note_line(title, body) + "\n"
     (TABDIR / f"{slug}.md").write_text(header + markdown.rstrip() + note, encoding="utf-8")
     _tables.append((objective, slug, title, body))
     print(f"  tbl  {slug}")

@@ -23,7 +23,7 @@ T2.1/ops-engineer, the ProviderRegistry seam) but blocks a config-driven
 judge from running end-to-end today.
 
 Run (train split only, tlw env):
-  & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" -m src.tlw.evaluation.calibration --n 40
+  python -m src.tlw.evaluation.calibration --n 40
 """
 
 from __future__ import annotations
