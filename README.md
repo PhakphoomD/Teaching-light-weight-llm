@@ -275,7 +275,10 @@ tests/                     mirrors src/ and tools/
 ## Data and licence
 
 The code, documentation, figures and tables are MIT-licensed ([LICENSE](LICENSE)). The datasets keep
-their own terms, and what was changed in each is recorded in [NOTICE.md](NOTICE.md).
+their own terms, and what was changed in each is recorded in [NOTICE.md](NOTICE.md). One of them is
+**non-commercial**: `data/legacy/alpaca_*.jsonl` is Stanford Alpaca under CC BY-NC 4.0. It is kept
+because the retracted November 2025 runs used it and their archived configurations name it, but no
+current result depends on it.
 
 **MedQuAD** — Ben Abacha & Demner-Fushman, *BMC Bioinformatics* 2019, CC BY 4.0. Redistributed here
 in reformatted, cleaned and split form; the changes are itemised in [NOTICE.md](NOTICE.md) as that

@@ -47,6 +47,35 @@ licensing reasons before publication. Those gaps are upstream, not introduced by
 
 ---
 
+## Stanford Alpaca — redistributed in `data/legacy/`, and its terms are the strictest here
+
+**Source.** Taori, R., Gulrajani, I., Zhang, T., Dubois, Y., Li, X., Guestrin, C., Liang, P., &
+Hashimoto, T. B. (2023). *Stanford Alpaca: An Instruction-following LLaMA Model*.
+<https://github.com/tatsu-lab/stanford_alpaca>
+
+**Licence.** Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0). The instruction data was
+generated using OpenAI models and is additionally subject to OpenAI's terms of use. **This is the one
+non-commercial component in this repository**, and it is called out here rather than left in a
+footnote: it does not affect the MIT-licensed code, but it does mean `data/legacy/alpaca_*.jsonl`
+may not be used commercially.
+
+**What is redistributed and why it is still here.** 51,974 of the 52,002 instruction records, plus
+two small samples (`alpaca_20.jsonl`, `alpaca_100.jsonl`). They are *not* used by any current
+experiment — they were the warm-up and general-domain inputs to the original November 2025 runs, and
+the archived configurations under `logs/experiments/phase0/` through `phase3/` name them directly.
+They are kept because deleting the input to a published-then-retracted result would remove the
+evidence a reader needs to check the retraction (§7.0 of the experiment record). They are not
+carried forward: every result in the current study uses MedQuAD or WixQA.
+
+**Changes were made.** Reformatted to one JSON-Lines record per instruction with the fields
+`id` / `question` / `expected_keywords` / `reference`. The instruction text and the response text are
+carried through unedited; `expected_keywords` is an added field holding a few words that also appear
+in the response, used by the original scoring code. The script that produced this conversion did not
+survive the rebuild, so the mapping is described from the files themselves rather than from the code
+that wrote them.
+
+---
+
 ## WixQA — *not* redistributed; fetched on demand
 
 **Source.** Wix.com. WixQA: a multi-dataset benchmark for enterprise retrieval-augmented generation
