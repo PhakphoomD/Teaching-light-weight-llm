@@ -828,6 +828,22 @@ def gold_article_truncation(budget_chars: int = 900) -> Dict[str, float]:
     lengths_by_id = {}
     kb = ROOT / "data" / "external" / "wixqa" / "kb_corpus.jsonl"
     if not kb.is_file():
+        # The knowledge base is third-party data (MIT, 50 MB) that a clone
+        # fetches rather than carries, so this is the one published value that
+        # cannot be recomputed from what the repository ships. The cached
+        # result is committed instead, and is recomputed and overwritten
+        # whenever the corpus is present -- so the two cannot drift apart
+        # silently, and a reader without the corpus still gets the number with
+        # its provenance attached.
+        cached = ROOT / "reports" / "rag-wixqa" / "gold-article-truncation.json"
+        if cached.is_file():
+            payload = json.loads(cached.read_text(encoding="utf-8"))
+            if int(payload.get("budget_chars", -1)) == int(budget_chars):
+                return {k: v for k, v in payload.items() if not k.startswith("_")}
+            raise MissingEvidence(
+                f"cached truncation is for budget_chars={payload.get('budget_chars')}, "
+                f"asked for {budget_chars}; fetch the KB corpus to recompute"
+            )
         raise MissingEvidence(f"missing KB corpus: {kb}")
     for row in _read_jsonl(kb):
         lengths_by_id[row["id"]] = len(row.get("contents") or "")

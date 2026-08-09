@@ -477,9 +477,8 @@ def test_gold_articles_were_mostly_truncated():
     and "the layout moved".
     """
     kb = D.ROOT / "data" / "external" / "wixqa" / "kb_corpus.jsonl"
-    if not (D.ROOT / "data" / "external" / "wixqa").is_dir():
-        pytest.skip("WixQA knowledge base not fetched; run scripts/dataset/fetch_wixqa.py")
-    assert kb.is_file(), f"the WixQA directory exists but {kb.name} is missing — layout moved?"
+    if (D.ROOT / "data" / "external" / "wixqa").is_dir():
+        assert kb.is_file(), f"the WixQA directory exists but {kb.name} is missing — layout moved?"
 
     trunc = D.gold_article_truncation()
     assert trunc["n_articles"] == 177

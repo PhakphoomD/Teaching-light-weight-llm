@@ -1,0 +1,8 @@
+{
+  "median_chars": 3555,
+  "share_truncated": 0.9265536723163842,
+  "n_articles": 177,
+  "budget_chars": 900,
+  "_note": "Derived from the WixQA knowledge base, which is third-party data (MIT, 50 MB) that a clone fetches rather than carries. Cached here so the figure that uses it stays reproducible without it; recomputed live whenever the corpus is present. Regenerate: python scripts/export_analysis_rows.py --wixqa-truncation",
+  "_source": "data/external/wixqa/kb_corpus.jsonl + runs/rag-wixqa/retrieval_log*.jsonl"
+}
