@@ -28,7 +28,7 @@ planning/SSOT → **project-coordinator** · structure audit → **housekeeping*
 dispatches a fixer only when explicitly asked.
 
 ## Renovation phase (ADR-015) — task ownership
-Current work is the renovation plan (`docs/plan/`, `todo.md`): Track A honest ablation → Track B
+The renovation is complete (`todo.md` is the dated log): Track A honest ablation → Track B
 product. P2 owners: config loader/registries T2.1–T2.2 → **ops-engineer**/**codebase-steward**;
 eval block T2.3 → **qa-engineer**+**prompt-engineer**; loop block T2.4 → **codebase-steward**+
 **prompt-engineer**; memory block T2.5 → **data-engineer**; runner + runs T2.6–T2.7 →

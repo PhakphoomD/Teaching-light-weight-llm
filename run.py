@@ -1,22 +1,24 @@
-"""Track-A entrypoint (T2.6) — the single command the user asked for.
+"""The entrypoint: one command runs one experiment, described by one file.
 
-"เรา run ไฟล์นี้แล้ว เราก็มี setting A(Student) B(teacher) C(preset) D(memory)
-E(parameter)... แค่ไปปรับว่าจะใช้อะไร" (T2.6 Why, docs/plan/T2.6-runner.md).
-Every arm/model/preset/memory/eval choice lives in the config file — nothing
-is hardcoded here or in src/tlw/runner.py.
+Every choice that defines an experiment — which model answers, which critiques,
+which prompt, whether retrieval is attached, the loop parameters and seed, and
+which judge scores it — lives in the config file. Nothing is hardcoded here or
+in src/tlw/runner.py; changing what is measured means editing YAML, not code.
 
-Usage (tlw python ONLY, §0.5 — bare `python` is guard-blocked):
+Usage (the project's conda python only, §0.5 — bare `python` is guard-blocked):
     & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" run.py \\
-        --config experiments/trackA_p2_armC_diabetes.yml
+        --config experiments/teaching-loop/3-teacher-feedback.yml
 
-    # Smoke / dry run (train split only, never held-out — §0.2):
+    # Smoke run — the train split only, never the held-out set (§0.2):
     & "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe" run.py \\
-        --config experiments/trackA_p2_armA_diabetes.yml \\
+        --config experiments/teaching-loop/1-baseline.yml \\
         --data data/clean/Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl \\
         --limit 5
 
-See experiments/README.md for the four arm configs and docs/plan/T2.6-runner.md
-for the dry-run evidence this task produced.
+The seed is the run's identity and comes from the environment
+(`EXPERIMENT_PARAMS_SEED`), so one config file drives all of its seeds. See
+experiments/README.md for the studies and their conditions, and
+docs/EXPERIMENT_RESULTS.md §5.3 for why the design is shaped this way.
 """
 
 import sys

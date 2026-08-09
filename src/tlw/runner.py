@@ -2,7 +2,7 @@
 
 "we run this one file, and settings A(student)/B(teacher)/C(preset)/D(memory)/
 E(params)/F(eval) decide everything; we only edit which one to use" (T2.6
-Why, docs/plan/T2.6-runner.md). This module is the ONLY place that builds a
+Why, docs/EXPERIMENT_RESULTS.md §5.3). This module is the ONLY place that builds a
 client/memory/preset/judge/arm from a config and wires them together; every
 block is imported only through its registry (registries.py) or `build_client`
 (src/providers/factory.py) — never constructed by hand, never hardcoded.

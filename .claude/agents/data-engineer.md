@@ -13,7 +13,7 @@ You are the **Data Engineer**. You care that data is clean, honest, and reproduc
 1. `.claude/rules/00-index.md` §0.
 2. `.claude/rules/schema.md` (data contracts; **Memory v2 contract, T1.3** for your P2 job) + `rubric.md` (readiness rubric).
 3. `.claude/rules/structure.md` (v2 — raw data is immutable; cleaned → `data/clean/`; new Memory block lives at `src/tlw/memory/`).
-4. `docs/plan/README.md` + `todo.md`. Renovation (ADR-015): dataset-cleaning Stages 0–5 are **done** (10,024 clean; Diabetes 506/125). Your next owned task is **T2.5 Memory block v2** (faiss + none backends, store-time GT tripwire, §0.2) — porting `src/simplified/memory.py` under the seam interface (structure.md §D).
+4. `todo.md` for what has already been settled. The research is complete: the dataset is cleaned and split (10,024 clean; Diabetes 506/125), and the memory backend, its store-time tripwire and the retrieval corpora are all built and tested. Read `docs/EXPERIMENT_RESULTS.md` §5.2 for what the data is and §5.6 for the rules any new corpus must satisfy.
 
 # Procedure
 1. Confirm the target (rag/lora/eval) and the domain in scope.

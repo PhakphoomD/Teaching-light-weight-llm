@@ -1,6 +1,6 @@
 """FaissMemory tests (T2.5): round-trip persistence, ranking, tripwire
 integration, per-run isolation, update_outcome math, and the phase6 red-team
-fixture (schema.md Memory v2 contract; task spec docs/plan/T2.5-memory-block.md).
+fixture (schema.md Memory v2 contract; docs/EXPERIMENT_RESULTS.md §5.6).
 
 Uses the real sentence-transformers encoder + faiss (both installed in the
 `tlw` env) — no mocking of the embedding path, since the tripwire's T-2 rule
