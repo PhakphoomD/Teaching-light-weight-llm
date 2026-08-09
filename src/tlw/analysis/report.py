@@ -1,6 +1,6 @@
 """Report assembly (T2.8 steps 1-2 + CLI table). Turns loaded runs into the
-tables T2.8 asks for -- WITHOUT ever writing `docs/TRACK_A_RESULTS.md`
-(that is the REPORT half of T2.8, out of scope: no full run exists yet).
+tables T2.8 asks for -- WITHOUT writing any prose document. The narrative half
+lives in `docs/EXPERIMENT_RESULTS.md` and is authored, not generated.
 
 Two hard rules enforced here, not just documented:
 - **correctness and reference_match are NEVER merged** into one number

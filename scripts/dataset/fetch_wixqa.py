@@ -2,7 +2,7 @@
 
 The 52 MB corpus is third-party data (Wix/WixQA on HuggingFace, MIT licence). It is
 gitignored, so a clone has to be able to re-acquire it — otherwise every WixQA number
-in docs/WIXQA_RESULTS.md is unreproducible from a fresh checkout. That is what this
+in docs/EXPERIMENT_RESULTS.md §7.4-7.6 is unreproducible from a fresh checkout. That is what this
 script exists for.
 
   python scripts/dataset/fetch_wixqa.py

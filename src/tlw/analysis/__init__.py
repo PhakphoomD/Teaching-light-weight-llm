@@ -8,7 +8,7 @@ descriptive Wilson intervals per arm (teaching-loop-protocol.md §4.2/§4.3) —
 written by `src/tlw/runner.py`.
 
 It is a REUSABLE, TESTED block, not a throwaway notebook (T2.8 step 1). It
-does NOT write `docs/TRACK_A_RESULTS.md` — that is the REPORT half of T2.8,
+does NOT write `docs/EXPERIMENT_RESULTS.md §7.1` — that is the REPORT half of T2.8,
 out of scope here because the full Track-A run has not happened yet (§0.1:
 no results doc before real data). Only synthetic fixtures and the n=5
 dry-run artifacts under `runs/trackA_p2_arm{A,C}_diabetes__seed42__*` back

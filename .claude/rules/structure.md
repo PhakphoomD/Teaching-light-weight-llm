@@ -113,13 +113,15 @@ Teaching-light-weight-llm-based-project/
 │   ├── figures/               fig-NN-<testbed>-<what>.{png,svg}, light and dark
 │   └── tables/                tab-NN-<testbed>-<what>.md — every value, APA-labelled
 │
-├── docs/
-│   ├── README.md              "start here" index
-│   ├── EXPERIMENT_RESULTS.md  the full record — objectives, decisions, every measurement (ADR-036)
-│   ├── TRACK_A_RESULTS.md · RAG_RESULTS.md · WIXQA_RESULTS.md · PRODUCT_RESULTS.md
-│   ├── RAG_RELIABILITY_ANALYSIS.md
-│   ├── LEAKAGE_AUDIT.md       the eighteen paths and the six seals (was audit/LEAKAGE_CENSUS.md)
-│   ├── plan/                  working notes — task specs and design docs, kept local, not published
+├── docs/                      exactly three published documents, plus two directories
+│   ├── README.md              "start here" index — routing only, carries no measured value
+│   ├── EXPERIMENT_RESULTS.md  THE report: purpose · objectives · method · Studies 0-7 ·
+│   │                          discussion · limitations. The five per-study reports were
+│   │                          merged into its §7 (ADR-037); nothing else states a headline
+│   ├── LEAKAGE_AUDIT.md       appendix A — the eighteen paths and the six seals
+│   ├── protocol/              appendix B — what was fixed before each study ran, dated;
+│   │                          bodies never edited, README.md is the register
+│   ├── plan/                  working notes — untracked by design, recoverable at a stated sha
 │   └── archive/               SUPERSEDED docs, each with a banner saying what was wrong
 │                              (incl. RAG_LAW.md, superseded by EXPERIMENT_RESULTS.md — ADR-036,
 │                               and v1-notebook-narrative.md recovered from the deleted notebook)

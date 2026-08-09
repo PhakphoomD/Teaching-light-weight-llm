@@ -257,3 +257,7 @@ src/simplified/legacy/
 
 # API keys and secrets
 .env
+
+# Working notes: task specifications and design notes written before each piece of work.
+# Substance absorbed into docs/EXPERIMENT_RESULTS.md; full text at commit 64a39cc372a3.
+/docs/plan/

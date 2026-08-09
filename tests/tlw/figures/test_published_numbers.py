@@ -32,7 +32,7 @@ TOLERANCE = 0.0015  # published values are quoted to three decimals
 
 
 # --------------------------------------------------------------------------
-# O1 -- the teaching loop (docs/TRACK_A_RESULTS.md)
+# O1 -- the teaching loop (docs/EXPERIMENT_RESULTS.md §7.1)
 # --------------------------------------------------------------------------
 
 
@@ -68,7 +68,7 @@ def test_self_refinement_is_a_real_gain():
 
 
 # --------------------------------------------------------------------------
-# O3 -- retrieval on a known domain (docs/RAG_RESULTS.md)
+# O3 -- retrieval on a known domain (docs/EXPERIMENT_RESULTS.md §7.2)
 # --------------------------------------------------------------------------
 
 
@@ -98,7 +98,7 @@ def test_the_null_is_two_effects_cancelling():
 
 
 # --------------------------------------------------------------------------
-# O4/O5 -- WixQA (docs/WIXQA_RESULTS.md)
+# O4/O5 -- WixQA (docs/EXPERIMENT_RESULTS.md §7.4-7.6)
 # --------------------------------------------------------------------------
 
 
@@ -364,7 +364,7 @@ def test_chunking_beats_a_better_encoder():
 
 
 def test_selective_retrieval_oracle_matches_the_report():
-    """docs/RAG_RESULTS.md publishes 0.920, an oracle gating each attempt."""
+    """docs/EXPERIMENT_RESULTS.md §7.2 publishes 0.920, an oracle gating each attempt."""
     oracle = D.selective_oracle("rag-medquad", "small-model-with-rag", "small-model-no-rag")
     assert oracle["gate per attempt (the absolute ceiling)"] == pytest.approx(0.920, abs=TOLERANCE)
     assert oracle["baseline"] == pytest.approx(0.821, abs=TOLERANCE)

@@ -1388,7 +1388,7 @@ def fig_lora() -> None:
         "the pass bar requires. Training itself was healthy (loss 1.98 -> 0.99 "
         "over two epochs on an 8GB laptop GPU); the objective it was trained on and the objective it "
         "was scored on were simply not the same. Sources: "
-        "reports/lora-medquad/fine-tuned-vs-original.json, docs/PRODUCT_RESULTS.md.",
+        "reports/lora-medquad/fine-tuned-vs-original.json, docs/EXPERIMENT_RESULTS.md §7.7.",
     )
 
 
@@ -1417,7 +1417,7 @@ def tab_lora() -> None:
                 ["token accuracy", "0.59 -> 0.75"],
                 ["answer length change", "roughly 30-45% shorter — on four sampled questions the "
                  "base model's 178, 158, 152 and 174 words became 95, 26, 122 and 141 "
-                 "*(quoted from docs/PRODUCT_RESULTS.md; the per-question answers were not "
+                 "*(quoted from docs/EXPERIMENT_RESULTS.md §7.7; the per-question answers were not "
                  "committed, so this row is cited rather than recomputed)*"],
             ],
         ),
@@ -1544,7 +1544,7 @@ def tab_predictions() -> None:
         "which is the argument for running the controlled comparison. One prediction, built as an "
         "explicit mixture of two measured conditional rates, landed within 0.003 of the outcome, and "
         "that accuracy is stronger evidence for the mechanism than the size of any single effect. "
-        "Sources: docs/WIXQA_RESULTS.md, docs/EXPERIMENT_RESULTS.md §10.",
+        "Sources: docs/EXPERIMENT_RESULTS.md §7.4-7.6, docs/EXPERIMENT_RESULTS.md §10.",
         table(["what was predicted", "prediction", "outcome", "verdict"], rows),
     )
 
@@ -1653,7 +1653,7 @@ def tab_reproducibility() -> None:
         "Two entries are worth reading as results rather than process: the judge calibration probe "
         "failed and the response was to change the protocol rather than tune the probe until it "
         "passed, and the leakage guard fired on a real run and aborted it. Sources: "
-        "docs/TRACK_A_RESULTS.md, docs/EXPERIMENT_RESULTS.md §5, .claude/rules/00-index.md §0.",
+        "docs/EXPERIMENT_RESULTS.md §7.1, docs/EXPERIMENT_RESULTS.md §5, .claude/rules/00-index.md §0.",
         table(["", ""], rows)
         + "\n\n### And the ones that caught something\n\n"
         + f"A guardrail nobody has ever tripped is untested. These are the {len(broke)} that fired, "

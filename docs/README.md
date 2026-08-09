@@ -1,46 +1,35 @@
-# Documentation index — start here
+# Documentation
 
-This project asked a simple question: **what actually makes a small local LLM better at one domain,
-and what only looks like it does?** Everything below is the answer, measured on held-out data with
-confidence intervals, on a codebase rebuilt so that its own evaluation cannot leak the answer key.
+This project asked one question: **what actually makes a small local language model better at one
+domain, and what only looks like it does?**
 
-## Read in this order
+There is one document that answers it, and everything else supports that document. No file in this
+directory other than the report states a headline number, so there is nowhere for a number to drift
+to.
 
-| # | Document | What it gives you | Time |
-|---|---|---|---|
-| 1 | **[EXPERIMENT_RESULTS.md](EXPERIMENT_RESULTS.md)** | **The whole result in one place.** The law, the evidence chain, product implications, limitations, and every number with its source. | ~10 min |
-| 2 | [TRACK_A_RESULTS.md](TRACK_A_RESULTS.md) | Does the teaching loop work? Self-refinement **+0.091**; an independent teacher **+0.003 (nothing)**. | ~5 min |
-| 3 | [WIXQA_RESULTS.md](WIXQA_RESULTS.md) | RAG where the model genuinely lacks the knowledge: **+0.152**, the dose-response proof, the grounding-delivery finding (**+0.130**), and Loop+RAG. | ~10 min |
-| 4 | [RAG_RESULTS.md](RAG_RESULTS.md) | RAG where the model already knows the domain: **no effect** (−0.005), and why that null is structural. | ~5 min |
-| 5 | [PRODUCT_RESULTS.md](PRODUCT_RESULTS.md) | LoRA fine-tuning on reference answers: **−0.292**, it hurts — and exactly why. | ~4 min |
-| 6 | [RAG_RELIABILITY_ANALYSIS.md](RAG_RELIABILITY_ANALYSIS.md) | Does RAG help *reliability* on the hard tail, rather than the average? | ~4 min |
-| 7 | [LEAKAGE_AUDIT.md](LEAKAGE_AUDIT.md) | How the answer key reached the student in the original system — all eighteen paths, why 70% of its score was resemblance rather than correctness, and the six mechanisms that closed them. | ~7 min |
+| | | |
+|---|---|---|
+| **[EXPERIMENT_RESULTS.md](EXPERIMENT_RESULTS.md)** | **The report.** Purpose, objectives and the rules fixed before each run, method, eight studies, discussion, limitations. | ~35 min |
+| [LEAKAGE_AUDIT.md](LEAKAGE_AUDIT.md) | *Appendix A.* How the reference answer reached the model in the original system — eighteen paths — and the six mechanisms that closed them. | ~7 min |
+| [protocol/](protocol/README.md) | *Appendix B.* What was decided before each study ran, dated, with a register stating what those dates can and cannot prove. | browse |
+| [archive/](archive/) | Superseded documents, each with a banner naming what was wrong in it and which decision corrects it. Kept deliberately: the correction is part of the record. | browse |
+| `plan/` | Working notes — the task specifications written before each piece of work. Not published; recoverable from version control at the commit named in the report's §12.4. | — |
 
-## If you only read one thing
+## Where the evidence is
 
-[**EXPERIMENT_RESULTS.md**](EXPERIMENT_RESULTS.md). It states the finding — *RAG helps only when the retrieved text actually
-contains the answer, and the biggest lever turned out to be how that text is delivered into the
-prompt, not which retriever produced it* — and backs every claim with a number, a CI and a log.
-
-## Where the evidence lives
-
-- **`reports/`** — the committed, human-readable outputs behind the numbers (scores, analysis
-  printouts). Start at [`reports/README.md`](../reports/README.md).
+- **[`reports/`](../reports/README.md)** — the committed analysis outputs behind every number, one
+  directory per study, each carrying the command that regenerates it. Also
+  [17 figures](../reports/figures/README.md) and
+  [21 tables](../reports/tables/).
 - **`runs/`** — raw run artifacts, grouped by the question each study answers. Gitignored except the
   small evidence files; every one is rebuildable from a config and a seed.
 
-## Other directories here
-
-| Path | What it is |
-|---|---|
-| `plan/` | The task specifications and design documents written before each piece of work was run. Most are instructions to an executor and are of no use to a reader, but not all: several are cited by the reports above as the protocol that was fixed before a run, and five are cited as evidence inside Accepted decisions in the ADR log. How this directory is split is being settled; until then it is published whole rather than pruned on an assumption. |
-| `archive/` | Superseded documents, kept with a banner explaining what was wrong and which ADR corrected it. Retained deliberately — the correction is part of the honest record. |
-
 ## The rules everything here follows
 
-Decisions live in `.claude/rules/decisions.md` (ADR log) and the constitution in
-`.claude/rules/00-index.md`. The two that shape these documents most:
+Decisions live in [`.claude/rules/decisions.md`](../.claude/rules/decisions.md) and the constitution
+in [`.claude/rules/00-index.md`](../.claude/rules/00-index.md). Two of them shape these documents
+more than the rest:
 
-- **§0.1 Honesty over optics** — every reported number must match its source log. Negative results are
+- **Honesty over optics** — every reported number must match its source log. Negative results are
   reported as plainly as positive ones, and most of the findings here are negative.
-- **§0.4 Evidence-backed** — a claim cites a file, a line, or a command that was actually run.
+- **Evidence-backed** — a claim cites a file, a line, or a command that was actually run.

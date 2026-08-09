@@ -1,6 +1,6 @@
-"""Stratified RAG reliability analysis (no selection bias) — RAG_RELIABILITY_ANALYSIS.md §6.
+"""Stratified RAG reliability analysis (no selection bias) — docs/EXPERIMENT_RESULTS.md §7.3.
 
-Reads the full-125 x K-seed sweep (runs_reliability/, both arms). Avoids the
+Reads the full-125 x K-seed sweep (runs/rag-medquad-reliability/, both arms). Avoids the
 regression-to-the-mean trap by a SEED SPLIT: classify each question's baseline
 difficulty on the "classify" seeds, then measure baseline vs RAG reliability on
 the DISJOINT "measure" seeds — so the RAG-lift-vs-difficulty curve is never

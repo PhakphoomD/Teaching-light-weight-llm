@@ -248,17 +248,19 @@ scripts/                   thin drivers; each imports from src/ or tools/
 tools/                     reusable CLI utilities — dataset cleaner, readiness assessor, index builder
 runs/                      experiment artifacts, grouped by the question each study answers
 reports/                   the committed evidence: figures, tables, analysis printouts
-docs/                      EXPERIMENT_RESULTS.md, per-study reports, archive/
+docs/                      the report, the leakage audit, the protocols, archive/
 tests/                     mirrors src/ and tools/
 .claude/rules/             the project's own rules and its full decision log
 ```
 
 | looking for | go to |
 |---|---|
-| the whole story with every number | [docs/EXPERIMENT_RESULTS.md](docs/EXPERIMENT_RESULTS.md) |
+| the whole study with every number | [docs/EXPERIMENT_RESULTS.md](docs/EXPERIMENT_RESULTS.md) |
+| how the answer key used to reach the model | [docs/LEAKAGE_AUDIT.md](docs/LEAKAGE_AUDIT.md) |
+| what was decided before each study ran | [docs/protocol/](docs/protocol/README.md) |
 | every figure with its caption | [reports/figures/README.md](reports/figures/README.md) |
 | every measured value, including the nulls | [reports/tables/](reports/tables/) |
-| per-study protocol and limitations | [docs/](docs/) |
+| the evidence behind a specific number | [reports/README.md](reports/README.md) |
 | why anything is the way it is | [reports/tables/tab-20-decision-log.md](reports/tables/tab-20-decision-log.md) (Table 20) |
 
 ---

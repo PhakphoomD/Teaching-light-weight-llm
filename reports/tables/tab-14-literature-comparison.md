@@ -33,6 +33,8 @@
 | Efron et al. 1993 (ISBN 978-0412042317) | An Introduction to the Bootstrap | the paired cluster bootstrap over questions, 10,000 resamples | applied |
 | Rougier et al. 2014 (doi:10.1371/journal.pcbi.1003833) | Ten Simple Rules for Better Figures | message-first design and self-contained captions in every figure here | applied |
 | Cleveland et al. 1984 (doi:10.2307/2288400) | Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods | why differences are drawn as position on a common scale, never as bars | applied |
+| Appelbaum et al. 2018 (doi:10.1037/amp0000191) | Journal Article Reporting Standards for Quantitative Research in Psychology: The APA Publications and Communications Board Task Force Report | the section structure of the report, the primary/secondary/exploratory grouping of its questions, and the requirement to state registration status plainly | applied |
+| Pineau et al. 2021 (arXiv:2003.12206) | Improving Reproducibility in Machine Learning Research (A Report from the NeurIPS 2019 Reproducibility Program) | seeds and resampling counts, compute and cost, and an artifact index — all reported rather than assumed | applied |
 
 ### References
 
@@ -65,5 +67,7 @@
 27. Efron, B., Tibshirani, R. J. (1993). *An Introduction to the Bootstrap*. Chapman & Hall. ISBN 978-0412042317.
 28. Rougier, N. P., Droettboom, M., Bourne, P. E. (2014). *Ten Simple Rules for Better Figures*. PLOS Computational Biology 10(9). doi:10.1371/journal.pcbi.1003833.
 29. Cleveland, W. S., McGill, R. (1984). *Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods*. JASA 79(387):531-554. doi:10.2307/2288400.
+30. Appelbaum, M., Cooper, H., Kline, R. B., et al. (2018). *Journal Article Reporting Standards for Quantitative Research in Psychology: The APA Publications and Communications Board Task Force Report*. American Psychologist 73(1):3-25. doi:10.1037/amp0000191.
+31. Pineau, J., Vincent-Lamarre, P., Sinha, K., et al. (2021). *Improving Reproducibility in Machine Learning Research (A Report from the NeurIPS 2019 Reproducibility Program)*. JMLR 22(164):1-20. arXiv:2003.12206.
 
 *Note.* Every work this project used or tested, and what happened when it was measured here Most were confirmed. One was not: iterative self-critique is well established at frontier scale and did not transfer to a 3B model on top of retrieval — which is itself consistent with the self-correction literature, since that predicts precisely this failure when the model must supply its own correctness signal. Rows marked *applied* are methods or frameworks this project adopted rather than tested, and rows marked *used* are components and datasets. The numbered list below is the full bibliography, and it is the single source for the references in `docs/EXPERIMENT_RESULTS.md` — a test asserts every work named in that report appears here.

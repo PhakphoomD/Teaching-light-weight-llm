@@ -11,13 +11,13 @@ That split is deliberate: track what a reader must check, ignore what a command 
 
 | Study | The question it answers | Headline | Written up in |
 |---|---|---|---|
-| `teaching-loop-medquad/` | Does an iterative teacher–student loop make a small model better? | Self-refinement **+0.091**; independent teacher **+0.003 (nothing)** | [TRACK_A_RESULTS](../docs/TRACK_A_RESULTS.md) |
-| `rag-medquad/` | Does RAG help when the model *already knows* the domain? | **−0.005 — no effect**; it significantly *hurts* the larger model (−0.069) | [RAG_RESULTS](../docs/RAG_RESULTS.md) |
-| `rag-medquad-fair-tests/` | Is that null just a bad retriever or too small a corpus? | No — a better reranker and a 24× corpus both fail. The null is structural. | [RAG_RESULTS](../docs/RAG_RESULTS.md) |
-| `rag-medquad-reliability/` | Does RAG help *reliability* on hard questions, not the average? | Baseline pass@5 **exceeds** RAG's — RAG trades reliability for recovery | [RAG_RELIABILITY_ANALYSIS](../docs/RAG_RELIABILITY_ANALYSIS.md) |
+| `teaching-loop-medquad/` | Does an iterative teacher–student loop make a small model better? | Self-refinement **+0.091**; independent teacher **+0.003 (nothing)** | [report §7.1](../docs/EXPERIMENT_RESULTS.md#71-study-1--does-a-teacher-student-loop-teach-a-small-model) |
+| `rag-medquad/` | Does RAG help when the model *already knows* the domain? | **−0.005 — no effect**; it significantly *hurts* the larger model (−0.069) | [report §7.2](../docs/EXPERIMENT_RESULTS.md#72-study-2--does-retrieval-help-a-model-that-already-knows-the-domain) |
+| `rag-medquad-fair-tests/` | Is that null just a bad retriever or too small a corpus? | No — a better reranker and a 24× corpus both fail. The null is structural. | [report §7.2](../docs/EXPERIMENT_RESULTS.md#72-study-2--does-retrieval-help-a-model-that-already-knows-the-domain) |
+| `rag-medquad-reliability/` | Does RAG help *reliability* on hard questions, not the average? | Baseline pass@5 **exceeds** RAG's — RAG trades reliability for recovery | [report §7.3](../docs/EXPERIMENT_RESULTS.md#73-study-3--does-retrieval-help-reliability-rather-than-the-average) |
 | `student-prompt-medquad/` | Does the student's prompt style matter? | 0.840 vs 0.864, p=0.58 — **no** | ADR-029 |
-| `rag-wixqa/` | Does RAG help when the model genuinely *lacks* the knowledge? | **+0.152**; then **+0.130 more** from fixing how the retrieved text is delivered | [WIXQA_RESULTS](../docs/WIXQA_RESULTS.md) |
-| `lora-medquad/` | Does fine-tuning on reference answers help? | **−0.292 — it hurts** | [PRODUCT_RESULTS](../docs/PRODUCT_RESULTS.md) |
+| `rag-wixqa/` | Does RAG help when the model genuinely *lacks* the knowledge? | **+0.152**; then **+0.130 more** from fixing how the retrieved text is delivered | [report §7.4–7.6](../docs/EXPERIMENT_RESULTS.md#74-study-4--does-retrieval-help-when-the-model-genuinely-lacks-the-knowledge) |
+| `lora-medquad/` | Does fine-tuning on reference answers help? | **−0.292 — it hurts** | [report §7.7](../docs/EXPERIMENT_RESULTS.md#77-study-7--does-fine-tuning-help) |
 | `judge-calibration/` | Is the judge trustworthy enough to measure any of this? | Both candidate judges failed the probe; the response was to raise the bar and hold one judge fixed | ADR-022, T2.3 |
 
 ## Naming
@@ -47,10 +47,9 @@ Each report carries its question and its regeneration command as the first two l
 > **Status.** All eight study directories are populated, and every value in them was recomputed
 > from `runs/` — none was transcribed. Two things a reader should know before using them:
 >
-> - The **reliability** report is the full 125-question × 8-seed sweep. `RAG_RELIABILITY_ANALYSIS.md`
->   was written while that sweep was still running and its headline table is the earlier 5-seed
->   pilot on two selected subsets. The two are not directly comparable — different sets, different
->   metric — and the document has not yet been updated to fold the completed sweep in.
+> - The **reliability** report is the full 125-question × 8-seed sweep, which measures a different
+>   set with a different metric from the five-seed pilot the report also cites. Both are reported;
+>   they are not merged, and §7.3 says which is which.
 > - The **fair-tests** report deliberately keeps its two variants apart. Pooling them would average
 >   a reranker test with a corpus-size test, which answer different questions.
 

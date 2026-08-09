@@ -970,7 +970,7 @@ def selective_oracle(study: str, cond_treatment: str, cond_baseline: str) -> Dic
 
     - *per attempt* takes the better of the two outcomes on every single
       attempt. It is the absolute ceiling and the figure published in
-      `docs/RAG_RESULTS.md`, and it assumes a gate that can see the future of
+      `docs/EXPERIMENT_RESULTS.md §7.2`, and it assumes a gate that can see the future of
       one specific generation.
     - *per question* decides once per question, from whether the baseline ever
       struggled with it across seeds. Still not implementable, but far closer
@@ -1291,6 +1291,20 @@ LITERATURE: List[Dict[str, str]] = [
                "of Graphical Methods",
          venue="JASA 79(387):531-554", id="doi:10.2307/2288400", role="presentation",
          tested="why differences are drawn as position on a common scale, never as bars",
+         verdict="applied"),
+    dict(key="appelbaum2018", authors="Appelbaum, M., Cooper, H., Kline, R. B., et al.", year="2018",
+         title="Journal Article Reporting Standards for Quantitative Research in Psychology: The APA "
+               "Publications and Communications Board Task Force Report",
+         venue="American Psychologist 73(1):3-25", id="doi:10.1037/amp0000191", role="reporting",
+         tested="the section structure of the report, the primary/secondary/exploratory grouping of "
+                "its questions, and the requirement to state registration status plainly",
+         verdict="applied"),
+    dict(key="pineau2021", authors="Pineau, J., Vincent-Lamarre, P., Sinha, K., et al.", year="2021",
+         title="Improving Reproducibility in Machine Learning Research (A Report from the NeurIPS "
+               "2019 Reproducibility Program)",
+         venue="JMLR 22(164):1-20", id="arXiv:2003.12206", role="reporting",
+         tested="seeds and resampling counts, compute and cost, and an artifact index — all reported "
+                "rather than assumed",
          verdict="applied"),
 ]
 

@@ -1,7 +1,7 @@
 """The exact prompts and decoding settings of the WixQA study.
 
 **These are controlled variables, not defaults.** Every WixQA number published in
-`docs/WIXQA_RESULTS.md` and `docs/RAG_LAW.md` was produced with these strings and
+`docs/EXPERIMENT_RESULTS.md §7.4-7.6` and `docs/RAG_LAW.md` was produced with these strings and
 these values; the only variable that ever changed across those runs was the one
 the experiment was testing (the seed, the retriever, or the grounding window).
 Editing anything here retroactively invalidates the comparison between runs.

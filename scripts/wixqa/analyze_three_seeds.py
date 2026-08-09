@@ -2,7 +2,7 @@
 
 Pools seeds {13,42,123} for both arms and reuses the PRE-REGISTERED statistics
 machinery (src/tlw/analysis/stats.py: paired_cluster_bootstrap + exact_mcnemar +
-wilson_interval) that produced the Track-A / RAG_RESULTS headline numbers.
+wilson_interval) that produced the Track-A / the experiment report §7.2 headline numbers.
 
 Seed 42 = the ADR-030 published draw (runs/rag-wixqa/{baseline_norag,rag_top3}.jsonl,
 already judged — exact continuity with the +13pt result). Seeds 13 & 123 =
