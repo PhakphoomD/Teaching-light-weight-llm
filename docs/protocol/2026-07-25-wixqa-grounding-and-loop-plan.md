@@ -3,8 +3,9 @@
 > **Amendment, 2026-08-09 — this document is not purely pre-run, and the reader should know which
 > parts are which.**
 >
-> Written before the runs: §1–§5 and §7, including the predictions in §5 (two of which came out
-> wrong, published as wrong in [Table 16](../../reports/tables/tab-16-predictions-vs-outcomes.md)),
+> Written before the runs: §1–§5 and §7, including the six numeric predictions in §5 — **five of
+> which landed outside their stated range**, all six now scored against the runs in
+> [Table 16](../../reports/tables/tab-16-predictions-vs-outcomes.md) —
 > and **§6, the decision rules — which fired and stopped the three-seed run.**
 >
 > Appended after the corresponding step ran, and labelled as such where it appears: the Stage-1

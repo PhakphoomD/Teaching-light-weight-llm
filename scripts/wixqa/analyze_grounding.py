@@ -24,16 +24,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from src.tlw.analysis.stats import paired_cluster_bootstrap, exact_mcnemar, wilson_interval
-
-STOP = set(
-    "a an the is are was were be been being of to in for on with and or as at by from this that these "
-    "those it its you your can will may if not no do does did have has had how what when where which "
-    "who why about into over under more most other some such only own same so than too very s t just".split()
-)
-
-
-def content(t):
-    return set(w for w in re.findall(r"[a-z0-9]+", t.lower()) if w not in STOP and len(w) > 2)
+from src.tlw.wixqa.grounding import content_words as content
 
 
 def load(pattern):

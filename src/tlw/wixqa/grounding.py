@@ -52,6 +52,26 @@ GROUNDINGS: Dict[str, Tuple[int, bool]] = {
 #: What the runs after T3.14 Stage 1 should use.
 DEFAULT_GROUNDING = "chunk2400"
 
+#: Function words excluded when measuring how much of an answer's *content* a
+#: grounding window carries. Recovered verbatim from the pre-T3.18 script that
+#: produced `reports/rag-wixqa/context-window-coverage.json` — the coverage
+#: numbers in the report were computed with exactly this list, so changing it
+#: would change what those numbers mean.
+STOP_WORDS = frozenset(
+    "a an the is are was were be been being of to in for on with and or as at by from this that these "
+    "those it its you your can will may if not no do does did have has had how what when where which "
+    "who why about into over under more most other some such only own same so than too very s t just"
+    .split()
+)
+
+
+def content_words(text: str) -> set:
+    """The content words of `text`, as the published coverage figures define them."""
+    import re
+
+    return {w for w in re.findall(r"[a-z0-9]+", text.lower())
+            if w not in STOP_WORDS and len(w) > 2}
+
 
 def window(article: dict, budget_chars: int, centre_word: Optional[int] = None) -> str:
     """Render the grounding text for ONE article within a character budget.
@@ -95,6 +115,6 @@ def grounding_block(articles, budget_chars: int, offsets=None) -> str:
 
 
 __all__ = [
-    "CHARS_PER_WORD", "GROUNDINGS", "DEFAULT_GROUNDING",
+    "CHARS_PER_WORD", "GROUNDINGS", "DEFAULT_GROUNDING", "STOP_WORDS", "content_words",
     "window", "best_chunk_word_offset", "grounding_block",
 ]

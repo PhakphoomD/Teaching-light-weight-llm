@@ -34,13 +34,14 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from src.tlw.wixqa.retrieval import encode, load_data
-from src.tlw.wixqa.grounding import GROUNDINGS, best_chunk_word_offset, window
+from src.tlw.wixqa.grounding import (GROUNDINGS, STOP_WORDS, best_chunk_word_offset,
+                                     window)
 
 RL = ROOT / "runs/rag-wixqa/retrieval_log_bge_chunk.jsonl"   # the T3.11 retrieval (article ids per question)
 OUT = ROOT / "reports/rag-wixqa"; OUT.mkdir(parents=True, exist_ok=True)
 
 def content(text: str):
-    return set(w for w in re.findall(r"[a-z0-9]+", text.lower()) if w not in STOP and len(w) > 2)
+    return set(w for w in re.findall(r"[a-z0-9]+", text.lower()) if w not in STOP_WORDS and len(w) > 2)
 
 
 

@@ -30,7 +30,7 @@ load_dotenv(ROOT / ".env")
 import src.tlw.providers  # noqa: F401
 from src.providers.factory import build_client
 from src.tlw.wixqa.retrieval import load_data, build_ranked, encode
-from src.tlw.wixqa.grounding import window, best_chunk_word_offset
+from src.tlw.wixqa.grounding import GROUNDINGS, window, best_chunk_word_offset
 from src.tlw.wixqa.prompts import RAG_SYS, TEMPERATURE, MAX_TOKENS
 from src.tlw.wixqa.retrieval import retrieval_record, clear_models
 

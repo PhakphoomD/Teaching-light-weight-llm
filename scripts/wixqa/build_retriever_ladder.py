@@ -11,6 +11,8 @@ applied to retrieval. All the retrieval logic lives in `src.tlw.wixqa.retrieval`
 import argparse, json, os, sys, time
 from pathlib import Path
 
+import numpy as np
+
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
 ROOT = Path(__file__).resolve().parents[2]

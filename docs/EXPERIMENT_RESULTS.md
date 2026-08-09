@@ -496,9 +496,24 @@ is drawn from the interval. Where the two disagree, the interval is what stands.
 on a p-value near a threshold — the effects that are called real have intervals excluding zero by a
 wide margin, and the ones called null have intervals straddling it.
 
-An interval published from an earlier resampling draw can differ in the third decimal from a later
-one. The RNG seed is stated so either can be reproduced, and the difference is resampling noise
-rather than disagreement.
+**The bootstrap is deterministic, and an earlier draft of this section said something false about
+it.** It claimed that a published interval differing in the third decimal from a recomputed one was
+resampling noise. It was not. Both paths run 10,000 resamples from a PCG64 generator seeded at 0 and
+return the same answer every time; the two differed because the generator draws cluster *indices*, so
+the order the questions are laid out in decides which ones each resample picks — and two callers
+keyed the same questions as `"12"` and as `12`, which `sorted()` orders lexically in one case and
+numerically in the other. Identical data, identical seed, two intervals. The point estimate never
+moved, because it does not depend on order, which is exactly why nothing noticed: every check in
+place was on point estimates.
+
+Two published intervals had drifted this way and are corrected: retrieval on the support-documentation
+testbed is **[+0.092, +0.213]** and a better retriever is **[−0.028, +0.080]** — the values the
+commands in §13 now return. The bootstrap orders clusters by `str(key)` regardless of the key's type,
+so the two paths cannot disagree again; the drift test asserts five published intervals as well as
+their point estimates, and asserts directly that the key's type cannot change the answer. This was
+found by an external review, and it is recorded here rather than quietly repaired because the
+mechanism — a check that watched the statistic nobody could break — is more useful than the
+0.002 it cost.
 
 **Pilots are structurally separated from headline runs.** They live one directory level deeper than
 the run discovery function scans, so no analysis command can pool a pilot into a headline result.
@@ -777,9 +792,10 @@ model cannot reliably follow *use-if-relevant-else-ignore-silently*.
   <img alt="Retrieval's repairs and regressions bucketed by how reliably the baseline already answered: all 15 repairs where it never succeeded, all 35 regressions where it always did." src="../reports/figures/fig-08-medquad-rag-outcome-split.png">
 </picture>
 
-Retrieval repaired 37 answers and broke 39, and the two sets barely overlap. Every repair landed on a
-question the model had never once answered correctly; **35 of the 39 regressions** landed on questions
-it had answered correctly in all three seeds. A retrieved passage that is on-topic but answers a
+Retrieval repaired 37 answers and broke 39, and the two sets barely overlap. **Not one repair landed
+on a question the baseline answered correctly in all three seeds**, and 15 of the 37 landed on
+questions it never once answered; in the other direction, **35 of the 39 regressions** landed on
+questions it had answered correctly in all three seeds. A retrieved passage that is on-topic but answers a
 neighbouring question pulls the model off an answer it already had — the retriever is dominated by the
 disease name, so "treatments for X" retrieves "symptoms of X".
 
@@ -839,8 +855,10 @@ were with it.**
 
 That is the product-shaped version of the finding, and it is invisible in the aggregate.
 
-It comes with a cost. Retrieval *lowers* the chance that at least one of several attempts lands
-(0.89 → 0.74). The reason is mechanical: pass@k [[17](#references)] rises with k only when the
+It comes with a cost, and the cost is quoted on a different set from the benefit, so both are named
+here. On the broader hard tail of thirty-five, retrieval *lowers* the chance that at least one of five
+attempts lands, 0.89 → 0.74. On the thirteen genuine gaps the same measure falls further,
+0.692 → 0.385 — more than twice the drop. Both are in **Table 7**. The reason is mechanical: pass@k [[17](#references)] rises with k only when the
 samples are diverse, and the same diversity is what makes self-consistency work
 [[18](#references)]. Injecting a fixed passage sharply conditions the output distribution, so answers
 across seeds collapse toward the passage's framing. Grounding trades exploration for consistency —
@@ -877,6 +895,22 @@ for selective application, which returns for the third time in §7.6.
 with different metrics, and are reported here as two measurements rather than merged into one. The
 pilot's per-mechanism analysis was written while the sweep was still running, and the sweep, when it
 finished, agreed with its mechanism and was considerably stronger than it suggested.
+
+**And they were not scored by the same judge, which matters more.** The five-seed pilot used the
+hosted judge every other MedQuAD study uses; the full sweep — the table above, including
+**−0.312 [−0.384, −0.242]**, the largest negative claim about retrieval in this report — was scored
+by the *local* `llama3.1:8b`, which **Table 17**,
+[*Judge Calibration Probes*](../reports/tables/tab-17-judge-calibration-probes.md), shows is the
+**worse** of the two failed candidates: it passes 0.950 of deliberately wrong answers against the
+hosted judge's 0.925. One judge is held fixed *within* the sweep, so the four strata and the overall
+difference are comparable to each other and the ranking they establish stands. But the sweep's
+absolute levels are not comparable to any other number in this report, and a difference measured by
+a more permissive instrument is a weaker piece of evidence than the same difference measured by a
+stricter one. Verify with:
+
+```bash
+python -c "import json,glob; print({json.load(open(f))['eval']['judge']['model'] for f in glob.glob('runs/rag-medquad-reliability/*/config_used.json')})"
+```
 
 ---
 
@@ -929,7 +963,7 @@ article containing the answer actually appeared in the retrieved top three:
 Nothing differs between those two rows except whether the retrieved text contained the answer. This is
 a within-run contrast, so it is not vulnerable to anything that differs between the two testbeds.
 
-The aggregate +0.152 is those two regimes mixed at a 55% hit rate: 0.55 × (+0.273) + 0.45 × (+0.004)
+The aggregate +0.152 decomposes into those two regimes at a 55% hit rate: 0.55 × (+0.273) + 0.45 × (+0.004)
 reproduces it exactly.
 
 **Sources:** `runs/rag-wixqa/1-no-rag/`, `runs/rag-wixqa/2-rag-basic/` and the retrieval log beside
@@ -1239,9 +1273,11 @@ bootstrap over questions [[27](#references)].
 
 ## 10. Limitations
 
-- **Two different judges scored this report, and neither is calibrated.** The MedQuAD studies use a
-  *blind* judge that sees only the question and the answer; both candidates for that role failed
-  their calibration probe (**Table 17**,
+- **Three judge configurations scored this report, and none is calibrated.** The MedQuAD studies use a
+  *blind* judge that sees only the question and the answer — and they do not all use the same one:
+  every study except the reliability sweep uses the hosted `llama-3.1-8b-instant`, while that sweep
+  (§7.3) used the local `llama3.1:8b`, the more permissive of the two. Both candidates for the blind
+  role failed their calibration probe (**Table 17**,
   [*Judge Calibration Probes*](../reports/tables/tab-17-judge-calibration-probes.md)), and no better
   independent option existed within the free-tier constraints, so the pass bar was raised instead
   and one judge was held fixed across every arm. The WixQA studies use a second, *reference-comparing*
@@ -1262,10 +1298,18 @@ bootstrap over questions [[27](#references)].
   comparison between them.
 - **Pre-registration dates are not corroborated by version control** (§2.3). What is checkable is that
   two recorded predictions were wrong and one stop rule cost a result.
-- **Two predictions were wrong**, both from trusting an observational correlation that a controlled
-  comparison later contradicted — the grounding repair was predicted at ~0.36 and returned 0.470, and
-  refinement was predicted at +3 points and returned −1.5
-  ([Table 16](../reports/tables/tab-16-predictions-vs-outcomes.md)).
+- **Five of six pre-registered numeric predictions landed outside their stated range**, and this
+  report said "two" until an external review counted them. The two it named — the grounding repair
+  predicted at ~0.36 that returned 0.470, and refinement predicted at +3 points that returned −1.5 —
+  are the two where the mechanism story survived being wrong. The three it omitted are the two
+  *completeness*-bar predictions, both of which came in far **below** their floor (0.007 against a
+  0.01–0.06 range, and 0.008 against 0.02–0.11), and one more that overshot. Nothing was concealed:
+  every one of those outcomes is published in Tables 10, 12 and 15. What was favourable was the
+  scorecard, in the one table that exists to make being wrong visible — so
+  [Table 16](../reports/tables/tab-16-predictions-vs-outcomes.md) now scores all six against the runs
+  instead of listing them by hand, and the count in its note is computed rather than written. The
+  misses that matter share one cause: an observational correlation was trusted that a controlled
+  comparison later contradicted.
 - **"Extraction" is a derived ratio**, not a directly observed quantity, and inherits the noise of both
   its parts.
 - **No correction was applied for testing many comparisons.** This report states twenty-six
@@ -1429,7 +1473,7 @@ Regenerates all 17 figures (light and dark) and all 21 tables from `runs/`, `rep
 python -m pytest tests/ -q
 ```
 
-401 tests, including `tests/tlw/figures/`, which recomputes each published headline from its
+473 tests, including `tests/tlw/figures/`, which recomputes each published headline from its
 artifact and fails if a figure and a document disagree.
 
 ```bash

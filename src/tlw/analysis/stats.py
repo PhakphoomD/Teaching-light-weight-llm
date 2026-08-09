@@ -103,11 +103,25 @@ def paired_cluster_bootstrap(
 
     Deterministic: same `cluster_table`/`seed`/`n_resamples` -> identical
     output (numpy Generator, PCG64, seeded -- §0.3).
+
+    **Clusters are ordered by `str(question_id)`, and that is load-bearing.**
+    The generator draws cluster *indices*, so the order the ids are laid out in
+    decides which questions each resample picks. Two callers that keyed the same
+    questions as `"12"` and as `12` therefore sorted them differently -- lexical
+    versus numeric -- and produced confidence intervals differing in the third
+    decimal from identical data and an identical seed. The point estimate never
+    moved, because it does not depend on order; only the interval did, which is
+    the harder failure to notice. Normalising here fixes every caller at once and
+    makes the key's *type* irrelevant, which is the property that was silently
+    assumed. Neither ordering is more correct statistically; agreeing is.
     """
     qids = sorted(
-        q
-        for q, arms in cluster_table.items()
-        if arm_a in arms and arms[arm_a] and arm_b in arms and arms[arm_b]
+        (
+            q
+            for q, arms in cluster_table.items()
+            if arm_a in arms and arms[arm_a] and arm_b in arms and arms[arm_b]
+        ),
+        key=str,
     )
     n = len(qids)
     if n == 0:

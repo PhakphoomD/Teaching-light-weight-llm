@@ -327,7 +327,7 @@ def tab_leakage_census() -> None:
         "line the audit draws is that a model may be *taught* using the reference answer but never "
         "*shown* it while being measured — so a teacher seeing the answer is legal and a memory "
         "store handing that answer back to the student is not. The second table is what the rebuild "
-        "put in place, and the design rule behind all six is the same: make the failure impossible "
+        "put in place, and the design rule behind all seven is the same: make the failure impossible "
         "to reintroduce rather than remembering not to. Source: docs/LEAKAGE_AUDIT.md.",
         table(["path", "what it does", "who sees the answer", "verdict", "where"], paths)
         + "\n\n### The seven seals, and why each is structural rather than procedural\n\n"
@@ -1521,13 +1521,69 @@ def tab_nulls() -> None:
 
 
 def tab_predictions() -> None:
-    rows = [
+    """Every pre-registered numeric prediction, scored against the runs.
+
+    An earlier version of this table listed two wrong predictions. The capstone
+    protocol recorded **six** numeric predictions with ranges, and five of them
+    landed outside their range -- the two omitted misses both went *low*, on the
+    completeness metric the intervention was built to move. Nothing was hidden:
+    every outcome appears in tab-10, tab-12 and tab-15. What was favourable was
+    the scorecard, in the one table whose whole job is to make being wrong
+    visible. So the scoring is now computed here rather than asserted.
+    """
+    # (label, predicted point, low, high, actual) -- ranges quoted from
+    # docs/protocol/2026-07-25-wixqa-grounding-and-loop-plan.md, actuals recomputed.
+    step = "4-rag-wider-context"
+    gold = D.wixqa_gold_retrieved(step)
+    judged = [r for r in D.wixqa_records(step) if r.get("score") is not None]
+    gold_rows = [r for r in judged if gold.get(int(r["idx"]))]
+    loop = D.wixqa_loop_cells()
+
+    def share(rows, bar, field="score"):
+        return sum(1 for r in rows if r[field] >= bar) / len(rows)
+
+    # the coverage gain is a content-overlap metric, not a judged rate -- it comes
+    # from the same committed printout tab-12 reads, never from the pass-rate delta
+    refine = D.analysis_printout("rag-wixqa/pilots/self-refine-pilot.txt")
+
+    numeric = [
+        ("Stage 1: pass rate where the answer was retrieved", 0.45, 0.38, 0.52,
+         share(gold_rows, 3)),
+        ("Stage 1: aggregate pass rate", 0.36, 0.32, 0.41, share(judged, 3)),
+        ("Stage 1: aggregate rate at the *completeness* bar", 0.03, 0.01, 0.06,
+         share(judged, 4)),
+        ("Stage 2: pass rate after self-refinement", 0.47, 0.42, 0.53,
+         share(loop, 3, "refined")),
+        ("Stage 2: completeness bar after self-refinement", 0.06, 0.02, 0.11,
+         share(loop, 4, "refined")),
+    ]
+
+    rows = []
+    outside = 0
+    for label, point, low, high, actual in numeric:
+        if low <= actual <= high:
+            verdict = "inside the stated range"
+        else:
+            outside += 1
+            direction = "above" if actual > high else "**below**"
+            verdict = f"**outside** the range, {direction} it"
+        rows.append([label, f"{point:.2f} ({low:.2f}-{high:.2f})", f"{actual:.3f}", verdict])
+
+    # the sixth is a predicted *change* rather than a level, so it is scored the same way
+    cov = refine["coverage_delta"]
+    outside += 0 if 0.00 <= cov <= 0.09 else 1
+    rows.append([
+        "Stage 2: gain in how much of the reference the answer covers",
+        "+0.04 (+0.00 to +0.09)",
+        f"{cov:+.3f}",
+        "inside the stated range" if 0.00 <= cov <= 0.09 else "**outside** the range",
+    ])
+
+    rows += [
         ["The mixture model's forecast for the stronger retriever", "0.337", "0.340",
          "correct, within 0.003 -- made before the run"],
-        ["The grounding-window repair", "about 0.36", "0.470", "**wrong** -- badly under-predicted"],
-        ["Self-refinement on top of retrieval", "+3 points", "-1.5 points", "**wrong** -- the sign flipped"],
-        ["'A broken retriever explains the null'", "reranking should recover it", "0.760, worse than plain",
-         "falsified"],
+        ["'A broken retriever explains the null'", "reranking should recover it",
+         "0.760, worse than plain", "falsified"],
         ["'Too small a corpus explains the null'", "24x more passages should recover it",
          "0.816, still below unaided", "falsified"],
         ["'0.400 is the model's ceiling once the answer is retrieved'", "should not move",
@@ -1536,18 +1592,25 @@ def tab_predictions() -> None:
          "if the pilot is flat, do not run three seeds", "pilot was flat; the run was not done",
          "fired as designed"],
     ]
+
     write_table(
         "tab-16-predictions-vs-outcomes",
         "O9",
         "What was predicted before running, and what actually happened",
-        "Predictions were recorded before the corresponding runs so that being wrong would be visible "
-        "rather than reinterpretable afterwards. Two were wrong, and both for the same reason: an "
-        "observational correlation was trusted that a controlled comparison later contradicted -- "
-        "which is the argument for running the controlled comparison. One prediction, built as an "
-        "explicit mixture of two measured conditional rates, landed within 0.003 of the outcome, and "
-        "that accuracy is stronger evidence for the mechanism than the size of any single effect. "
-        "Sources: docs/EXPERIMENT_RESULTS.md §7.4-7.6, docs/EXPERIMENT_RESULTS.md §10.",
-        table(["what was predicted", "prediction", "outcome", "verdict"], rows),
+        f"Predictions were recorded before the corresponding runs so that being wrong would be "
+        f"visible rather than reinterpretable afterwards. Of the six numeric predictions the "
+        f"capstone protocol recorded with ranges, **{outside} landed outside their range** -- three "
+        f"above and two below, the low ones both on the completeness bar the intervention was built "
+        f"to move. An earlier version of this table showed two of them; the omission was found by an "
+        f"external review and the scoring is now computed from the runs rather than typed, which is "
+        f"why it can no longer drift in the author's favour. The misses share a cause: an "
+        f"observational correlation was trusted that a controlled comparison later contradicted -- "
+        f"which is the argument for running the controlled comparison. One prediction, built as an "
+        f"explicit mixture of two measured conditional rates, landed within 0.003 of the outcome, "
+        f"and that accuracy is stronger evidence for the mechanism than the size of any single "
+        f"effect. Sources: docs/protocol/2026-07-25-wixqa-grounding-and-loop-plan.md (the ranges), "
+        f"runs/rag-wixqa/ (the outcomes).",
+        table(["what was predicted", "prediction (range)", "outcome", "verdict"], rows),
     )
 
 
@@ -1660,7 +1723,7 @@ def tab_reproducibility() -> None:
         + "\n\n### And the ones that caught something\n\n"
         + f"A guardrail nobody has ever tripped is untested. These are the {len(broke)} that fired, "
         f"what each "
-        "found, and what changed as a result. Two of them found defects in the project's *own* "
+        "found, and what changed as a result. Seven of them found defects in the project's *own* "
         "credibility rather than in a result: work that could not be reproduced from a clone, and a "
         "front page still advertising a number the project had already retracted.\n\n"
         + table(["what broke", "how bad", "what was done"], broke),

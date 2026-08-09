@@ -241,7 +241,7 @@ Regenerates all 17 figures (light and dark) and all 21 tables from the committed
 python -m pytest tests/ -q
 ```
 
-401 tests, including a suite that recomputes each published headline from its artifact and fails if
+473 tests, including a suite that recomputes each published headline from its artifact and fails if
 a figure and a document ever disagree.
 
 ```bash

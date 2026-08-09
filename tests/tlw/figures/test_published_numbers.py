@@ -547,3 +547,78 @@ def test_pilots_cannot_leak_into_a_headline():
         # short count is the guard working and is labelled wherever it appears.
         expected = 250 if condition == "4-teacher-sees-answer" else 375
         assert n == expected, f"{condition}: expected {expected} question-runs, found {n}"
+
+
+# --------------------------------------------------------------------------
+# The intervals, which nothing checked until a review found two had drifted
+# --------------------------------------------------------------------------
+#
+# Every test above asserts a point estimate. None asserted a bound -- and the
+# report says "every conclusion here is drawn from the interval". Two published
+# intervals had in fact drifted from what the advertised reproduce command
+# returned, because two callers keyed the same clusters as `str` and as `int`,
+# `sorted()` ordered them lexically in one and numerically in the other, and the
+# generator therefore drew different resamples from identical data. The point
+# estimate is order-invariant, so nothing moved where anything was watching.
+#
+# `paired_cluster_bootstrap` now orders by `str(key)` regardless of key type.
+# These cases are what would have caught it: the published bounds themselves,
+# and a direct assertion that the key's type cannot change the answer.
+
+PUBLISHED_INTERVALS = [
+    # (label, computed comparison, published low, published high, where)
+    ("teacher over self-refinement", lambda: D.study_comparison(
+        "teaching-loop-medquad", "3-teacher-feedback", "2-self-refine").delta,
+     -0.021, 0.029, "EXPERIMENT_RESULTS.md §7.1"),
+    ("self-refinement over baseline", lambda: D.study_comparison(
+        "teaching-loop-medquad", "2-self-refine", "1-baseline").delta,
+     0.051, 0.133, "EXPERIMENT_RESULTS.md §7.1"),
+    ("retrieval on WixQA", lambda: D.wixqa_comparison("2-rag-basic", "1-no-rag").delta,
+     0.092, 0.213, "EXPERIMENT_RESULTS.md abstract and §7.4"),
+    ("a better retriever", lambda: D.wixqa_comparison(
+        "3-rag-better-retriever", "2-rag-basic").delta,
+     -0.028, 0.080, "EXPERIMENT_RESULTS.md §7.5"),
+    ("a wider grounding window", lambda: D.wixqa_comparison(
+        "4-rag-wider-context", "3-rag-better-retriever").delta,
+     0.072, 0.188, "EXPERIMENT_RESULTS.md abstract and §7.5"),
+]
+
+
+@pytest.mark.parametrize(
+    "label,compute,low,high,where",
+    PUBLISHED_INTERVALS,
+    ids=[case[0] for case in PUBLISHED_INTERVALS],
+)
+def test_published_interval_still_holds(label, compute, low, high, where):
+    """The bounds in the documents, not only the point estimate."""
+    got = compute()
+    assert got.ci_low == pytest.approx(low, abs=TOLERANCE), (
+        f"{label}: {where} publishes a lower bound of {low:+.3f}, "
+        f"recomputing gives {got.ci_low:+.4f}"
+    )
+    assert got.ci_high == pytest.approx(high, abs=TOLERANCE), (
+        f"{label}: {where} publishes an upper bound of {high:+.3f}, "
+        f"recomputing gives {got.ci_high:+.4f}"
+    )
+
+
+def test_cluster_key_type_cannot_change_the_interval():
+    """The root cause, asserted directly.
+
+    A caller is free to key clusters however it likes; the bootstrap must not
+    care. Before the fix these two calls returned different lower bounds from
+    byte-identical data and the same seed.
+    """
+    from src.tlw.analysis.stats import paired_cluster_bootstrap
+
+    table, _ = D._wixqa_pairs("2-rag-basic", "1-no-rag", 3)
+    as_written = paired_cluster_bootstrap(
+        table, arm_a="2-rag-basic", arm_b="1-no-rag", seed=0)
+    as_integers = paired_cluster_bootstrap(
+        {int(k): v for k, v in table.items()},
+        arm_a="2-rag-basic", arm_b="1-no-rag", seed=0)
+
+    assert as_written.point_estimate == as_integers.point_estimate
+    assert (as_written.ci_low, as_written.ci_high) == (
+        as_integers.ci_low, as_integers.ci_high
+    ), "cluster key type changed the interval; the ordering normalisation regressed"
