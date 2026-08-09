@@ -39,7 +39,7 @@ up as a result.*
 |---|---|
 | **An independent teacher in the loop adds nothing.** | +0.003 [−0.021, +0.029], p = 1.00. The model re-reading and rewriting its own answer is the part that worked (+0.091). |
 | **Retrieval helps if and only if the retrieved text contains the answer.** | −0.005 where the model already knew the domain; **+0.152** where it did not. Split one run by whether the right document was actually retrieved: **+0.273** when it was, +0.004 when it was not. |
-| **How retrieved text is delivered mattered ~5× more than which retriever found it.** | +0.130 from changing which 2,400 characters reach the prompt, against +0.025 from a better retriever — with no extra model call, though the grounding block grows from 2,640 to 6,175 characters. |
+| **How retrieved text is delivered mattered ~5× more than which retriever found it.** | +0.130 from changing which 2,400 characters reach the prompt, against +0.025 from a better retriever, with no extra model call. On this testbed the graded answer is partly quoted from the indexed articles, so part of that is the model being shown more of what it is scored against; where the wider window revealed no new reference text the effect is **+0.077 [+0.006, +0.148]** and still holds. |
 | **Fine-tuning on reference answers actively hurt.** | −0.292. The fine-tune worked; it learned the reference corpus's terse style, and terse answers fail a bar that requires completeness. |
 
 **And the unsolved one:** every intervention here helps deficient answers and taxes adequate ones.
@@ -173,7 +173,7 @@ adequate ones.** On MedQuAD the two halves were almost exactly equal, which is w
 Applied selectively, every one of them is clearly positive. The model cannot make that call itself.
 
 **→ [The full experiment record](docs/EXPERIMENT_RESULTS.md)** — the complete study, about an hour end to end; its abstract and §7 carry the result. Objectives, every decision and why,
-all 17 figures, all 21 tables, 26 null results, and the six guardrails that caught something.
+all 17 figures, all 22 tables, 26 null results, and the six guardrails that caught something.
 
 ---
 
@@ -235,13 +235,13 @@ Nothing below needs a GPU, an API key, or a model run.
 python scripts/make_figures.py
 ```
 
-Regenerates all 17 figures (light and dark) and all 21 tables from the committed logs.
+Regenerates all 17 figures (light and dark) and all 22 tables from the committed logs.
 
 ```bash
 python -m pytest tests/ -q
 ```
 
-473 tests, including a suite that recomputes each published headline from its artifact and fails if
+476 tests, including a suite that recomputes each published headline from its artifact and fails if
 a figure and a document ever disagree.
 
 ```bash

@@ -112,10 +112,18 @@ HF_HUB_OFFLINE=1 python scripts/wixqa/run_three_seeds_retriever.py --retriever b
 HF_HUB_OFFLINE=1 python scripts/wixqa/run_three_seeds_retriever.py --retriever bge_chunk --grounding chunk2400 --seed <n>
 HF_HUB_OFFLINE=1 python scripts/wixqa/run_self_refine.py          # the single-seed pilot
 python scripts/wixqa/analyze_dose_response.py
+HF_HUB_OFFLINE=1 python scripts/wixqa/measure_reference_exposure.py   # offline, no model calls
 ```
 
 Both ladders are offline and cost minutes, which is the point: seven retrievers and four grounding
 windows were ranked before any of them was allowed to consume model calls.
+
+The last command is the one that answers the sharpest objection to this study. It rebuilds both
+grounding blocks from the committed retrieval logs, measures how much of the graded expert answer
+sits verbatim in each, and splits the questions by whether the wider window revealed any new
+reference text — the stratification published as Table 22 and in §7.5. It needs
+`data/external/wixqa` (see `scripts/dataset/fetch_wixqa.py`); every other command in this file runs
+from what the repository already carries.
 
 ## Study 7 — fine-tuning (§7.7)
 

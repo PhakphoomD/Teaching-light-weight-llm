@@ -311,8 +311,8 @@ def tab_leakage_census() -> None:
          "506 records → 448 after dropping near-duplicates of held-out answers → **414** after "
          "dropping template twins that share verbatim blocks but not enough cosine similarity "
          "to be caught the first way"],
-        ["the support-documentation study is sealed by what is indexed, not by a runtime check",
-         "its index holds the 6,221 knowledge-base articles and never the 200 expert answers, so the reference is absent from anything the retriever can return"],
+        ["the support-documentation study is sealed by what is indexed, and that seal is the weakest one here",
+         "its index holds the 6,221 knowledge-base articles and never the 200 expert answers -- but those answers were written from the articles and quote them, so 151 of 200 share a verbatim 12-token run with their source. Deliberate (a support agent should read the manual) and measured, not assumed: see tab-22"],
         ["any retrieved passage still sharing a 12-token span with the held-out answer is "
          "dropped at run time",
          "dropped and **counted**, so the filter's own activity is reportable rather than silent"],
@@ -1614,6 +1614,51 @@ def tab_predictions() -> None:
     )
 
 
+def tab_reference_exposure() -> None:
+    """The sharpest objection to this project's largest exploratory result,
+    measured rather than argued."""
+    ex = D.reference_exposure()
+    ov, st = ex["overall"], ex["strata"]
+
+    rows = []
+    for label in ("no new reference text revealed", "new reference text revealed"):
+        s = st[label]
+        rows.append([
+            label,
+            str(s["questions"]),
+            f"{s['narrow_pass_rate']:.3f}",
+            f"{s['wide_pass_rate']:.3f}",
+            f"**{s['delta']:+.3f}**",
+            f"[{s['ci'][0]:+.3f}, {s['ci'][1]:+.3f}]",
+            f"{s['mcnemar_p']:.2g}",
+        ])
+
+    write_table(
+        "tab-22-wixqa-reference-exposure",
+        "O6",
+        "Whether the wider grounding window helped because it showed more of the graded answer",
+        "The knowledge-base articles this testbed indexes are the articles the expert answers were "
+        "written from, so they quote them: by this project's own 12-token criterion "
+        f"{ov['share_with_a_verbatim_run']:.1%} of questions had a verbatim run of the reference "
+        f"inside the text the model was shown (median {ov['median_longest_run_tokens']} tokens, "
+        f"longest {ov['max_longest_run_tokens']}). That is deliberate and defended in the report, but "
+        "it means the winning intervention -- a wider window -- could be helping simply by exposing "
+        "more of the text the judge compares against. The test is to split the questions by whether "
+        "the wider window revealed any *new* reference text. **It survives where it revealed none** "
+        f"({st['no new reference text revealed']['delta']:+.3f}, interval excluding zero), and is "
+        f"{st['new reference text revealed']['delta'] / st['no new reference text revealed']['delta']:.1f}"
+        " times larger where it did -- so the effect is real and its published size is inflated by "
+        "exposure. Retrieval is byte-identical across the two rungs (600/600 cells), so the window is "
+        "the only thing that changed. Sources: "
+        "scripts/wixqa/measure_reference_exposure.py, reports/rag-wixqa/reference-exposure-strata.json.",
+        table(
+            ["did the wider window reveal new reference text?", "questions",
+             "narrow window", "wider window", "difference", "95% CI", "McNemar p"],
+            rows,
+        ),
+    )
+
+
 def tab_reproducibility() -> None:
     rows = [
         ["Repetition", "3 seeds {13, 42, 123} for every headline; pilots and single-seed runs labelled"],
@@ -2419,6 +2464,7 @@ def main() -> None:
     tab_predictions()              # O9
     tab_judge_calibration()        # O9
     tab_cost()                     # O9
+    tab_reference_exposure()
     tab_reproducibility()          # O9
 
     print("index")

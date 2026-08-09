@@ -622,3 +622,27 @@ def test_cluster_key_type_cannot_change_the_interval():
     assert (as_written.ci_low, as_written.ci_high) == (
         as_integers.ci_low, as_integers.ci_high
     ), "cluster key type changed the interval; the ordering normalisation regressed"
+
+
+def test_reference_exposure_stratification_still_holds():
+    """The answer to the sharpest objection against the delivery result.
+
+    The grounding-window effect survives on the questions where the wider window
+    revealed no new reference text, and is far larger where it did. Both halves
+    are load-bearing: the first is why the finding stands, the second is why its
+    published size is an upper bound. If either moved, §7.5, §10, Table 22 and
+    the README's fourth finding would all be wrong at once.
+    """
+    ex = D.reference_exposure()
+    quiet = ex["strata"]["no new reference text revealed"]
+    loud = ex["strata"]["new reference text revealed"]
+
+    assert quiet["questions"] + loud["questions"] == 200
+    assert quiet["delta"] == pytest.approx(0.077, abs=TOLERANCE)
+    assert quiet["ci"][0] > 0, "the effect must still exclude zero without new exposure"
+    assert loud["delta"] == pytest.approx(0.205, abs=TOLERANCE)
+    assert loud["delta"] > quiet["delta"], "exposure inflates the effect; if not, §7.5 is wrong"
+
+    # the exposure itself, which §10 and the leakage audit both quote
+    assert ex["overall"]["questions"] == 200
+    assert ex["overall"]["share_with_a_verbatim_run"] == pytest.approx(0.565, abs=0.005)

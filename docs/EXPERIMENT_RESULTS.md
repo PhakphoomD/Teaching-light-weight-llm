@@ -1057,7 +1057,55 @@ rose to 0.534, so it was never a model ceiling.
 
 This is the exploratory finding flagged in §2.1. It was not what the study was designed to measure.
 
-**Sources:** `reports/rag-wixqa/context-window-coverage.json` · `runs/rag-wixqa/4-rag-wider-context/`
+#### The objection this result has to answer, and what happened when it was measured
+
+**Table 22.** [*WixQA Reference Exposure*](../reports/tables/tab-22-wixqa-reference-exposure.md)
+
+There is a sharp objection here and it deserves the space. On this testbed the judge scores by
+comparison against an expert answer, and the knowledge-base articles that answer was written *from*
+are indexed deliberately and never scrubbed (§5.2). The intervention widens the window onto those
+articles. So: is this the model getting more of what it *needs*, or more of what it is *graded
+against*?
+
+The first thing to say is the size of the exposure, which this report did not previously state.
+Measured with the project's own leak criterion — the twelve contiguous tokens that abort a run
+anywhere else — **151 of the 200 expert answers (75.5%) share a verbatim run with their source
+article**, median 27 tokens, longest 190; and **56.5%** of questions had such a run inside the text
+the model was actually shown. Applied here, `assert_gt_free` would abort three quarters of these
+runs. That is a consequence of the design, not a bug in it, but it was asserted away in an earlier
+version of the leakage audit and it is now measured instead.
+
+The objection can then be settled, because retrieval is byte-identical across the two rungs (600 of
+600 cells) and both grounding blocks can be rebuilt from the committed logs. Splitting the questions
+by whether the wider window revealed any *new* reference text:
+
+| did the wider window reveal new reference text? | questions | narrow | wider | difference |
+|---|---|---|---|---|
+| no | 117 | 0.328 | 0.405 | **+0.077 [+0.006, +0.148]**, p = 0.009 |
+| yes | 83 | 0.357 | 0.562 | **+0.205 [+0.112, +0.297]**, p = 4×10⁻⁷ |
+
+**The effect survives where no new reference text was revealed** — the interval excludes zero — so
+the intervention is doing real work: putting the answer-bearing passage in front of the model helps
+even when it exposes nothing new of the graded text. **And it is 2.7 times larger where new reference
+text was revealed**, so the headline +0.130 is inflated by exposure and should be read as an upper
+bound. The honest one-line version is: *changing which part of a document reaches the prompt is worth
+at least +0.077 on this testbed, and the +0.130 aggregate includes a reference-exposure component
+that a blind judge would not credit.*
+
+Two things follow. The direction of the finding — deliver the matched passage, not the document head
+— is unaffected, and it is the direction that transfers to a product. But this testbed cannot
+cleanly separate "correct" from "resembles the reference", which is the same distinction §7.1 proved
+is real when the loop raised correctness nine points while resemblance stayed flat. Settling it would
+need a blind or paraphrase-robust judge on this data, which was not run.
+
+**Reproduce:**
+
+```bash
+python scripts/wixqa/measure_reference_exposure.py
+```
+
+**Sources:** `reports/rag-wixqa/context-window-coverage.json` ·
+`reports/rag-wixqa/reference-exposure-strata.json` · `runs/rag-wixqa/4-rag-wider-context/`
 · `reports/rag-wixqa/wider-context-vs-narrow.txt`.
 
 #### Fixing two stages exposed a third
@@ -1287,6 +1335,18 @@ bootstrap over questions [[27](#references)].
   Comparisons *within* a testbed use one fixed judge throughout and remain valid on that basis;
   absolute pass rates carry less weight than the differences, and a pass rate from one testbed should
   not be read against a pass rate from the other.
+- **On the support-documentation testbed the reference text is in the prompt, at scale, and that is
+  the weakest point in this report.** The knowledge-base articles are indexed without a scrub because
+  they are the legitimate source (§5.2) — but the expert answers were written from them, so 151 of
+  200 share a verbatim twelve-token run with their source article, and 56.5% of questions had such a
+  run inside what the model was shown. The judge on that testbed scores by comparison against those
+  same answers and was never calibrated. The exposure was measured rather than argued away and the
+  headline result survives the stratum where the intervention revealed no new reference text
+  (**Table 22**, [*WixQA Reference Exposure*](../reports/tables/tab-22-wixqa-reference-exposure.md)),
+  but at +0.077 rather than +0.130. **Every WixQA number in this report — +0.152, +0.025, +0.130,
+  −0.015 — comes from that one uncalibrated, reference-comparing instrument**, and only the delivery
+  result has been stratified this way. A blind or paraphrase-robust judge on this data would settle
+  it; it was not run.
 - **One seed for Study 6.** A pre-registered stop rule ended it when the pilot came back flat, so those
   numbers are directional and labelled as such everywhere.
 - **The three rescue attempts in Study 2 are single-seed** and shown in a lighter colour for that
@@ -1466,14 +1526,14 @@ Nothing below needs a GPU, an API key, or a model run. Every number comes from c
 python scripts/make_figures.py
 ```
 
-Regenerates all 17 figures (light and dark) and all 21 tables from `runs/`, `reports/` and
+Regenerates all 17 figures (light and dark) and all 22 tables from `runs/`, `reports/` and
 `logs/experiments/`.
 
 ```bash
 python -m pytest tests/ -q
 ```
 
-473 tests, including `tests/tlw/figures/`, which recomputes each published headline from its
+476 tests, including `tests/tlw/figures/`, which recomputes each published headline from its
 artifact and fails if a figure and a document disagree.
 
 ```bash
@@ -1498,7 +1558,7 @@ step and a hosted judge for another; nothing in this report does.
 | **A** | [Leakage audit](LEAKAGE_AUDIT.md) — the eighteen paths, the derivation of the 70% figure, and how a leak propagated |
 | **B** | [Protocols](protocol/README.md) — what was decided before each study ran, with a register of what the dates can and cannot prove |
 | **C** | [Figures](../reports/figures/README.md) — all 17 with their captions |
-| **D** | [Tables](../reports/tables/) — all 21, every measured value including the nulls |
+| **D** | [Tables](../reports/tables/) — all 22, every measured value including the nulls |
 | **E** | [Evidence](../reports/README.md) — the committed analysis outputs behind every number |
 | **F** | [Decision log](../.claude/rules/decisions.md) — all thirty-six, in full |
 | **G** | [The retired write-up](archive/PROJECT_OVERVIEW_AND_RESULTS.md), with a banner naming each false claim · [the original design rationale, recovered verbatim](archive/v1-notebook-narrative.md) |

@@ -1388,6 +1388,30 @@ LITERATURE: List[Dict[str, str]] = [
 ]
 
 
+def reference_exposure() -> Dict[str, Any]:
+    """How much of the graded reference sat in the prompt, and what it was worth.
+
+    The support-documentation testbed indexes the knowledge-base articles the
+    expert answers were written from, deliberately and without a scrub. That
+    makes one question unavoidable: is the grounding-window result the model
+    getting more of what it *needs*, or more of what it is *graded against*?
+
+    `scripts/wixqa/measure_reference_exposure.py` answers it by rebuilding both
+    grounding blocks from the committed retrieval logs and splitting the
+    questions by whether the wider window revealed any new reference text. This
+    reads that artifact rather than recomputing it, because recomputing needs the
+    50 MB third-party corpus a clone does not carry.
+    """
+    path = REPORTS / "rag-wixqa" / "reference-exposure-strata.json"
+    if not path.is_file():
+        raise MissingEvidence(
+            f"{_rel(path)} is missing; regenerate with "
+            "`python scripts/wixqa/measure_reference_exposure.py` "
+            "(needs data/external/wixqa, see scripts/dataset/fetch_wixqa.py)"
+        )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def literature() -> List[Dict[str, str]]:
     """The works this project used or tested, with full citations.
 
