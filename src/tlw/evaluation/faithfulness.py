@@ -1,4 +1,4 @@
-"""FaithfulnessJudge (T3.4, RAG_SPEC §4.2) — the RAG groundedness DIAGNOSTIC.
+"""FaithfulnessJudge (T3.4, rag-medquad-protocol §4.2) — the RAG groundedness DIAGNOSTIC.
 
 RAGAS-style groundedness (Es et al. 2023, arXiv 2309.15217): given an ANSWER and
 the retrieved CONTEXT passages, what fraction of the answer's factual claims are
@@ -10,7 +10,7 @@ gold answer is NEVER a parameter, so it cannot reach this prompt (grep-proof: no
 -unbuilt `gt_comparing` mode (registries.py) — it compares the answer to the
 non-gold TRAIN passages, never to the reference.
 
-DIAGNOSTIC ONLY (ADR-019 / RAG_SPEC §4): faithfulness is reported as its own
+DIAGNOSTIC ONLY (ADR-019 / rag-medquad-protocol §4): faithfulness is reported as its own
 column beside blind correctness and reference_match, and NEVER enters the
 pass/fail decision. A faithful-but-wrong answer must still FAIL on correctness.
 """

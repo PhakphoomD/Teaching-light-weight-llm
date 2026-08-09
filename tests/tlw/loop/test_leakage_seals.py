@@ -112,7 +112,7 @@ def test_arm_d_raises_if_teacher_echoes_gt_into_returned_feedback(make_client, m
     """The L7/Trace-C failure mode: a misbehaving teacher (or a bad
     template) echoes GT back into its RETURNED feedback text. Arm D's
     student-bound refine prompt must refuse to carry it forward — the round
-    raises instead of silently leaking (EVAL_SPEC.md §1, loop/core.py
+    raises instead of silently leaking (teaching-loop-protocol.md §1, loop/core.py
     structural seal, defense-in-depth on top of this file's tests)."""
     student = make_client(["draft v1"])  # only the first-attempt call happens
     teacher = make_client([f"Example: {GT}"])  # simulates the L7 echo defect

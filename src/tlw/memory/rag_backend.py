@@ -1,4 +1,4 @@
-"""RagMemory — slot D 'rag' backend (T3.3, RAG_SPEC §2 / schema.md slot-D rag).
+"""RagMemory — slot D 'rag' backend (T3.3, rag-medquad-protocol §2 / schema.md slot-D rag).
 
 The third MemoryBackend implementation: a corpus-backed, READ-ONLY retriever
 over a prebuilt index (T3.2, `tools/rag/`). It satisfies the SAME seam as
@@ -10,7 +10,7 @@ the runner is unchanged — but it differs on three points (schema.md slot-D rag
     FIRST answer attempt (grounding = knowledge, useful up front), whereas
     `faiss` notes are refinement-only (Memory v2 §3).
 
-Anti-leak (RAG_SPEC §5): the corpus was built held-out-free at index time
+Anti-leak (rag-medquad-protocol §5): the corpus was built held-out-free at index time
 (RAG-L1 id exclusion + RAG-L2 near-dup scrub, `tools/rag/builder.py`). The
 run-time guard RAG-L3 (`assert_gt_free` on the grounded student prompt vs the
 held-out gold answer, `src/tlw/loop/core.py`) is the last line of defence.
@@ -75,7 +75,7 @@ class RagMemory(MemoryBackend):
         if not corpus_path:
             raise ValueError(
                 "RagMemory requires corpus_path (a `tools/rag/` index dir) — "
-                "set memory.corpus_path in the experiment config (RAG_SPEC §2)."
+                "set memory.corpus_path in the experiment config (rag-medquad-protocol §2)."
             )
         self.corpus_dir = Path(corpus_path)
         if not self.corpus_dir.exists():
@@ -130,7 +130,7 @@ class RagMemory(MemoryBackend):
 
     def retrieve(self, query: str, top_k: int) -> List[Dict[str, Any]]:
         """Top-k passages for `query`, filtered by the similarity floor
-        (RAG_SPEC §1.3). Empty is normal (no train neighbour cleared the floor)
+        (rag-medquad-protocol §1.3). Empty is normal (no train neighbour cleared the floor)
         -> the student answers un-grounded for that question."""
         self._ensure_loaded()
         k = top_k if top_k is not None else self.top_k

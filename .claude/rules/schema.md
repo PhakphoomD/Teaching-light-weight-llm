@@ -228,9 +228,9 @@ Method names align **exactly** with `structure.md` §D:111 (the seam is authorit
 
 ---
 
-# Slot-D `rag` backend contract (RAG retrieval) — ADR-026, Proposed (full spec: `docs/plan/RAG_SPEC.md`)
+# Slot-D `rag` backend contract (RAG retrieval) — ADR-026, Proposed (full spec: `docs/protocol/2026-07-16-rag-medquad-protocol.md`)
 
-**The third `MemoryBackend` implementation (`type: rag`) — a corpus-backed, read-only retriever, not a note store.** `rag` is reserved-but-unregistered in `src/tlw/registries.py:16` (a `rag` run fails loud until T3.3 builds it). It satisfies the **same MemoryBackend seam** (`store`/`retrieve`/`update_outcome`/`stats`, `src/tlw/registries.py:75-100`) so the T2.6 runner is unchanged — the loop just injects the returned passages at the first answer attempt instead of a refinement round. Built by T3.3; corpus/index built by T3.2. This section is the spec they satisfy; the honesty/eval design lives in `docs/plan/RAG_SPEC.md`.
+**The third `MemoryBackend` implementation (`type: rag`) — a corpus-backed, read-only retriever, not a note store.** `rag` is reserved-but-unregistered in `src/tlw/registries.py:16` (a `rag` run fails loud until T3.3 builds it). It satisfies the **same MemoryBackend seam** (`store`/`retrieve`/`update_outcome`/`stats`, `src/tlw/registries.py:75-100`) so the T2.6 runner is unchanged — the loop just injects the returned passages at the first answer attempt instead of a refinement round. Built by T3.3; corpus/index built by T3.2. This section is the spec they satisfy; the honesty/eval design lives in `docs/protocol/2026-07-16-rag-medquad-protocol.md`.
 
 ## How `rag` differs from `faiss` (both are slot D)
 | Aspect | `faiss` (memory, ADR-018) | `rag` (ADR-026) |
@@ -245,12 +245,12 @@ Method names align **exactly** with `structure.md` §D:111 (the seam is authorit
 ## Slot-D keys `rag` uses
 Reuses `type`, `embedding` (`minilm`, same encoder), `top_k` (default 3), `similarity_threshold` (**default 0.35 — deliberately lower than memory's 0.75**; RAG wants *related* context, not a near-exact question twin). Adds two **`rag`-only optional keys**: `corpus_path` (path to the T3.2 index dir; carries a build manifest of indexed ids) and `max_passage_words` (default 150; sub-chunk cap, only if sub-chunking is enabled).
 
-## Anti-leak invariants (RAG_SPEC §5 — the honesty seals, analogues of memory's tripwire)
+## Anti-leak invariants (rag-medquad-protocol §5 — the honesty seals, analogues of memory's tripwire)
 - **RAG-L1 — corpus = TRAIN split only.** The held-out 125 must NEVER be indexed. T3.2 writes a build manifest of every indexed `id`; it must contain **zero** held-out ids. A `corpus_path` whose manifest reports a held-out id → hard validation error (a slot-D analogue of Config Contract **V6**).
 - **RAG-L2a — cosine near-dup scrub.** T3.2 drops any train record whose `question` OR `answer` is ≥ 0.90 cosine (MiniLM, rubric D3) to any held-out record (semantic twins).
 - **RAG-L2b — verbatim-block scrub (added 2026-07-16).** Whole-answer cosine is blind to *templated* leaks — MedQuAD's "What to do for X?" answers reuse one NIH advice template across GI diseases (Crohn's vs Ulcerative Colitis: ~100% shared verbatim text yet only ~0.76 cosine). So T3.2 ALSO drops any train record sharing **≥ 8 contiguous 12-token shingles** with any held-out answer (`--block-shingle-min`, default 8). This is the seal that removes template answer-by-proxy leaks.
 - **RAG-L3 — run-time per-passage filter.** `grounding_block(...)` (`src/tlw/loop/core.py`) drops+counts any retrieved passage that still shares a ≥12-token shingle with the held-out gold, then grounds on the survivors — it does NOT abort the run (hub decision 2026-07-16). This handles the residual innocent case: same-topic passages share a single definitional sentence with the gold without being the answer. Dropped-passage count is reported (`grounding_filtered_total`, §0.1). `assert_gt_free` remains the final whole-prompt backstop (aborts only if gold reaches a prompt through any path).
-- **RAG-L4 — judge stays blind.** Blind correctness (`BlindJudge`, `src/tlw/evaluation/judge.py:128`, PASS ≥ 4) is the headline, unchanged from Track A. Faithfulness (RAGAS groundedness, RAG_SPEC §4.2) sees passages but never gold, is a NEW judge mode (not the unbuilt `gt_comparing`), and is a **diagnostic column only — never the pass gate**.
+- **RAG-L4 — judge stays blind.** Blind correctness (`BlindJudge`, `src/tlw/evaluation/judge.py:128`, PASS ≥ 4) is the headline, unchanged from Track A. Faithfulness (RAGAS groundedness, rag-medquad-protocol §4.2) sees passages but never gold, is a NEW judge mode (not the unbuilt `gt_comparing`), and is a **diagnostic column only — never the pass gate**.
 
 ## V8 exemption (flag to T2.1 owner)
 Config Contract **V8** forbids arms A/B + accumulating memory (`faiss`). `type: rag` is a read-only corpus, not a note-accumulating store, so it does **not** create the "baseline that learns" problem V8 exists to stop — the RAG headline arms answer single-pass (`arm: A`, `max_rounds: 1`) *with* `type: rag`. T3.3 adds a one-line V8 exemption: `arm ∈ {A,B}` requires `memory.type ∈ {none, rag}` (rag allowed, faiss still forbidden).

@@ -1,8 +1,8 @@
-"""reference_match diagnostics (T2.3) — EVAL_SPEC.md §2.
+"""reference_match diagnostics (T2.3) — teaching-loop-protocol.md §2.
 
 `reference_match` is a DIAGNOSTIC column, never the pass/fail decision
 (that is `correctness`, judge.py's BlindJudge). It exists only to expose
-the old confound named in EVAL_SPEC §2: if an arm raises reference_match
+the old confound named in teaching-loop-protocol §2: if an arm raises reference_match
 without raising correctness, it learned to mimic the reference's wording,
 not to be more correct. No weight, no threshold, never merged (ADR-019).
 
@@ -86,7 +86,7 @@ def semantic_similarity(answer: str, reference_answer: str, encoder: Optional[An
 
 
 def reference_match(answer: str, reference_answer: str, encoder: Optional[Any] = None) -> Dict[str, float]:
-    """The two-field diagnostic (EVAL_SPEC §2 table): semantic_sim + rouge_l
+    """The two-field diagnostic (teaching-loop-protocol §2 table): semantic_sim + rouge_l
     vs the reference answer. NOT a pass/fail signal, NOT weighted into
     correctness. Callers log these as separate columns on the per-round
     record, alongside (never combined with) the judge's `correctness`."""

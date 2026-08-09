@@ -2,7 +2,7 @@
 # regenerate: python -m src.tlw.analysis --runs-dir runs/rag-medquad --rag
 
 ==============================================================================
-RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE
+RAG ablation (T3.4, rag-medquad-protocol §6)  --  correctness is the HEADLINE
 labels present: 3B, 3B+RAG, 7B, 7B+RAG
 ------------------------------------------------------------------------------
 Descriptive per-label pass-rate (Wilson 95% CI):

@@ -4,7 +4,7 @@ tables T2.8 asks for -- WITHOUT ever writing `docs/TRACK_A_RESULTS.md`
 
 Two hard rules enforced here, not just documented:
 - **correctness and reference_match are NEVER merged** into one number
-  (ADR-019, EVAL_SPEC §2) -- they live in separate dict keys everywhere in
+  (ADR-019, teaching-loop-protocol §2) -- they live in separate dict keys everywhere in
   this module and the CLI prints them as separate lines.
 - **Sample-size honesty banner.** Any comparison built from fewer than the
   pre-registered 125 held-out questions or fewer than 3 seeds gets a loud
@@ -35,12 +35,12 @@ from .stats import (
     wilson_interval,
 )
 
-PRE_REGISTERED_N_QUESTIONS = 125  # EVAL_SPEC.md §4.4 -- the held-out set size
-PRE_REGISTERED_N_SEEDS = 3  # EVAL_SPEC.md §4.1 -- {13, 42, 123}
+PRE_REGISTERED_N_QUESTIONS = 125  # teaching-loop-protocol.md §4.4 -- the held-out set size
+PRE_REGISTERED_N_SEEDS = 3  # teaching-loop-protocol.md §4.1 -- {13, 42, 123}
 NOT_PRE_REGISTERED_BANNER = (
     "*** NOT the pre-registered sample -- this is pilot/dry-run data "
     "(n<{n} questions and/or <{s} seeds). Do NOT read this as the Track-A "
-    "headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). ***"
+    "headline result (teaching-loop-protocol.md §4.4, T2.8 Must-NOT). ***"
 )
 
 
@@ -59,7 +59,7 @@ def pooled_pass_rate(runs: Sequence[RunRecord]) -> Tuple[int, int]:
 
 def arm_descriptive(runs_by_arm: Dict[str, List[RunRecord]]) -> Dict[str, WilsonInterval]:
     """Wilson 95% interval per arm, pooling all seeds handed in for that
-    arm (EVAL_SPEC §4.2 "Secondary/descriptive -- Wilson score interval
+    arm (teaching-loop-protocol §4.2 "Secondary/descriptive -- Wilson score interval
     per arm")."""
     out: Dict[str, WilsonInterval] = {}
     for arm, runs in runs_by_arm.items():
@@ -113,7 +113,7 @@ def banner_for(
 def reference_match_divergence(runs_by_arm: Dict[str, List[RunRecord]]) -> Dict[str, Dict[str, Optional[float]]]:
     """Per-arm correctness vs reference_match, SIDE BY SIDE, never merged
     (ADR-019). Divergence itself (correctness up, reference_match flat/
-    down, or vice versa) is the finding EVAL_SPEC §2 calls out -- this
+    down, or vice versa) is the finding teaching-loop-protocol §2 calls out -- this
     function just assembles the two columns; callers/CLI compute/print the
     divergence."""
     out: Dict[str, Dict[str, Optional[float]]] = {}

@@ -1,4 +1,4 @@
-"""T3.4 faithfulness diagnostic tests (RAG_SPEC §4.2).
+"""T3.4 faithfulness diagnostic tests (rag-medquad-protocol §4.2).
 
 Faithfulness is a DIAGNOSTIC (never gates pass/fail) and is §0.2-safe: its
 prompt sees (answer, passages) only, never the gold answer.

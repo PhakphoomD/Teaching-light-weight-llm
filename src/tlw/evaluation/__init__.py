@@ -1,5 +1,5 @@
 # Evaluation block (T2.3) — correctness judge (headline) + reference_match
-# (diagnostic), kept in permanently separate fields (EVAL_SPEC.md §2, ADR-019).
+# (diagnostic), kept in permanently separate fields (teaching-loop-protocol.md §2, ADR-019).
 #
 # Importing this package registers BlindJudge into JUDGE_REGISTRY under
 # "blind" (side effect of importing .judge). Anything that needs

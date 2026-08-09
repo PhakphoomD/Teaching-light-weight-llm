@@ -25,5 +25,5 @@ Token cost per arm (student+teacher+judge):
 Memory-note usage per arm:
   arm A: memory_hit_rate=0.000 (0/125 rounds)  episodes_stored=0  rejects=0
 ==============================================================================
-*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
+*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (teaching-loop-protocol.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
 ==============================================================================

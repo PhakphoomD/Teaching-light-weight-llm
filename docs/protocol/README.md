@@ -69,6 +69,30 @@ is not a register.
 
 ---
 
+## The bodies still use the original filenames, on purpose
+
+These documents cross-reference each other, and the repository, by the names they had when they
+were written — `EVAL_SPEC.md §3.2`, `RAG_SPEC.md §5`, `runs_wixqa/`, `data/rag/`. Those names have
+since changed. **The bodies were not updated**, because a protocol that gets edited after the run is
+no longer a record of what was decided beforehand; every other file in the repository was repointed
+instead. Use this table to resolve a reference:
+
+| named inside a protocol | now |
+|---|---|
+| `EVAL_SPEC.md` | `2026-07-13-teaching-loop-protocol.md` (this directory) |
+| `RAG_SPEC.md` | `2026-07-16-rag-medquad-protocol.md` (this directory) |
+| `SELECTIVE_RAG.md` | `reports/rag-medquad/selective-gating-analysis.md` |
+| `T2.7_PILOT_REPORT.md` | `reports/teaching-loop-medquad/2026-07-14-pilot-report.md` |
+| `docs/audit/LEAKAGE_CENSUS.md` | `docs/LEAKAGE_AUDIT.md` |
+| `runs_wixqa/`, `runs_rag/`, `runs_hardtail/` … | `runs/<study>/` — see `.claude/rules/structure.md` |
+| `data/rag/` | `indexes/` |
+| `docs/RAG_LAW.md` | `docs/archive/RAG_LAW.md`, superseded by the experiment report |
+
+The section numbers cited elsewhere in the repository are still valid, because the section
+structure was not touched either.
+
+---
+
 ## One document contains material added after its run
 
 [`2026-07-25-wixqa-grounding-and-loop-plan.md`](2026-07-25-wixqa-grounding-and-loop-plan.md) has

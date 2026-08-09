@@ -1,4 +1,4 @@
-"""RAG ablation report (T3.4, RAG_SPEC §4/§6) — the {3B, 3B+RAG, 7B, 7B+RAG}
+"""RAG ablation report (T3.4, rag-medquad-protocol §4/§6) — the {3B, 3B+RAG, 7B, 7B+RAG}
 table + headline delta, reusing the Track-A statistics machinery.
 
 Why a separate module from report.py: the Track-A report keys everything by the
@@ -41,7 +41,7 @@ from .stats import exact_mcnemar, paired_cluster_bootstrap, per_seed_deltas
 _MODEL_LABEL = {"qwen2.5:3b": "3B", "qwen2.5:7b-instruct": "7B"}
 _NB_RE = re.compile(r"(\d+(?:\.\d+)?)b")
 
-# Default RAG comparisons (RAG_SPEC §6): headline first.
+# Default RAG comparisons (rag-medquad-protocol §6): headline first.
 DEFAULT_RAG_COMPARISONS: Tuple[Tuple[str, str], ...] = (
     ("3B+RAG", "3B"),   # HEADLINE — the RAG effect
     ("7B+RAG", "7B"),   # does RAG still help a stronger model?

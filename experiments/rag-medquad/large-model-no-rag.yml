@@ -1,11 +1,11 @@
 # experiments/rag-medquad/large-model-no-rag.yml
 # RAG ablation arm "7B" (no retrieval) — ceiling reference: does a bigger model
-# close the gap WITHOUT retrieval? (RAG_SPEC §3/§6, ADR-026).
+# close the gap WITHOUT retrieval? (rag-medquad-protocol §3/§6, ADR-026).
 #
 # Diffs from config/base.yml:
 #   student : local qwen2.5:7b-instruct (this IS the base default; stated for clarity)
 #   eval    : Groq llama-3.1-8b-instant + pass_threshold 1.0 (score>=4) — SAME
-#             judge+bar as every ablation arm (comparability, RAG_SPEC §4.1).
+#             judge+bar as every ablation arm (comparability, rag-medquad-protocol §4.1).
 #   params  : arm A, max_rounds 1 (single pass).
 # memory stays base default (none).
 #

@@ -1,4 +1,4 @@
-"""BlindJudge calibration probe (T2.3 / EVAL_SPEC.md §3.3).
+"""BlindJudge calibration probe (T2.3 / teaching-loop-protocol.md §3.3).
 
 Gates the judge BEFORE the real Track-A run. Built and run on the TRAIN
 split (506 recs), NEVER the 125-question held-out set (§0.2). Extends the
@@ -45,7 +45,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TRAIN_PATH = PROJECT_ROOT / "data" / "clean" / "Diabetes_and_Digestive_and_Kidney_Diseases_train.jsonl"
 OUTPUT_DIR = PROJECT_ROOT / "runs" / "judge-calibration"
 
-# EVAL_SPEC §3.3 acceptance gates.
+# teaching-loop-protocol §3.3 acceptance gates.
 GATE_GOOD_PASS_RATE_MIN = 0.80
 GATE_WRONG_PASS_RATE_MAX = 0.15
 GATE_PLAUSIBLE_WRONG_PASS_RATE_MAX = 0.30
@@ -163,7 +163,7 @@ _NUMBER_RE = re.compile(r"\b\d+(\.\d+)?\b")
 
 
 def make_plausible_wrong(answer: str) -> str:
-    """Heuristic clinically-material negation/alteration (EVAL_SPEC §3.3).
+    """Heuristic clinically-material negation/alteration (teaching-loop-protocol §3.3).
 
     Honesty note (§0.1): this is a deterministic RULE-BASED heuristic, not a
     clinically-validated adversarial generator. It flips the first polarity
@@ -260,7 +260,7 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 def cohens_kappa_pass_fail(rows_a: List[Dict[str, Any]], rows_b: List[Dict[str, Any]], pass_threshold_score: int = 3) -> Optional[float]:
     """Cohen's kappa on the PASS/FAIL binary verdict between two judges over
-    the same candidates (EVAL_SPEC §3.3 inter-judge agreement gate)."""
+    the same candidates (teaching-loop-protocol §3.3 inter-judge agreement gate)."""
     pairs = []
     by_id_b = {(r["id"], cls): r[cls] for r in rows_b for cls in CLASSES}
     for r in rows_a:

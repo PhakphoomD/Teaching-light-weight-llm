@@ -121,12 +121,12 @@ with the +9.9pt oracle standing as the motivating headroom (future work).
 A new slot-E arm strategy **`S` (selective)** in `src/tlw/loop/strategies.py`: draft → gate → maybe
 reground, reusing the `rag` MemoryBackend for retrieval and the existing leak seals (RAG-L3 on the
 grounded prompt). No new memory type. Config `params.arm: S`, `memory.type: rag`. The gate model is
-a slot (reuse `eval.judge` or a dedicated `gate` model). Ablation arm added to RAG_SPEC §3:
+a slot (reuse `eval.judge` or a dedicated `gate` model). Ablation arm added to rag-medquad-protocol §3:
 {3B, 3B+RAG, 3B+selective-RAG}, same 125×3, headline `selective − baseline` with the usual CI.
 
 ---
 
 ## 6. Anti-leak
-Same seals as always-on RAG (RAG_SPEC §5): corpus is TRAIN-only (RAG-L1/L2), the gate and grounded
+Same seals as always-on RAG (rag-medquad-protocol §5): corpus is TRAIN-only (RAG-L1/L2), the gate and grounded
 prompts run through `assert_gt_free` / the RAG-L3 filter, and the gate sees only (draft, passages) —
 never the gold answer (§0.2). The gate is a NEW call, not the correctness judge.

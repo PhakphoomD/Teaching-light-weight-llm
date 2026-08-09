@@ -9,7 +9,7 @@ McNemar p = 1.00**), while self-refinement itself is a real, significant gain ov
 
 ---
 
-## 1. Method (see `docs/plan/EVAL_SPEC.md` for the pre-registered protocol)
+## 1. Method (see `docs/protocol/2026-07-13-teaching-loop-protocol.md` for the pre-registered protocol)
 
 Four arms, same held-out set, same seeds, honest-by-construction (no ground truth on the
 student/judge path — §0.2, enforced structurally by `src/tlw/loop/core.py::assert_gt_free`):
@@ -30,7 +30,7 @@ student/judge path — §0.2, enforced structurally by `src/tlw/loop/core.py::as
   on Groq (0 fallbacks) → a single, consistent judge across the whole run.
 - **Data** = 125 held-out Diabetes questions (`data/clean/…_heldout.jsonl`), **3 seeds
   {13, 42, 123}**, students at temperature 0.3 so seeds are genuinely different runs.
-- **Headline stat** (pre-registered, EVAL_SPEC §4): pass-rate difference **C − B** with a 95%
+- **Headline stat** (pre-registered, teaching-loop-protocol §4): pass-rate difference **C − B** with a 95%
   **paired cluster-bootstrap** CI (cluster = question, 3 seeds pooled, 10,000 resamples), exact
   McNemar alongside, Wilson per-arm descriptive. Correctness and reference-match are **never
   merged** (ADR-019).
@@ -118,10 +118,10 @@ The pre-renovation project reported **25% → 83% → 100%** (ADR-001). This run
 
 - **Single domain.** Diabetes/Digestive/Kidney MedQuAD only. Do not generalise to other domains
   or harder question types (these are largely definitional).
-- **Judge validity at the 3-vs-4 line.** The blind judge was calibrated (EVAL_SPEC §3.3) at the
+- **Judge validity at the 3-vs-4 line.** The blind judge was calibrated (teaching-loop-protocol §3.3) at the
   PASS/FAIL (≥3) boundary; the 3-vs-4 boundary used here for the score≥4 bar was **not**
   separately calibrated, and no free LLM judge (local 8B, Groq 8B, even Groq 70B on a flawed
-  adversarial probe) cleanly passed all calibration gates (see `docs/plan/T2.7_PILOT_REPORT.md`
+  adversarial probe) cleanly passed all calibration gates (see `reports/teaching-loop-medquad/2026-07-14-pilot-report.md`
   and the T2.3b/c notes in `todo.md`). C − B is a **difference** measured with one consistent
   judge, so it is robust to a mis-placed-but-consistent absolute bar; the per-arm absolute
   pass-rates are softer.

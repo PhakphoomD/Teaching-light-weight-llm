@@ -18,7 +18,7 @@
 #
 # params.seed is DELIBERATELY NOT set here — it is the run's identity and is
 # supplied per invocation via EXPERIMENT_PARAMS_SEED (schema.md Layering rule 4),
-# so the SAME file drives all 3 pre-registered seeds {13, 42, 123} (EVAL_SPEC §4.1).
+# so the SAME file drives all 3 pre-registered seeds {13, 42, 123} (teaching-loop-protocol §4.1).
 #
 # Run one seed on the real heldout set (never --data ..._train.jsonl for this):
 #   $env:EXPERIMENT_PARAMS_SEED = "42"

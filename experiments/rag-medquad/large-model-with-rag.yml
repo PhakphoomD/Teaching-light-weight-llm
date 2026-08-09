@@ -1,6 +1,6 @@
 # experiments/rag-medquad/large-model-with-rag.yml
 # RAG ablation arm "7B+RAG" — does retrieval still help when the model is already
-# stronger? (RAG_SPEC §3/§6, ADR-026). Secondary comparison: (7B+RAG) - 7B.
+# stronger? (rag-medquad-protocol §3/§6, ADR-026). Secondary comparison: (7B+RAG) - 7B.
 #
 # Diffs from config/base.yml:
 #   student : local qwen2.5:7b-instruct (base default; only retrieval differs from 7B)

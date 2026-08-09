@@ -10,7 +10,7 @@ not an inert component.
 
 ---
 
-## 1. Method (pre-registered in `docs/plan/RAG_SPEC.md`, ADR-026)
+## 1. Method (pre-registered in `docs/protocol/2026-07-16-rag-medquad-protocol.md`, ADR-026)
 
 Four-arm ablation was planned; this run reports the **headline pair** (the user-approved scope):
 
@@ -31,7 +31,7 @@ Four-arm ablation was planned; this run reports the **headline pair** (the user-
   indexed (MiniLM + FAISS). Grounding passages enter the *first* answer prompt; a run-time
   per-passage leak filter (RAG-L3) dropped 30 residual passages across the run (never shown to
   the student).
-- **Headline stat** (pre-registered, RAG_SPEC §6): pass-rate difference **3B+RAG − 3B** with a 95%
+- **Headline stat** (pre-registered, rag-medquad-protocol §6): pass-rate difference **3B+RAG − 3B** with a 95%
   **paired cluster-bootstrap** CI (cluster = question, 3 seeds pooled, 10,000 resamples), exact
   McNemar alongside, Wilson per-arm descriptive. Correctness, reference_match, and faithfulness
   are **never merged** (ADR-019).
@@ -127,7 +127,7 @@ wording problem.
   so same-disease-wrong-aspect passages are retrieved at high similarity — the similarity floor
   cannot separate them (broken cases sit at 0.70–0.85, same as good ones). A better retriever /
   re-ranker is untested here.
-- **Judge validity at the 3-vs-4 line.** Inherited from Track A (EVAL_SPEC §3.3 calibrated the
+- **Judge validity at the 3-vs-4 line.** Inherited from Track A (teaching-loop-protocol §3.3 calibrated the
   ≥3 boundary, not the ≥4 bar used here). The **difference** 3B+RAG − 3B is robust to a consistent
   judge; the absolute pass-rates are softer.
 
@@ -167,7 +167,7 @@ were untouched, `scripts/rag/rejudge.py --only-nulls`). All four arms are now ju
 a 3B to a 7B's level on this domain. The mechanism is the same tug-of-war (§3), scaled by base
 model strength: the stronger the model, the **fewer** knowledge gaps exist for RAG to fill (7B
 fails ~10% vs 3B's ~18%) while the distraction tax on the easy majority is unchanged — so the
-better the base model, the more RAG's distraction dominates its repair. **Both RAG_SPEC §3
+better the base model, the more RAG's distraction dominates its repair. **Both rag-medquad-protocol §3
 secondary questions answer *no*:** RAG does not help a stronger model (it hurts more), and it does
 not let a small model reach a big one. faithfulness for the 7B+RAG arm was not computed (diagnostic
 only; the story is unaffected).
@@ -181,7 +181,7 @@ only; the story is unaffected).
   failure (the 3B is *confidently* wrong), and an 8B "verify-then-ground" LLM gate is bimodal-useless
   (99% fire on a lenient prompt, 0% on a strict one — it follows the prompt's tone, not the content).
   A strong-reasoner (70B) gate is the last cheap test, queued for the Groq reset. Full detail:
-  `docs/plan/SELECTIVE_RAG.md`. Working hypothesis: selective RAG needs a *learned* gate or an
+  `reports/rag-medquad/selective-gating-analysis.md`. Working hypothesis: selective RAG needs a *learned* gate or an
   *aspect-aware retriever*, not an LLM self-gate.
 
 ---

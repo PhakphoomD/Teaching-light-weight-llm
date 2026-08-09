@@ -68,7 +68,7 @@ NOT DONE.)*
 ### MINOR-1 — student/judge latency ~2× the planning estimate
 At ~19 s/call each, run sequentially, a full 125×3-seed×4-arm run of **round-1-only** work is
 ≈ 125×3×4×(19+19) ≈ **16 h** of local compute (Groq 0 while degenerate). If the judge is fixed
-and answers start failing round 1, add teacher rounds on top. The EVAL_SPEC §5 schedule should be
+and answers start failing round 1, add teacher rounds on top. The teaching-loop-protocol §5 schedule should be
 re-projected from these measured numbers, not the 4.8 s/q figure.
 
 ---
@@ -114,7 +114,7 @@ Resolving the judge is necessary but may not be sufficient — the **no-headroom
 for the hub, in rough order of leverage:
 
 1. **Raise the bar so the baseline can fail.** Move `pass_threshold` to `score ≥ 4` (strict
-   "correct AND complete") and/or adopt a stronger judge (EVAL_SPEC §5.3 J2 Groq-70B for the
+   "correct AND complete") and/or adopt a stronger judge (teaching-loop-protocol §5.3 J2 Groq-70B for the
    small held-out set, ~budgeted days) so round-1 answers don't all pass. This is the most direct
    fix for the degeneracy and folds the judge-lock decision in.
 2. **Harder questions / harder domain slice** — pick held-out questions where the 7B student

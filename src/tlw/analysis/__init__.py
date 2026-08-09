@@ -1,9 +1,9 @@
-"""Track-A analysis block (T2.8 SCRIPT half — qa-engineer, per ADR-019/EVAL_SPEC.md §4).
+"""Track-A analysis block (T2.8 SCRIPT half — qa-engineer, per ADR-019/teaching-loop-protocol.md §4).
 
 This package computes the **pre-registered** headline statistic — the loop
 effect `pass_rate(C) - pass_rate(B)`, with a 95% paired cluster-bootstrap CI
 over the held-out questions, seeds pooled, plus a McNemar p-value and
-descriptive Wilson intervals per arm (EVAL_SPEC.md §4.2/§4.3) — from real
+descriptive Wilson intervals per arm (teaching-loop-protocol.md §4.2/§4.3) — from real
 `runs/<run_id>/{summary.jsonl,rounds.jsonl,config_used.json}` artifacts
 written by `src/tlw/runner.py`.
 

@@ -6,7 +6,7 @@
 # qwen/qwen3-32b), sees NO ground truth in arm C (blind, §0.2).
 # params.seed supplied per-run via EXPERIMENT_PARAMS_SEED (not hardcoded here).
 #
-# HEADLINE CLAIM = pass_rate(C) - pass_rate(B), 95% CI (EVAL_SPEC.md §4.3),
+# HEADLINE CLAIM = pass_rate(C) - pass_rate(B), 95% CI (teaching-loop-protocol.md §4.3),
 # computed by T2.8 across seeds {13, 42, 123} on the real 125-question heldout.
 #
 # Run:

@@ -1,4 +1,4 @@
-"""T3.4 RAG ablation report tests (RAG_SPEC §4/§6).
+"""T3.4 RAG ablation report tests (rag-medquad-protocol §4/§6).
 
 Uses the shared synthetic-run factory (`make_run`) to build {3B, 3B+RAG, 7B,
 7B+RAG} runs and checks: label derivation, the pre-registered 3B+RAG - 3B delta

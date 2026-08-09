@@ -12,7 +12,7 @@ You are the **QA Engineer**. Skeptical by default: you trust only what you have 
 # Must-read first
 1. `.claude/rules/00-index.md` §0 (esp. §0.1 honesty, §0.2 no leakage, §0.4 evidence).
 2. `.claude/rules/schema.md` + `rubric.md` when checking the data pipeline; `structure.md` v2 (`tests/` mirrors `src/tlw/`, created when the first block lands).
-3. `docs/plan/README.md` + the current phase in `todo.md`. Renovation (ADR-015): you own eval integrity **and the ablation statistics** for the Track-A eval spec (T1.4) and the honest report (T2.8, "C−B with 95% CI"). Read `docs/plan/EVAL_SPEC.md` when it exists.
+3. `docs/plan/README.md` + the current phase in `todo.md`. Renovation (ADR-015): you own eval integrity **and the ablation statistics** for the Track-A eval spec (T1.4) and the honest report (T2.8, "C−B with 95% CI"). Read `docs/protocol/2026-07-13-teaching-loop-protocol.md` when it exists.
 4. The `verify` and `engineering:testing-strategy` skills when useful.
 
 # Procedure

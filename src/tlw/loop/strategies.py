@@ -1,4 +1,4 @@
-"""Arm strategies A/B/C/D (T2.4) — EVAL_SPEC.md §1 / ADR-002.
+"""Arm strategies A/B/C/D (T2.4) — teaching-loop-protocol.md §1 / ADR-002.
 
 Each arm decides ONLY what feedback source feeds the student between
 rounds; scoring is always delegated to the judge seam (no scoring logic
@@ -29,7 +29,7 @@ _DEFAULT_TEACHER_PRESET = "orca"
 
 
 def _reference_match(answer: str, ground_truth: Optional[str]) -> Optional[Dict[str, float]]:
-    """Diagnostic-only, legal score-path use of GT (EVAL_SPEC §2, LEAKAGE_AUDIT
+    """Diagnostic-only, legal score-path use of GT (teaching-loop-protocol §2, LEAKAGE_AUDIT
     L10-L12) — never fed back to the student, never gates pass/fail. `None`
     when no GT was supplied (the default for a headline arm run)."""
     if not ground_truth:
@@ -99,7 +99,7 @@ class _BaseArm(ArmStrategy):
 @STRATEGY_REGISTRY.register("A")
 class BaselineArm(_BaseArm):
     """A — single pass, no feedback, no teacher, no memory. The floor
-    (EVAL_SPEC §1)."""
+    (teaching-loop-protocol §1)."""
 
     def run(self, question, student, teacher, memory, judge, params) -> List[Dict[str, Any]]:
         ground_truth = params.get("ground_truth")
@@ -120,7 +120,7 @@ class BaselineArm(_BaseArm):
 @STRATEGY_REGISTRY.register("B")
 class SelfRefineArm(_BaseArm):
     """B — the student critiques its own previous answer between rounds.
-    ZERO teacher calls (EVAL_SPEC §1) — this is the control arm C is
+    ZERO teacher calls (teaching-loop-protocol §1) — this is the control arm C is
     measured against (C - B isolates the teacher-feedback effect)."""
 
     def run(self, question, student, teacher, memory, judge, params) -> List[Dict[str, Any]]:
@@ -173,7 +173,7 @@ class SelfRefineArm(_BaseArm):
 class _TeacherArm(_BaseArm):
     """Shared round structure for C (blind) / D (sighted) — the teacher's
     own prompt (GT visibility) and preset variant are the only difference
-    between the two (EVAL_SPEC §1). Memory notes (from any prior question)
+    between the two (teaching-loop-protocol §1). Memory notes (from any prior question)
     are only ever folded into a REFINEMENT prompt, never the first attempt
     (schema.md Memory v2 §3) — with `memory.type: none` (the headline for
     all four arms, ADR-022 (c)) `memory.retrieve(...)` always returns `[]`,
@@ -234,7 +234,7 @@ class _TeacherArm(_BaseArm):
             # Structural seal (defense-in-depth on TOP OF the leakage-seal
             # tests, tests/tlw/loop/test_leakage_seals.py): arm D's teacher
             # legally saw GT, but its RETURNED feedback must still be
-            # GT-free before it reaches the student (EVAL_SPEC §1). Raises
+            # GT-free before it reaches the student (teaching-loop-protocol §1). Raises
             # LeakageGuardError otherwise — the round never sends the prompt.
             answer = student_answer(
                 student, refine_prompt, ground_truth=ground_truth, temperature=s_temp, max_tokens=s_tok
@@ -274,7 +274,7 @@ class _TeacherArm(_BaseArm):
 @STRATEGY_REGISTRY.register("C")
 class BlindTeacherArm(_TeacherArm):
     """C — an independent teacher gives feedback WITHOUT seeing GT (the
-    treatment). C - B isolates the teacher-feedback effect (EVAL_SPEC §0)."""
+    treatment). C - B isolates the teacher-feedback effect (teaching-loop-protocol §0)."""
 
     ARM_NAME = "C"
     TEACHER_VARIANT = "blind"
@@ -286,7 +286,7 @@ class SightedTeacherArm(_TeacherArm):
     """D — teacher gives feedback WITH GT visible to the teacher (legal
     §0.2 use, its own prompt only). LEAKAGE CEILING — an upper bound on
     what's reachable by cheating, printed for context, NEVER a claimed
-    result (EVAL_SPEC §1: "labeled leakage-ceiling")."""
+    result (teaching-loop-protocol §1: "labeled leakage-ceiling")."""
 
     ARM_NAME = "D"
     TEACHER_VARIANT = "sighted"

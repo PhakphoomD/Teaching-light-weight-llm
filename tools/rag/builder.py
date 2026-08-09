@@ -1,12 +1,12 @@
-"""RAG retrieval-corpus + FAISS index builder (T3.2, RAG_SPEC §1 / §5).
+"""RAG retrieval-corpus + FAISS index builder (T3.2, rag-medquad-protocol §1 / §5).
 
 Turns a cleaned Q&A jsonl into a retrieval index: one passage per record
-(v1, no sub-chunking — RAG_SPEC §1.1), keyed by the record QUESTION embedding,
+(v1, no sub-chunking — rag-medquad-protocol §1.1), keyed by the record QUESTION embedding,
 returning the record ANSWER as the grounding passage. Reuses:
   - the project MiniLM encoder via `tools.dataset.embeddings.embed` (normalized)
   - the FAISS IndexFlatIP construction from `src/tlw/memory/faiss_backend.py`
 
-Honesty seals enforced at build time (RAG_SPEC §5, schema.md slot-D `rag`):
+Honesty seals enforced at build time (rag-medquad-protocol §5, schema.md slot-D `rag`):
   RAG-L1  held-out records provably excluded (by id) — manifest records the check.
   RAG-L2  drop any source record whose QUESTION or ANSWER is >= dedup_threshold
           cosine (MiniLM, default 0.90 = rubric D3) to any held-out record — an
@@ -137,7 +137,7 @@ class RagIndexBuilder:
         n_dropped_id = n_source - len(after_l1)
 
         # RAG-L2: near-duplicate scrub against held-out. Two complementary
-        # filters (RAG_SPEC §5, strengthened per the 2026-07-16 hub finding —
+        # filters (rag-medquad-protocol §5, strengthened per the 2026-07-16 hub finding —
         # whole-answer cosine alone misses templated answers that share a large
         # VERBATIM block while differing overall, e.g. the "What to do for
         # Crohn's" vs "…Ulcerative Colitis" NIH template, cosine 0.76 but ~100%
@@ -307,7 +307,7 @@ class RagIndexBuilder:
     def _sample_retrievals(
         self, index, passages: List[Dict[str, Any]], queries: List[str], k: int = 3, n_q: int = 3
     ) -> List[Dict[str, Any]]:
-        """Eyeball-quality demo (RAG_SPEC/T3.2 step 3). Queries are for DISPLAY
+        """Eyeball-quality demo (rag-medquad-protocol/T3.2 step 3). Queries are for DISPLAY
         only — nothing is tuned against them (Must-NOT: no hand-tuning vs heldout)."""
         if not passages:
             return []
@@ -355,7 +355,7 @@ class RagIndexBuilder:
         )
         lines.append(f"| **indexed passages** | **{r.n_indexed}** |")
         lines.append("")
-        lines.append("## Honesty seals (RAG_SPEC §5)")
+        lines.append("## Honesty seals (rag-medquad-protocol §5)")
         lines.append("")
         lines.append(f"- **Held-out id exclusion (RAG-L1):** {r.heldout_id_exclusion}")
         lines.append(f"- **Held-out verbatim-text exclusion:** {r.heldout_text_exclusion}")

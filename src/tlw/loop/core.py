@@ -13,7 +13,7 @@ instead of, the leakage-seal tests in tests/tlw/loop/) that a
 student-bound prompt cannot carry the reference answer, even if a preset
 template or a misbehaving teacher model tries to put it there (this is what
 seals arm D's "teacher legally saw GT, but its RETURNED feedback must still
-be GT-free before the student sees it", EVAL_SPEC.md §1).
+be GT-free before the student sees it", teaching-loop-protocol.md §1).
 """
 
 from typing import Any, Dict, List, Optional
@@ -78,7 +78,7 @@ def assert_gt_free(prompt: str, ground_truth: Optional[str]) -> None:
 
 
 def grounding_block(memory, question: str, top_k: int, ground_truth: Optional[str] = None):
-    """RAG grounding (T3.3, ADR-026 / RAG_SPEC §1.4). Returns
+    """RAG grounding (T3.3, ADR-026 / rag-medquad-protocol §1.4). Returns
     `(block_str, n_dropped)`: a labelled REFERENCE-PASSAGES block for the FIRST
     answer attempt, plus a count of passages filtered by the RAG-L3 leak filter.
     Empty block ("") when the backend does not ground the first attempt (the

@@ -146,7 +146,7 @@ def test_build_params_carries_run_identity():
 
 def test_diagnose_round_computed_even_without_params_ground_truth():
     """The runner computes reference_match post-hoc from the dataset's own
-    ground truth for ALL arms (EVAL_SPEC §2, legal score-path use) even
+    ground truth for ALL arms (teaching-loop-protocol §2, legal score-path use) even
     though arm A/B/C never receive ground_truth inside params (previous
     test) — the two paths are intentionally decoupled."""
     round_record = {"answer": "X is the reference answer."}

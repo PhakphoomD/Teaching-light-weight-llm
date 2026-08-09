@@ -1,6 +1,6 @@
 # experiments/rag-medquad/small-model-no-rag.yml
 # RAG ablation arm "3B" (no retrieval) — the baseline the RAG lift is measured
-# against (RAG_SPEC §3, ADR-026). Identical settings to
+# against (rag-medquad-protocol §3, ADR-026). Identical settings to
 # experiments/teaching-loop/1-baseline.yml except
 # it is pinned single-pass (max_rounds 1) and named for the P3 ablation.
 #
@@ -9,9 +9,9 @@
 #   eval.judge         : Groq llama-3.1-8b-instant + pass_threshold 1.0 (score>=4)
 #                        — the SAME judge+bar Track A's full run used
 #                        (experiments/teaching-loop/1-baseline.yml), so the RAG
-#                        number is directly comparable (RAG_SPEC §4.1).
+#                        number is directly comparable (rag-medquad-protocol §4.1).
 #   params.arm         : A, max_rounds 1 (single pass — retrieval is the only
-#                        variable across the 3B / 3B+RAG pair, RAG_SPEC §3)
+#                        variable across the 3B / 3B+RAG pair, rag-medquad-protocol §3)
 # memory stays base default (none). teacher unused (arm A never calls it).
 #
 # params.seed supplied per invocation via EXPERIMENT_PARAMS_SEED (all 3 seeds

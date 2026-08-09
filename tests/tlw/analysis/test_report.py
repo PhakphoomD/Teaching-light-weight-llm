@@ -80,7 +80,7 @@ def test_banner_fires_on_seed_shortfall_even_with_full_n(runs_root, make_run):
 
 
 def test_pre_registered_constants_match_eval_spec():
-    # EVAL_SPEC.md §4.4 (125 held-out) / §4.1 (3 seeds: 13, 42, 123)
+    # teaching-loop-protocol.md §4.4 (125 held-out) / §4.1 (3 seeds: 13, 42, 123)
     assert PRE_REGISTERED_N_QUESTIONS == 125
     assert PRE_REGISTERED_N_SEEDS == 3
 

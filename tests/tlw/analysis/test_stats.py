@@ -1,4 +1,4 @@
-"""Statistical correctness tests for stats.py (T2.8 EVAL_SPEC.md §4).
+"""Statistical correctness tests for stats.py (T2.8 teaching-loop-protocol.md §4).
 
 Every non-trivial number here is either hand-computable (worked in the
 docstring/comment) or cross-checked against an independent implementation

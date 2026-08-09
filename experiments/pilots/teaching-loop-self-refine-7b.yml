@@ -1,6 +1,6 @@
 # experiments/pilots/teaching-loop-self-refine-7b.yml
 # Arm B — self-refine: the student critiques its OWN previous answer, ZERO
-# teacher calls (EVAL_SPEC.md §1). This is the control arm C is measured
+# teacher calls (teaching-loop-protocol.md §1). This is the control arm C is measured
 # against — the pre-registered headline is pass_rate(C) - pass_rate(B).
 # Diffs from config/base.yml only; memory.type stays base.yml's 'none'
 # (Config Contract V8 requires it for arms A/B).

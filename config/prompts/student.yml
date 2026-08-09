@@ -16,7 +16,7 @@ minimal:
 
     Answer:
 
-  # GT-FREE — RAG grounding variant (T3.3, ADR-026 / RAG_SPEC §1.4). Used only
+  # GT-FREE — RAG grounding variant (T3.3, ADR-026 / rag-medquad-protocol §1.4). Used only
   # when a `rag` backend returns passages for the FIRST attempt; {context} holds
   # the retrieved REFERENCE PASSAGES. No {ground_truth} placeholder — the
   # passages are TRAIN evidence, and the prompt is still assert_gt_free-checked.

@@ -72,7 +72,7 @@ ALLOWED_KEYS: Dict[str, Any] = {
         "gt_similarity_max": None,
         "seed_from": None,
         "corpus_path": None,  # rag only (T3.3, ADR-026) — prebuilt tools/rag/ index dir
-        "max_passage_words": None,  # rag only — sub-chunk cap (RAG_SPEC §1.1)
+        "max_passage_words": None,  # rag only — sub-chunk cap (rag-medquad-protocol §1.1)
         "aspect_rerank": None,  # rag only (T3.9 FLAW-2 fix) — keep only same-aspect passages
     },
     "params": {  # E

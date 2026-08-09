@@ -13,10 +13,10 @@
 # quarantined; must never be a registry key (ADR-020 §7).
 
 orca:
-  # GT-VISIBLE: teacher-only — arm D (sighted-teacher, EVAL_SPEC §1).
+  # GT-VISIBLE: teacher-only — arm D (sighted-teacher, teaching-loop-protocol §1).
   # {ground_truth} appears ONLY inside this teacher-only template; the
   # teacher's RETURNED feedback text still passes the student-bound
-  # leakage guard before it can reach the student (EVAL_SPEC §1, loop/core.py).
+  # leakage guard before it can reach the student (teaching-loop-protocol §1, loop/core.py).
   sighted: |
     You are the Teacher model.
 
@@ -51,7 +51,7 @@ orca:
     2) ...
     3) ...
 
-  # GT-FREE — arm C (blind-teacher, the treatment, EVAL_SPEC §0/§1). Derived
+  # GT-FREE — arm C (blind-teacher, the treatment, teaching-loop-protocol §0/§1). Derived
   # from `sighted` above minus the [Target Answer] block (PROMPT_CATALOG §5a).
   # invariant: this template MUST NOT contain {ground_truth} anywhere.
   blind: |

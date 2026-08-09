@@ -151,7 +151,7 @@ def render_report(report: dict) -> str:
 def render_rag_report(report: dict) -> str:
     lines: List[str] = []
     lines.append("=" * 78)
-    lines.append("RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE")
+    lines.append("RAG ablation (T3.4, rag-medquad-protocol §6)  --  correctness is the HEADLINE")
     lines.append(f"labels present: {', '.join(report['labels_present']) or '(none)'}")
     lines.append("-" * 78)
 

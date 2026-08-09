@@ -1,12 +1,12 @@
 # WixQA RAG — 3-seed result + retrieval instrument (T3.9, P3-E)
 
-**Task:** T3.9 (`docs/plan/T3.9-wixqa-instrument-3seed.md`) · **Owners:** data-engineer + qa-engineer ·
+**Task:** T3.9 (`docs/protocol/2026-07-24-wixqa-hit-rate-instrument.md`) · **Owners:** data-engineer + qa-engineer ·
 **Depends on / anchors:** ADR-030 (the single-seed +13pt WixQA positive) · **Status:** FINAL — all
 600/600 replicates judged (2026-07-24); numbers below are locked.
 
 This turns ADR-030's **single-seed** WixQA result into a **3-seed result with a confidence interval**, and
 builds the **per-question retrieval instrument** (hit-rate harness) that the P3-E dose-response proof needs
-(`docs/plan/P3-E-retrieval-proof.md`). It is **variant #1** of the retriever ladder (MiniLM / whole-article).
+(`docs/protocol/2026-07-24-wixqa-dose-response-plan.md`). It is **variant #1** of the retriever ladder (MiniLM / whole-article).
 
 ---
 
@@ -128,7 +128,7 @@ Each step directory carries a `manifest.json` with its exact condition. Every nu
 
 # Retriever ladder (T3.10) — offline hit-rate@k + the go/no-go gate
 
-**Task:** T3.10 (`docs/plan/T3.10-retriever-ladder-offline.md`) · **Owner:** data-engineer · **Depends on:**
+**Task:** T3.10 (`docs/protocol/2026-07-24-wixqa-retriever-gate.md`) · **Owner:** data-engineer · **Depends on:**
 T3.9 · **Status:** DONE 2026-07-24 — **GATE = GO**, `bge_chunk` advances to T3.11.
 
 Purely offline de-risk (the T2.7-pilot discipline applied to retrieval): rank stronger retrievers over the
@@ -197,7 +197,7 @@ is the *second* bottleneck the Loop+RAG capstone (T3.14) targets.
 
 # Dose-response: the law demonstrated (T3.11)
 
-**Task:** T3.11 (`docs/plan/T3.11-dose-response-e2e.md`) · **Owner:** ops + qa · **Depends on:** T3.10 (go) ·
+**Task:** T3.11 (`docs/protocol/2026-07-25-wixqa-dose-response-run.md`) · **Owner:** ops + qa · **Depends on:** T3.10 (go) ·
 **Status:** FINAL — all 600/600 replicates judged (3 seeds × 200, completed 2026-07-25); numbers locked.
 
 The T3.10 winner `bge_chunk` (hit-rate 0.665) was run end-to-end on WixQA (3B, seeds {13,42,123}), with
@@ -348,7 +348,7 @@ python scripts/wixqa/analyze_grounding.py --control 'runs/rag-wixqa/3-rag-better
 # Loop+RAG: self-refine on top of RAG (T3.14 Stage 2)
 
 **Status:** PILOT COMPLETE 2026-08-06 — 133/133 judged (gold-retrieved subset, seed 42). Stopped at the
-pilot **per the pre-registered gate** (§6 of `docs/plan/P3E-CAPSTONE-PLAN.md`): the effect on the judged
+pilot **per the pre-registered gate** (§6 of `docs/protocol/2026-07-25-wixqa-grounding-and-loop-plan.md`): the effect on the judged
 bar was null, so the expensive 3-seed run was not run. Single-seed, labelled subset — see limits.
 
 The configuration the project is named after, finally evaluated: **self-refine + RAG together**

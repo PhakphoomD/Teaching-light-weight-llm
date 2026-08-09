@@ -1,6 +1,6 @@
 """BlindJudge (T2.3) — the Track-A headline correctness judge.
 
-Implements EVAL_SPEC.md §3 exactly: an independent, blind (Q+answer only,
+Implements teaching-loop-protocol.md §3 exactly: an independent, blind (Q+answer only,
 NEVER the reference) LLM judge that returns a 0-4 correctness verdict.
 PASS iff score >= 3 (normalized pass_threshold = 0.75, base.yml).
 
@@ -22,7 +22,7 @@ from src.providers.factory import build_client
 
 from ..registries import JUDGE_REGISTRY, Judge
 
-# --- Rubric prompt (EVAL_SPEC.md §3.2, verbatim) ---
+# --- Rubric prompt (teaching-loop-protocol.md §3.2, verbatim) ---
 
 RUBRIC_PROMPT = """You are a strict medical-QA evaluator. Judge the ANSWER to the QUESTION on its own merits.
 You are NOT given a reference answer — judge correctness from your own medical knowledge.
@@ -59,7 +59,7 @@ def parse_verdict(text: Optional[str]) -> Dict[str, Any]:
     and only emit the verdict JSON on its LAST line — a preamble may mention
     unrelated numbers (e.g. "score 3 out of 4 scale", a dose, a percentage),
     so parsing must find the FINAL verdict, never the first number it trips
-    over. Parse order (extends EVAL_SPEC §3.2's strict-JSON-then-fallback
+    over. Parse order (extends teaching-loop-protocol §3.2's strict-JSON-then-fallback
     posture with "last, not first"):
       1) whole-text strict JSON (covers old-style bare-JSON replies / tests)
       2) the LAST `{...}` object in the text that strict-parses with a

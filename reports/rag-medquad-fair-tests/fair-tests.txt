@@ -1,11 +1,9 @@
 # question: is the MedQuAD retrieval null just a weak retriever or too small a library?
-# regenerate: run src.tlw.analysis --rag over each variant directory in
-#             runs/rag-medquad-fair-tests/ separately (pooling the two would average
-#             a reranker test with a corpus-size test, which measure different things)
+# regenerate: run src.tlw.analysis --rag over each variant directory in runs/rag-medquad-fair-tests/ separately
 
 ### matching-question-type-only
 ==============================================================================
-RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE
+RAG ablation (T3.4, rag-medquad-protocol §6)  --  correctness is the HEADLINE
 labels present: 3B+RAG
 ------------------------------------------------------------------------------
 Descriptive per-label pass-rate (Wilson 95% CI):
@@ -23,12 +21,12 @@ Three SEPARATE columns, never merged (ADR-019):
 Token cost per label (student+judge; judge incl. faithfulness calls):
   3B+RAG  : total=168182  student=106270  judge=61912
 ==============================================================================
-*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
+*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (teaching-loop-protocol.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
 ==============================================================================
 
 ### much-bigger-library
 ==============================================================================
-RAG ablation (T3.4, RAG_SPEC §6)  --  correctness is the HEADLINE
+RAG ablation (T3.4, rag-medquad-protocol §6)  --  correctness is the HEADLINE
 labels present: 3B+RAG
 ------------------------------------------------------------------------------
 Descriptive per-label pass-rate (Wilson 95% CI):
@@ -46,6 +44,6 @@ Three SEPARATE columns, never merged (ADR-019):
 Token cost per label (student+judge; judge incl. faithfulness calls):
   3B+RAG  : total=170205  student=107799  judge=62406
 ==============================================================================
-*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (EVAL_SPEC.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
+*** NOT the pre-registered sample -- this is pilot/dry-run data (n<125 questions and/or <3 seeds). Do NOT read this as the Track-A headline result (teaching-loop-protocol.md §4.4, T2.8 Must-NOT). *** Reasons: only 1 distinct seed(s) present (need >= 3)
 ==============================================================================
 

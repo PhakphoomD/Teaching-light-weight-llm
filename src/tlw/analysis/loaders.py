@@ -204,7 +204,7 @@ def build_cluster_table(
     """Build the `{question_id: {arm: [passed_bool, ...]}}` cluster table
     `stats.paired_cluster_bootstrap` consumes, from one or more RunRecords
     per arm (one run per seed). Seeds are pooled inside each question's
-    per-arm list, per EVAL_SPEC §4.2 "Across seeds: pool the 3 seeds into
+    per-arm list, per teaching-loop-protocol §4.2 "Across seeds: pool the 3 seeds into
     the bootstrap (question is the cluster; seed replicates ride inside
     the cluster)".
 

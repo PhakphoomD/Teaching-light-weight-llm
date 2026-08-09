@@ -47,7 +47,7 @@ Non-Parametric Memories" (ACL 2023, arXiv:2212.10511):** retrieval augmentation 
 **hurts** on **high-popularity** questions the model already answers — because the retrieved
 passage adds noise the model would have been better off ignoring. Their recommendation —
 **adaptive retrieval** (retrieve only when the question is likely outside the model's knowledge) —
-is exactly our "selective RAG" (`SELECTIVE_RAG.md`).
+is exactly our "selective RAG" ([the selective-retrieval analysis](../reports/rag-medquad/selective-gating-analysis.md)).
 
 Our data is a clean reproduction on a *capability* axis rather than a *popularity* axis: the
 "genuine gaps" (baseline reliably fails) are this model's long tail, and RAG's +12pt per-attempt
@@ -114,7 +114,7 @@ Classification for Deep Neural Networks" (NeurIPS 2017, arXiv:1705.08500)** — 
 
 Selective RAG needs a gate that fires on the model's knowledge gaps. Our gate experiments failed:
 uncertainty signals (answer length, hedging, cross-seed self-consistency) correlated ~0 with
-failure, and LLM self-gates were prompt-tone-dominated (`SELECTIVE_RAG.md`). The reason is
+failure, and LLM self-gates were prompt-tone-dominated ([the selective-retrieval analysis](../reports/rag-medquad/selective-gating-analysis.md)). The reason is
 **calibration**: **Kadavath et al. 2022, "Language Models (Mostly) Know What They Know"
 (arXiv:2207.05221)** shows self-knowledge is an *emergent, scale-dependent* property — it is present
 in large models and **weak in small ones**. **Xiong et al. 2024, "Can LLMs Express Their Uncertainty?"

@@ -270,7 +270,7 @@ def _build_params(cfg: ExperimentConfig, run_id: str, ground_truth: Optional[str
     memory-off arms (T2.6 build decision: "REQUIRED for arm D, absent/None
     elsewhere"). `reference_match` diagnostics for ALL arms are computed
     separately, post-hoc, by the runner (see `_diagnose_round` below) — that
-    is a distinct, runner-only, legal score-path use of GT (EVAL_SPEC.md §2,
+    is a distinct, runner-only, legal score-path use of GT (teaching-loop-protocol.md §2,
     L10-L12) that never enters this params dict or any prompt."""
     params: Dict[str, Any] = {
         "run_id": run_id,
@@ -294,7 +294,7 @@ def _build_params(cfg: ExperimentConfig, run_id: str, ground_truth: Optional[str
 
 
 def _diagnose_round(round_record: Dict[str, Any], ground_truth: Optional[str]) -> Optional[Dict[str, float]]:
-    """Runner-level `reference_match` (EVAL_SPEC.md §2, diagnostic-only,
+    """Runner-level `reference_match` (teaching-loop-protocol.md §2, diagnostic-only,
     legal score-path use of GT) computed AFTER the arm/judge have already
     produced the round record, from a separate call site — this is what lets
     every arm (including A/B/C, which never receive `ground_truth` in
@@ -403,7 +403,7 @@ def run_experiment(
         memory_kwargs["storage_dir"] = str(run_dir / "memory")
     memory = build_memory_backend(cfg.memory.type, **memory_kwargs)
 
-    # Faithfulness diagnostic (T3.4, RAG_SPEC §4.2) — built ONLY for rag runs
+    # Faithfulness diagnostic (T3.4, rag-medquad-protocol §4.2) — built ONLY for rag runs
     # (it needs retrieved passages). Reuses the SAME judge model as the blind
     # correctness judge for one consistent evaluator; it sees (answer, passages)
     # only, never the gold answer (§0.2). Computed post-hoc like reference_match,
@@ -465,7 +465,7 @@ def run_experiment(
                     ref_semantic.append(diag["semantic_sim"])
                     ref_rouge.append(diag["rouge_l"])
                 # Faithfulness (rag only) — groundedness of this answer vs the
-                # passages it was shown; diagnostic, never gates (RAG_SPEC §4.2).
+                # passages it was shown; diagnostic, never gates (rag-medquad-protocol §4.2).
                 if faithfulness_judge is not None and r.get("grounding_context"):
                     fscore = faithfulness_judge.score(r.get("answer", ""), r["grounding_context"])
                     r["faithfulness"] = fscore.get("faithfulness")
@@ -546,7 +546,7 @@ def run_experiment(
 
 def print_summary(summary: Dict[str, Any]) -> None:
     """Honest console summary: correctness AND reference_match as SEPARATE
-    columns, never merged (T2.6 step 1 / EVAL_SPEC.md §2, ADR-019)."""
+    columns, never merged (T2.6 step 1 / teaching-loop-protocol.md §2, ADR-019)."""
     rm = summary["metrics"]["reference_match"]
     sem = rm["semantic_sim_mean"]
     rouge = rm["rouge_l_mean"]

@@ -1,4 +1,4 @@
-"""The pre-registered statistics (EVAL_SPEC.md §4 -- implemented exactly).
+"""The pre-registered statistics (teaching-loop-protocol.md §4 -- implemented exactly).
 
 Three tools, each with one job (§4.2):
 
@@ -28,7 +28,7 @@ Z_975 = 1.959963984540054  # scipy.stats.norm.ppf(0.975), hardcoded so this
 
 @dataclass(frozen=True)
 class WilsonInterval:
-    """Descriptive per-arm interval (EVAL_SPEC §4.2 "secondary/descriptive")."""
+    """Descriptive per-arm interval (teaching-loop-protocol §4.2 "secondary/descriptive")."""
 
     k: int
     n: int
@@ -40,7 +40,7 @@ class WilsonInterval:
 
 def wilson_interval(k: int, n: int, z: float = Z_975) -> WilsonInterval:
     """Wilson score interval for a single proportion k/n. Behaves well at
-    small n and near 0/1 (EVAL_SPEC §4.2), unlike a naive normal-approx CI.
+    small n and near 0/1 (teaching-loop-protocol §4.2), unlike a naive normal-approx CI.
 
     n=0 -> point/low/high all 0.0 (an empty arm has no defensible interval;
     callers must treat n=0 as "no data", not "0% pass rate").
@@ -62,7 +62,7 @@ def wilson_interval(k: int, n: int, z: float = Z_975) -> WilsonInterval:
 @dataclass(frozen=True)
 class BootstrapResult:
     """The headline C-B (or any arm-pair) delta with its paired
-    cluster-bootstrap 95% CI (EVAL_SPEC §4.2/§4.3)."""
+    cluster-bootstrap 95% CI (teaching-loop-protocol §4.2/§4.3)."""
 
     arm_a: str
     arm_b: str
@@ -92,7 +92,7 @@ def paired_cluster_bootstrap(
     n_resamples: int = 10_000,
     seed: int = 0,
 ) -> BootstrapResult:
-    """Paired cluster bootstrap over questions (EVAL_SPEC §4.2 "Primary").
+    """Paired cluster bootstrap over questions (teaching-loop-protocol §4.2 "Primary").
 
     `cluster_table`: {question_id: {arm: [passed_bool, ...]}} -- the list
     per arm holds one entry per seed replicate for that question (seeds
@@ -151,7 +151,7 @@ def paired_cluster_bootstrap(
 
 @dataclass(frozen=True)
 class McNemarResult:
-    """Companion paired-significance test (EVAL_SPEC §4.2 "Companion
+    """Companion paired-significance test (teaching-loop-protocol §4.2 "Companion
     significance"). `b` = arm_a PASS / arm_b FAIL, `c` = arm_a FAIL / arm_b
     PASS (discordant pairs); concordant pairs (both pass or both fail)
     carry no information for McNemar and are excluded, per the standard
@@ -169,7 +169,7 @@ def exact_mcnemar(pairs: Sequence[Tuple[bool, bool]], arm_a: str = "a", arm_b: s
     """Exact (binomial) McNemar test on paired PASS/FAIL observations.
 
     `pairs`: sequence of (passed_a, passed_b) for the SAME observation unit
-    (one question, one seed replicate -- EVAL_SPEC §4.2 names the unit as
+    (one question, one seed replicate -- teaching-loop-protocol §4.2 names the unit as
     "B-vs-C discordant pairs"; when seeds are pooled, each (question, seed)
     replicate is treated as one paired observation here, which is the
     simplest generalization -- flagged under NOT DONE in the report for
@@ -206,7 +206,7 @@ def per_seed_deltas(
     seeds: Sequence[int],
     seed_index: Dict[str, Dict[str, List[int]]],
 ) -> Dict[int, float]:
-    """Mean +/- spread of C-B across the individual seeds (EVAL_SPEC §4.2
+    """Mean +/- spread of C-B across the individual seeds (teaching-loop-protocol §4.2
     "also report mean +/- spread ... as a robustness check"). `seed_index`
     mirrors `cluster_table`'s shape but holds the seed id for each replicate
     (same list order) so a replicate can be attributed back to its seed.

@@ -178,7 +178,7 @@ def test_faiss_registered_after_t25(tmp_path):
 def test_rag_registered_after_t33(tmp_path):
     """T3.3 shipped: importing src.tlw.memory now registers the real 'rag'
     backend (read-only corpus retriever, ADR-026) — it requires a corpus_path
-    and fails loud without one (RAG_SPEC §2)."""
+    and fails loud without one (rag-medquad-protocol §2)."""
     import src.tlw.memory  # noqa: F401  (side-effect import: registers "rag")
 
     assert "rag" in MEMORY_REGISTRY.names()

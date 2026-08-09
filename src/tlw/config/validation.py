@@ -216,14 +216,14 @@ def _check_v8_arm_memory(cfg: Dict[str, Any], errors: List[str]) -> None:
 
 
 def _check_rag_corpus_path(cfg: Dict[str, Any], errors: List[str]) -> None:
-    """memory.type: rag REQUIRES a corpus_path (RAG_SPEC §2 / schema.md slot-D
+    """memory.type: rag REQUIRES a corpus_path (rag-medquad-protocol §2 / schema.md slot-D
     rag) — a rag run with no index must fail loud, not retrieve nothing silently."""
     if _get(cfg, "memory.type") != "rag":
         return
     if not _get(cfg, "memory.corpus_path"):
         errors.append(
             "RAG — memory.type: rag requires memory.corpus_path (a prebuilt "
-            "tools/rag/ index dir, T3.2); none was given (RAG_SPEC §2)"
+            "tools/rag/ index dir, T3.2); none was given (rag-medquad-protocol §2)"
         )
 
 
