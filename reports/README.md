@@ -44,6 +44,9 @@ python scripts/wixqa/analyze_dose_response.py
 
 Each report carries its question and its regeneration command as the first two lines of the file.
 
+To rebuild the run logs themselves rather than recompute from them — the model runs, the index
+builds, the judging, the fine-tune — see [HOW_TO_REGENERATE.md](HOW_TO_REGENERATE.md).
+
 > **Status.** All eight study directories are populated, and every value in them was recomputed
 > from `runs/` — none was transcribed. Two things a reader should know before using them:
 >

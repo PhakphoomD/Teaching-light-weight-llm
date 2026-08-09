@@ -1384,6 +1384,11 @@ python scripts/wixqa/analyze_dose_response.py
 The original analyses, run directly. Each study directory under `reports/` carries the exact command
 that regenerates its own report as the first two lines of the file.
 
+**To rebuild the logs themselves** rather than recompute from them — the model runs, the index
+builds, the judging, the fine-tune — see
+[`reports/HOW_TO_REGENERATE.md`](../reports/HOW_TO_REGENERATE.md). That layer needs a GPU for one
+step and a hosted judge for another; nothing in this report does.
+
 ### Appendices
 
 | | |
