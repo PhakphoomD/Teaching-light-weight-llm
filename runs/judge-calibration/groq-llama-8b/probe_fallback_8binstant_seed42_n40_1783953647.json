@@ -1,0 +1,369 @@
+{
+  "n": 40,
+  "seed": 42,
+  "judge_model": "groq/llama-3.1-8b-instant",
+  "note": "ADR-022(d) fallback after local llama3.1:8b (Ollama) probe failed gates",
+  "summary": {
+    "per_class": {
+      "good": {
+        "pass_rate": 0.95,
+        "null_rate": 0.0,
+        "mean_normalized": 0.86875,
+        "n": 40
+      },
+      "wrong": {
+        "pass_rate": 0.1,
+        "null_rate": 0.0,
+        "mean_normalized": 0.08125,
+        "n": 40
+      },
+      "truncated": {
+        "pass_rate": 0.775,
+        "null_rate": 0.0,
+        "mean_normalized": 0.675,
+        "n": 40
+      },
+      "plausible_wrong": {
+        "pass_rate": 0.925,
+        "null_rate": 0.0,
+        "mean_normalized": 0.85,
+        "n": 40
+      }
+    },
+    "discrimination_good_minus_wrong": 0.7875,
+    "gates": {
+      "good_pass_rate_ge_0.80": true,
+      "wrong_pass_rate_le_0.15": true,
+      "plausible_wrong_pass_rate_le_0.30": false,
+      "discrimination_ge_0.6": true,
+      "null_rate_lt_0.02": true
+    },
+    "all_gates_pass": false
+  },
+  "rows": [
+    {
+      "id": "diabetes-00410",
+      "question": "How to diagnose What I need to know about Gestational Diabetes ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00066",
+      "question": "Who is at risk for Anemia of Inflammation and Chronic Disease?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00014",
+      "question": "What are the treatments for Acromegaly ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00478",
+      "question": "What causes Ectopic Kidney ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00177",
+      "question": "What is (are) National Hormone and Pituitary Program (NHPP): Information for People Treated with Pituitary Human Growth Hormone (Comprehensive Report) ?",
+      "good": 0,
+      "wrong": 0,
+      "truncated": 0,
+      "plausible_wrong": 0
+    },
+    {
+      "id": "diabetes-00158",
+      "question": "Who is at risk for Nutrition for Early Chronic Kidney Disease in Adults?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 2
+    },
+    {
+      "id": "diabetes-00141",
+      "question": "What are the treatments for Perineal Injury in Males ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00081",
+      "question": "What is (are) Nutrition for Advanced Chronic Kidney Disease in Adults ?",
+      "good": 3,
+      "wrong": 3,
+      "truncated": 1,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00476",
+      "question": "What to do for Mineral and Bone Disorder in Chronic Kidney Disease ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00061",
+      "question": "How many people are affected by Urinary Tract Infection In Adults ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00436",
+      "question": "What to do for What I need to know about Diarrhea ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00574",
+      "question": "What to do for Primary Sclerosing Cholangitis ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00350",
+      "question": "How to diagnose Prevent diabetes problems: Keep your diabetes under control ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00053",
+      "question": "How to diagnose Primary Hyperparathyroidism ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00382",
+      "question": "What to do for Indigestion ?",
+      "good": 4,
+      "wrong": 3,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00275",
+      "question": "What causes Dumping Syndrome ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00018",
+      "question": "What are the symptoms of Prolactinoma ?",
+      "good": 4,
+      "wrong": 3,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00017",
+      "question": "How many people are affected by Prolactinoma ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00056",
+      "question": "What are the symptoms of Urine Blockage in Newborns ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 1,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00138",
+      "question": "What is (are) Perineal Injury in Males ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 4,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00148",
+      "question": "What to do for Graves' Disease ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 1,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00326",
+      "question": "What is (are) Hypoglycemia ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 4,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00388",
+      "question": "What are the symptoms of Diarrhea ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00015",
+      "question": "What to do for Acromegaly ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 1,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00360",
+      "question": "What are the symptoms of Short Bowel Syndrome ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00125",
+      "question": "What causes Simple Kidney Cysts ?",
+      "good": 3,
+      "wrong": 3,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00463",
+      "question": "What is (are) Kidney Dysplasia ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00418",
+      "question": "What causes Crohn's Disease ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 4,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00453",
+      "question": "Who is at risk for Biliary Atresia?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00272",
+      "question": "What are the symptoms of Intestinal Pseudo-obstruction ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00139",
+      "question": "What are the complications of Perineal Injury in Males ?",
+      "good": 4,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00289",
+      "question": "What is (are) Fecal Incontinence ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00381",
+      "question": "How to diagnose Indigestion ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00179",
+      "question": "What are the symptoms of Hashimoto's Disease ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00526",
+      "question": "What are the treatments for What I need to know about Hepatitis A ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00559",
+      "question": "What is (are) Diabetes, Heart Disease, and Stroke ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00003",
+      "question": "What are the symptoms of Kidney Stones in Adults ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00488",
+      "question": "What are the complications of Pyelonephritis: Kidney Infection ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00522",
+      "question": "What is (are) What I need to know about Hepatitis A ?",
+      "good": 2,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00094",
+      "question": "What are the treatments for Hematuria (Blood in the Urine) ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 3
+    }
+  ],
+  "kappa_vs_groq70b": 0.4107648725212466,
+  "kappa_gate_pass": false,
+  "reused_groq70b_rows_from": "runs/calibration/probe_seed42_n40_1783952270.json",
+  "call_seconds": 559.119327545166
+}

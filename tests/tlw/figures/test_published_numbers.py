@@ -468,7 +468,19 @@ def test_gold_articles_were_mostly_truncated():
     """The two numbers behind the delivery finding, recomputed rather than
     quoted — they used to sit in a caption citing a file that did not contain
     them. Counted per article (177 across 133 questions), which is what the
-    published median of 3,555 is a statement about."""
+    published median of 3,555 is a statement about.
+
+    This one needs the WixQA knowledge base, which is third-party data (MIT,
+    50 MB) that a clone acquires with `scripts/dataset/fetch_wixqa.py` rather
+    than carries. Absent, the test skips; present but unreadable, it fails —
+    the distinction structure.md §E asks for between "a fresh clone lacks it"
+    and "the layout moved".
+    """
+    kb = D.ROOT / "data" / "external" / "wixqa" / "kb_corpus.jsonl"
+    if not (D.ROOT / "data" / "external" / "wixqa").is_dir():
+        pytest.skip("WixQA knowledge base not fetched; run scripts/dataset/fetch_wixqa.py")
+    assert kb.is_file(), f"the WixQA directory exists but {kb.name} is missing — layout moved?"
+
     trunc = D.gold_article_truncation()
     assert trunc["n_articles"] == 177
     assert trunc["median_chars"] == 3555

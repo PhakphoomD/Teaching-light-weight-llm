@@ -1,0 +1,64 @@
+{
+  "n": 2,
+  "seed": 42,
+  "local_judge_model": "groq/llama-3.3-70b-versatile",
+  "local_summary": {
+    "per_class": {
+      "good": {
+        "pass_rate": 1.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.875,
+        "n": 2
+      },
+      "wrong": {
+        "pass_rate": 0.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.0,
+        "n": 2
+      },
+      "truncated": {
+        "pass_rate": 0.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.5,
+        "n": 2
+      },
+      "plausible_wrong": {
+        "pass_rate": 1.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.875,
+        "n": 2
+      }
+    },
+    "discrimination_good_minus_wrong": 0.875,
+    "gates": {
+      "good_pass_rate_ge_0.80": true,
+      "wrong_pass_rate_le_0.15": true,
+      "plausible_wrong_pass_rate_le_0.30": false,
+      "discrimination_ge_0.6": true,
+      "null_rate_lt_0.02": true
+    },
+    "all_gates_pass": false
+  },
+  "local_rows": [
+    {
+      "id": "diabetes-00410",
+      "question": "How to diagnose What I need to know about Gestational Diabetes ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00066",
+      "question": "Who is at risk for Anemia of Inflammation and Chronic Disease?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 3
+    }
+  ],
+  "kappa": null,
+  "kappa_gate_pass": null,
+  "kappa_not_applicable_reason": "judge-under-test is groq/llama-3.3-70b-versatile, identical to the kappa cross-check model \u2014 self-comparison is meaningless, skipped",
+  "groq_error": null
+}

@@ -250,6 +250,9 @@ runs/**
 !runs/**/rounds-analysis.jsonl
 !runs/**/*-analysis.jsonl
 !runs/**/retrieval_log*.jsonl
+# The judge calibration probes: 100 KB, and the evidence behind Table 17 --
+# both candidates failing is a published finding, so a reader must be able to open it.
+!runs/judge-calibration/**/*.json
 # Rebuildable search indexes (was: data/rag/) -- python -m tools.rag.cli
 indexes/
 # Third-party datasets -- see scripts/dataset/fetch_wixqa.py

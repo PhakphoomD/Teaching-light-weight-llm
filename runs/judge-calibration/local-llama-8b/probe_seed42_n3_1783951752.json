@@ -1,0 +1,71 @@
+{
+  "n": 3,
+  "seed": 42,
+  "local_judge_model": "ollama/llama3.1:8b",
+  "local_summary": {
+    "per_class": {
+      "good": {
+        "pass_rate": 1.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.8333333333333334,
+        "n": 3
+      },
+      "wrong": {
+        "pass_rate": 0.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.25,
+        "n": 3
+      },
+      "truncated": {
+        "pass_rate": 1.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.75,
+        "n": 3
+      },
+      "plausible_wrong": {
+        "pass_rate": 1.0,
+        "null_rate": 0.0,
+        "mean_normalized": 0.8333333333333334,
+        "n": 3
+      }
+    },
+    "discrimination_good_minus_wrong": 0.5833333333333334,
+    "gates": {
+      "good_pass_rate_ge_0.80": true,
+      "wrong_pass_rate_le_0.15": true,
+      "plausible_wrong_pass_rate_le_0.30": false,
+      "discrimination_ge_0.6": false,
+      "null_rate_lt_0.02": true
+    },
+    "all_gates_pass": false
+  },
+  "local_rows": [
+    {
+      "id": "diabetes-00410",
+      "question": "How to diagnose What I need to know about Gestational Diabetes ?",
+      "good": 3,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00066",
+      "question": "Who is at risk for Anemia of Inflammation and Chronic Disease?",
+      "good": 3,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00014",
+      "question": "What are the treatments for Acromegaly ?",
+      "good": 4,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 4
+    }
+  ],
+  "kappa": null,
+  "kappa_gate_pass": null,
+  "groq_error": null
+}

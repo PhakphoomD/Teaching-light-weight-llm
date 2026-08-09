@@ -1,0 +1,689 @@
+{
+  "n": 40,
+  "seed": 123,
+  "local_judge_model": "ollama/llama3.1:8b",
+  "local_summary": {
+    "per_class": {
+      "good": {
+        "pass_rate": 0.25,
+        "null_rate": 0.0,
+        "mean_normalized": 0.4125,
+        "n": 40
+      },
+      "wrong": {
+        "pass_rate": 0.05,
+        "null_rate": 0.0,
+        "mean_normalized": 0.2875,
+        "n": 40
+      },
+      "truncated": {
+        "pass_rate": 0.25,
+        "null_rate": 0.0,
+        "mean_normalized": 0.525,
+        "n": 40
+      },
+      "plausible_wrong": {
+        "pass_rate": 0.3,
+        "null_rate": 0.0,
+        "mean_normalized": 0.40625,
+        "n": 40
+      }
+    },
+    "discrimination_good_minus_wrong": 0.125,
+    "gates": {
+      "good_pass_rate_ge_0.80": false,
+      "wrong_pass_rate_le_0.15": true,
+      "plausible_wrong_pass_rate_le_0.30": true,
+      "discrimination_ge_0.6": false,
+      "null_rate_lt_0.02": true
+    },
+    "all_gates_pass": false
+  },
+  "local_rows": [
+    {
+      "id": "diabetes-00030",
+      "question": "What are the symptoms of Nephrotic Syndrome in Adults ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 1,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00173",
+      "question": "What are the treatments for National Hormone and Pituitary Program (NHPP): Information for People Treated with Pituitary Human Growth Hormone (Comprehensive Report) ?",
+      "good": 4,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00053",
+      "question": "How to diagnose Primary Hyperparathyroidism ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00494",
+      "question": "What are the symptoms of What I need to know about Hepatitis C ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00265",
+      "question": "How to diagnose Anemia in Chronic Kidney Disease ?",
+      "good": 1,
+      "wrong": 3,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00172",
+      "question": "What to do for Renal Tubular Acidosis ?",
+      "good": 3,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00064",
+      "question": "What to do for Urinary Tract Infection In Adults ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 0,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00543",
+      "question": "What is (are) Financial Help for Diabetes Care ?",
+      "good": 3,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00581",
+      "question": "What are the symptoms of IgA Nephropathy ?",
+      "good": 1,
+      "wrong": 0,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00562",
+      "question": "What is (are) Hemochromatosis ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00022",
+      "question": "What is (are) Henoch-Schnlein Purpura ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 0
+    },
+    {
+      "id": "diabetes-00250",
+      "question": "What are the symptoms of Prevent diabetes problems: Keep your nervous system healthy ?",
+      "good": 1,
+      "wrong": 3,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00342",
+      "question": "What are the symptoms of Abdominal Adhesions ?",
+      "good": 2,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00360",
+      "question": "What are the symptoms of Short Bowel Syndrome ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00214",
+      "question": "What to do for Monogenic Forms of Diabetes: Neonatal Diabetes Mellitus and Maturity-onset Diabetes of the Young ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00221",
+      "question": "What are the treatments for What I need to know about Gas ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00550",
+      "question": "What to do for What I need to know about Interstitial Cystitis/Painful Bladder Syndrome ?",
+      "good": 1,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00094",
+      "question": "What are the treatments for Hematuria (Blood in the Urine) ?",
+      "good": 3,
+      "wrong": 2,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00078",
+      "question": "What are the symptoms of Porphyria ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00217",
+      "question": "What to do for Sexual and Urologic Problems of Diabetes ?",
+      "good": 1,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00453",
+      "question": "Who is at risk for Biliary Atresia?",
+      "good": 1,
+      "wrong": 2,
+      "truncated": 1,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00158",
+      "question": "Who is at risk for Nutrition for Early Chronic Kidney Disease in Adults?",
+      "good": 1,
+      "wrong": 2,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00097",
+      "question": "How many people are affected by Urinary Tract Infections in Children ?",
+      "good": 4,
+      "wrong": 1,
+      "truncated": 4,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00000",
+      "question": "What is (are) Kidney Stones in Adults ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00583",
+      "question": "How to diagnose IgA Nephropathy ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 0,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00283",
+      "question": "What to do for Irritable Bowel Syndrome in Children ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00497",
+      "question": "What is (are) Diagnosis of Diabetes and Prediabetes ?",
+      "good": 3,
+      "wrong": 2,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00564",
+      "question": "What are the complications of Hemochromatosis ?",
+      "good": 1,
+      "wrong": 2,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00385",
+      "question": "What is (are) Your Guide to Diabetes: Type 1 and Type 2 ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00248",
+      "question": "What to do for What I need to know about Diverticular Disease ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00042",
+      "question": "What are the treatments for Treatment Methods for Kidney Failure: Peritoneal Dialysis ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00003",
+      "question": "What are the symptoms of Kidney Stones in Adults ?",
+      "good": 4,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00203",
+      "question": "What causes Gas in the Digestive Tract ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 3,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00472",
+      "question": "What is (are) Mineral and Bone Disorder in Chronic Kidney Disease ?",
+      "good": 4,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00289",
+      "question": "What is (are) Fecal Incontinence ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00061",
+      "question": "How many people are affected by Urinary Tract Infection In Adults ?",
+      "good": 3,
+      "wrong": 1,
+      "truncated": 1,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00026",
+      "question": "How to diagnose Henoch-Schnlein Purpura ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00056",
+      "question": "What are the symptoms of Urine Blockage in Newborns ?",
+      "good": 1,
+      "wrong": 1,
+      "truncated": 2,
+      "plausible_wrong": 1
+    },
+    {
+      "id": "diabetes-00431",
+      "question": "What is (are) What I need to know about Diarrhea ?",
+      "good": 4,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00082",
+      "question": "How to diagnose Treatment Methods for Kidney Failure: Hemodialysis ?",
+      "good": 1,
+      "wrong": 2,
+      "truncated": 2,
+      "plausible_wrong": 1
+    }
+  ],
+  "kappa": 0.21311475409836064,
+  "kappa_gate_pass": false,
+  "groq_error": null,
+  "groq_rows": [
+    {
+      "id": "diabetes-00030",
+      "question": "What are the symptoms of Nephrotic Syndrome in Adults ?",
+      "good": 3,
+      "wrong": null,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00173",
+      "question": "What are the treatments for National Hormone and Pituitary Program (NHPP): Information for People Treated with Pituitary Human Growth Hormone (Comprehensive Report) ?",
+      "good": 2,
+      "wrong": 0,
+      "truncated": 1,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00053",
+      "question": "How to diagnose Primary Hyperparathyroidism ?",
+      "good": 3,
+      "wrong": 0,
+      "truncated": 2,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00494",
+      "question": "What are the symptoms of What I need to know about Hepatitis C ?",
+      "good": 4,
+      "wrong": null,
+      "truncated": 2,
+      "plausible_wrong": 4
+    },
+    {
+      "id": "diabetes-00265",
+      "question": "How to diagnose Anemia in Chronic Kidney Disease ?",
+      "good": null,
+      "wrong": 1,
+      "truncated": 1,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00172",
+      "question": "What to do for Renal Tubular Acidosis ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": 3
+    },
+    {
+      "id": "diabetes-00064",
+      "question": "What to do for Urinary Tract Infection In Adults ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00543",
+      "question": "What is (are) Financial Help for Diabetes Care ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00581",
+      "question": "What are the symptoms of IgA Nephropathy ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00562",
+      "question": "What is (are) Hemochromatosis ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00022",
+      "question": "What is (are) Henoch-Schnlein Purpura ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00250",
+      "question": "What are the symptoms of Prevent diabetes problems: Keep your nervous system healthy ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00342",
+      "question": "What are the symptoms of Abdominal Adhesions ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00360",
+      "question": "What are the symptoms of Short Bowel Syndrome ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00214",
+      "question": "What to do for Monogenic Forms of Diabetes: Neonatal Diabetes Mellitus and Maturity-onset Diabetes of the Young ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00221",
+      "question": "What are the treatments for What I need to know about Gas ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00550",
+      "question": "What to do for What I need to know about Interstitial Cystitis/Painful Bladder Syndrome ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00094",
+      "question": "What are the treatments for Hematuria (Blood in the Urine) ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00078",
+      "question": "What are the symptoms of Porphyria ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00217",
+      "question": "What to do for Sexual and Urologic Problems of Diabetes ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00453",
+      "question": "Who is at risk for Biliary Atresia?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00158",
+      "question": "Who is at risk for Nutrition for Early Chronic Kidney Disease in Adults?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00097",
+      "question": "How many people are affected by Urinary Tract Infections in Children ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00000",
+      "question": "What is (are) Kidney Stones in Adults ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00583",
+      "question": "How to diagnose IgA Nephropathy ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00283",
+      "question": "What to do for Irritable Bowel Syndrome in Children ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00497",
+      "question": "What is (are) Diagnosis of Diabetes and Prediabetes ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00564",
+      "question": "What are the complications of Hemochromatosis ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00385",
+      "question": "What is (are) Your Guide to Diabetes: Type 1 and Type 2 ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00248",
+      "question": "What to do for What I need to know about Diverticular Disease ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00042",
+      "question": "What are the treatments for Treatment Methods for Kidney Failure: Peritoneal Dialysis ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00003",
+      "question": "What are the symptoms of Kidney Stones in Adults ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00203",
+      "question": "What causes Gas in the Digestive Tract ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00472",
+      "question": "What is (are) Mineral and Bone Disorder in Chronic Kidney Disease ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00289",
+      "question": "What is (are) Fecal Incontinence ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00061",
+      "question": "How many people are affected by Urinary Tract Infection In Adults ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00026",
+      "question": "How to diagnose Henoch-Schnlein Purpura ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00056",
+      "question": "What are the symptoms of Urine Blockage in Newborns ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00431",
+      "question": "What is (are) What I need to know about Diarrhea ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    },
+    {
+      "id": "diabetes-00082",
+      "question": "How to diagnose Treatment Methods for Kidney Failure: Hemodialysis ?",
+      "good": null,
+      "wrong": null,
+      "truncated": null,
+      "plausible_wrong": null
+    }
+  ]
+}
