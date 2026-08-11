@@ -1,4 +1,4 @@
-"""RAG retrieval-corpus + FAISS index builder (T3.2, rag-medquad-protocol §1 / §5).
+"""RAG retrieval-corpus + FAISS index builder (rag-medquad-protocol §1 / §5).
 
 Turns a cleaned Q&A jsonl into a retrieval index: one passage per record
 (v1, no sub-chunking — rag-medquad-protocol §1.1), keyed by the record QUESTION embedding,
@@ -307,7 +307,7 @@ class RagIndexBuilder:
     def _sample_retrievals(
         self, index, passages: List[Dict[str, Any]], queries: List[str], k: int = 3, n_q: int = 3
     ) -> List[Dict[str, Any]]:
-        """Eyeball-quality demo (rag-medquad-protocol/T3.2 step 3). Queries are for DISPLAY
+        """Eyeball-quality demo (rag-medquad-protocol/step 3). Queries are for DISPLAY
         only — nothing is tuned against them (Must-NOT: no hand-tuning vs heldout)."""
         if not passages:
             return []

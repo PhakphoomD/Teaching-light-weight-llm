@@ -1,4 +1,4 @@
-"""Offline selective-RAG simulation (P3-B, reports/rag-medquad/selective-gating-analysis.md §4).
+"""Offline selective-RAG simulation (reports/rag-medquad/selective-gating-analysis.md §4).
 
 Tests the "verify-then-ground" gate WITHOUT re-running the student. We already
 have, per (question, seed): the baseline draft + its pass/fail (trackA_full_armA)

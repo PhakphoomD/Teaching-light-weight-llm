@@ -2,7 +2,7 @@
 
 The 7B ablation (2026-07-16) exhausted Groq's daily token cap partway, so ~40% of
 those judge calls fell back to the LOCAL llama3.1:8b judge — which scores
-differently from Groq llama-3.1-8b-instant (T2.3). That makes the 7B+RAG − 7B
+differently from Groq llama-3.1-8b-instant. That makes the 7B+RAG − 7B
 comparison confounded by a mixed judge. This script re-scores the affected runs'
 answers with a single Groq judge (deterministic, temp 0 → runs already fully
 Groq-judged are unchanged), restoring one consistent evaluator across all arms.

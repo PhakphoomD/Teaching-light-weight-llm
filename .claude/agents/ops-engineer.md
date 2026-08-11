@@ -3,7 +3,7 @@ name: ops-engineer
 description: Use for environment, dependencies, running things, and reproducibility — conda/pip, GPU/CUDA/QLoRA setup, local inference (Ollama/llama.cpp), CI, and single-command run scripts. Invoke to make something runnable or to fix env/deps issues.
 tools: Read, Grep, Glob, Bash, Edit, Write, Skill
 model: sonnet
-memory: project
+memory: local
 ---
 
 # Identity

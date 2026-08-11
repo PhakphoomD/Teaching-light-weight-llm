@@ -1,4 +1,4 @@
-"""Shared mocks for loop-block tests (T2.4) — no API calls anywhere.
+"""Shared mocks for loop-block tests — no API calls anywhere.
 
 MockClient/MockJudge/MockMemory stand in for the LLMClient (src/core/client.py)
 and Judge (registries.py) seams so arm-strategy tests exercise real call

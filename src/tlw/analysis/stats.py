@@ -11,7 +11,7 @@ Three tools, each with one job (§4.2):
 
 Nothing here reads a run artifact directly (that is `loaders.py`); these
 functions take plain aggregated inputs so they are unit-testable against
-hand-computable synthetic examples (T2.8 build instruction 5).
+hand-computable synthetic examples (build instruction 5).
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
 Z_975 = 1.959963984540054  # scipy.stats.norm.ppf(0.975), hardcoded so this
-# module has no scipy dependency (stdlib+numpy only per T2.8 build rule 6).
+# module has no scipy dependency (stdlib+numpy only  build rule 6).
 
 
 @dataclass(frozen=True)
@@ -187,7 +187,7 @@ def exact_mcnemar(pairs: Sequence[Tuple[bool, bool]], arm_a: str = "a", arm_b: s
     "B-vs-C discordant pairs"; when seeds are pooled, each (question, seed)
     replicate is treated as one paired observation here, which is the
     simplest generalization -- flagged under NOT DONE in the report for
-    T2.8, since replicates from the same question are not strictly
+    the analysis, since replicates from the same question are not strictly
     independent).
 
     Exact two-sided p-value: `2 * min(P(X<=min(b,c)), P(X>=max(b,c)))`

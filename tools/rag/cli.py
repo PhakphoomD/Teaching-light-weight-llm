@@ -1,4 +1,4 @@
-"""CLI for the RAG index builder (T3.2).
+"""CLI for the RAG index builder.
 
 Reproducible single command (§0.3), with the `tlw` environment active:
 

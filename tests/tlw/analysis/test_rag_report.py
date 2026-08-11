@@ -1,8 +1,8 @@
-"""T3.4 RAG ablation report tests (rag-medquad-protocol §4/§6).
+"""RAG ablation report tests (rag-medquad-protocol §4/§6).
 
 Uses the shared synthetic-run factory (`make_run`) to build {3B, 3B+RAG, 7B,
 7B+RAG} runs and checks: label derivation, the pre-registered 3B+RAG - 3B delta
-(same machinery as Track A), and the three-separate-columns rule (correctness /
+(same machinery as the teaching-loop study), and the three-separate-columns rule (correctness /
 faithfulness / reference_match, never merged).
 """
 
@@ -68,7 +68,7 @@ def test_three_columns_never_merged(make_run, runs_root):
 
 
 def test_missing_arm_ignored(make_run):
-    # A non-A run (e.g. a stray Track-A arm C) must not pollute the RAG grouping.
+    # A non-A run (e.g. a stray the teaching-loop study arm C) must not pollute the RAG grouping.
     make_run("armC", arm="C", seed=42, memory_type="none",
              student_model="qwen2.5:3b", passed_flags=[True])
     ragrun = _mk(make_run, "3brag", "qwen2.5:3b", "rag", [True], 42, faith=0.7)

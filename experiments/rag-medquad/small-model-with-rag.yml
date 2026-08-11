@@ -1,21 +1,21 @@
 # experiments/rag-medquad/small-model-with-rag.yml
 # RAG ablation arm "3B+RAG" — the HEADLINE treatment (rag-medquad-protocol §3/§6, ADR-026).
 # Pre-registered headline = pass_rate(3B+RAG) - pass_rate(3B), 95% paired
-# cluster-bootstrap CI (src/tlw/analysis, same machinery as Track A).
+# cluster-bootstrap CI (src/tlw/analysis, same machinery as the teaching-loop study).
 #
 # Diffs from config/base.yml:
 #   student  : local qwen2.5:3b (same student as the 3B arm — only retrieval differs)
-#   memory   : type rag over the T3.2 held-out-free index (indexes/medquad-diabetes-train);
+#   memory   : type rag over the leak-scrubbed training-split index (indexes/medquad-diabetes-train);
 #              similarity_threshold 0.35 (RAG floor, LOWER than memory's 0.75 —
 #              RAG wants related context, not a near-exact twin, rag-medquad-protocol §1.3);
 #              grounding passages enter the FIRST answer attempt (grounded_first
 #              preset), guarded by assert_gt_free (RAG-L3).
 #   eval     : Groq llama-3.1-8b-instant + pass_threshold 1.0 (score>=4) — SAME
-#              judge+bar as Track A / the 3B arm (comparability, rag-medquad-protocol §4.1).
+#              judge+bar as the teaching-loop study / the 3B arm (comparability, rag-medquad-protocol §4.1).
 #   params   : arm A, max_rounds 1 (single pass — isolate the retrieval effect).
 #
 # corpus_path is project-relative (resolved by the loader); it must point at a
-# held-out-EXCLUDED index (RAG-L1/L2, verified in the T3.2 build_report.md).
+# held-out-EXCLUDED index (RAG-L1/L2, verified in the build_report.md).
 #
 #   $env:EXPERIMENT_PARAMS_SEED = "42"
 #   python run.py --config experiments/rag-medquad/small-model-with-rag.yml `

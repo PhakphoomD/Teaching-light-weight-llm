@@ -1351,11 +1351,10 @@ def fig_lora() -> None:
 
     def build():
         theme = active()
-        # One panel, not two. An earlier version drew a second panel of
-        # per-question answer lengths, but those four pairs exist only as prose
-        # in a report -- no file in the repo holds them, so the chart would
-        # have been the one hand-typed thing in a set whose whole claim is that
-        # nothing is. The finding moves to tab-13, marked as quoted.
+        # One panel. The per-question answer lengths that would fill a second
+        # panel exist only as prose in a report, and every value drawn here is
+        # recomputed from an artifact -- so they are published in tab-13,
+        # labelled as quoted rather than recomputed, and not charted.
         fig, ax1 = plt.subplots(figsize=(7.4, 2.6))
         dot_ci(
             ax1,
@@ -1523,13 +1522,11 @@ def tab_nulls() -> None:
 def tab_predictions() -> None:
     """Every pre-registered numeric prediction, scored against the runs.
 
-    An earlier version of this table listed two wrong predictions. The capstone
-    protocol recorded **six** numeric predictions with ranges, and five of them
-    landed outside their range -- the two omitted misses both went *low*, on the
-    completeness metric the intervention was built to move. Nothing was hidden:
-    every outcome appears in tab-10, tab-12 and tab-15. What was favourable was
-    the scorecard, in the one table whose whole job is to make being wrong
-    visible. So the scoring is now computed here rather than asserted.
+    The capstone protocol recorded six numeric predictions with stated ranges.
+    Each is scored here against the runs rather than transcribed, so the count
+    of misses in the note cannot drift away from the outcomes -- which matters
+    more in this table than in any other, because its purpose is to make being
+    wrong visible.
     """
     # (label, predicted point, low, high, actual) -- ranges quoted from
     # docs/protocol/2026-07-25-wixqa-grounding-and-loop-plan.md, actuals recomputed.

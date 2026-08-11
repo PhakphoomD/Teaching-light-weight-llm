@@ -1,10 +1,10 @@
-"""WixQA T3.9 (P3-E): seeded + instrumented student generation for the 3-seed re-run.
+"""WixQA: seeded + instrumented student generation for the 3-seed re-run.
 
 Generates the 3B student's answers for ONE arm (baseline | rag) at a given seed,
-with a per-question RETRIEVAL RECORD (rag arm) so the dose-response proof (P3-E)
+with a per-question RETRIEVAL RECORD (rag arm) so the dose-response proof
 can measure pass-rate vs hit-rate. Scores are left null here; scoring is a
 SEPARATE, budget-aware pass (scripts/wixqa/judge.py) so Groq's org-wide TPD cap
-never corrupts a run mid-flight (todo lesson: never destructive-judge on a
+never corrupts a run mid-flight (never destructive-judge on a
 half-empty budget).
 
 Comparability (ADR-030): prompts, retrieval config (top_k=3, MAX_PASSAGE_CHARS=900),
@@ -13,7 +13,7 @@ wixqa_rag.py. The judge (scripts/wixqa/judge.py) reuses the SAME JUDGE_SYS. The
 ONLY new variable is Ollama's options.seed, so seeds {13,42,123} are
 distinct-but-reproducible draws from the same temp-0.3 distribution (§0.3).
 
-Honesty (ADR-030 / P3-E): the WixQA KB is the LEGITIMATE knowledge source;
+Honesty (ADR-030 / the retrieval-bottleneck study): the WixQA KB is the LEGITIMATE knowledge source;
 grounding on the retrieved article is intended (not leakage). The STUDENT never
 sees the gold answer; only the (separate) judge does. The index holds KB articles
 only, never the 200 expert QA answers.

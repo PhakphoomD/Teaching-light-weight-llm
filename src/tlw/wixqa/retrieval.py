@@ -1,13 +1,13 @@
-"""Retrieval over the WixQA knowledge base — the seven variants of the T3.10 ladder.
+"""Retrieval over the WixQA knowledge base — the seven variants of the retriever comparison.
 
 Moved verbatim from `scripts/wixqa/build_retriever_ladder.py`, which four other scripts
 imported. Behaviour is unchanged: the chunk size, the encoder prefixes and the
 candidate depths are the controlled variables behind the published hit-rates
-(T3.10) and the dose-response proof (T3.11).
+ and the dose-response proof.
 
 Measured hit-rate@3 over the 200 questions, for reference:
 
-    bge_chunk         0.665   <- the winner, advanced to T3.11
+    bge_chunk         0.665   <- the winner, used for the end-to-end runs
     minilm_chunk      0.645          chunking is the dominant lever
     bge_chunk_rerank  0.640          a wash at k=3: better recall@10, worse @3
     bge_whole         0.620
@@ -66,7 +66,7 @@ def clear_models() -> None:
     """Drop cached encoders so a caller can free GPU memory before generation.
 
     The 8 GB card cannot hold an encoder and the student model at once; a run
-    that skips this stalls instead of failing (learned the hard way, T3.11).
+    that skips this stalls instead of failing (learned the hard way).
     """
     _MODELS.clear()
     try:
@@ -220,7 +220,7 @@ def hitrate(ranked, gold) -> Tuple[dict, List]:
     return res, ranks
 
 
-#: Every variant of the T3.10 ladder, in the order it was reported.
+#: The retriever variants compared offline, in ranked order.
 VARIANT_NAMES = [
     "minilm_whole", "minilm_chunk", "bge_whole", "bge_chunk",
     "bm25", "hybrid_rrf", "bge_chunk_rerank",
@@ -260,7 +260,7 @@ def build_ranked(name: str, arts, qa, cache: Dict[str, List[List[str]]] | None =
 
 
 def retrieval_record(idx: int, question: str, gold_ids, retrieved_ids, sims) -> dict:
-    """The per-question hit-rate instrument (T3.9), seed-independent.
+    """The per-question hit-rate instrument, seed-independent.
 
     Retrieval is a deterministic embedding lookup, so this record is identical
     across seeds — which is what lets the analysis split any run by whether the

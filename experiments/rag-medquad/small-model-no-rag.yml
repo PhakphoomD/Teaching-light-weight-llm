@@ -2,12 +2,12 @@
 # RAG ablation arm "3B" (no retrieval) — the baseline the RAG lift is measured
 # against (rag-medquad-protocol §3, ADR-026). Identical settings to
 # experiments/teaching-loop/1-baseline.yml except
-# it is pinned single-pass (max_rounds 1) and named for the P3 ablation.
+# it is pinned single-pass (max_rounds 1) and named for the retrieval ablation.
 #
 # Diffs from config/base.yml:
 #   student            : local qwen2.5:3b (product floor, ADR-015)
 #   eval.judge         : Groq llama-3.1-8b-instant + pass_threshold 1.0 (score>=4)
-#                        — the SAME judge+bar Track A's full run used
+#                        — the SAME judge+bar the teaching-loop study's full run used
 #                        (experiments/teaching-loop/1-baseline.yml), so the RAG
 #                        number is directly comparable (rag-medquad-protocol §4.1).
 #   params.arm         : A, max_rounds 1 (single pass — retrieval is the only

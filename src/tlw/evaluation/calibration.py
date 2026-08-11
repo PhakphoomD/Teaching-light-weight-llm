@@ -1,6 +1,6 @@
-"""BlindJudge calibration probe (T2.3 / teaching-loop-protocol.md §3.3).
+"""BlindJudge calibration probe (teaching-loop-protocol.md §3.3).
 
-Gates the judge BEFORE the real Track-A run. Built and run on the TRAIN
+Gates the judge BEFORE the real the teaching-loop study run. Built and run on the TRAIN
 split (506 recs), NEVER the 125-question held-out set (§0.2). Extends the
 label-free method of scripts/calibration/compare_judges.py (GOOD/WRONG/TRUNCATED) with
 the spec's fourth, harder class:
@@ -13,14 +13,13 @@ the spec's fourth, harder class:
 Judge client: this script talks to the local Ollama daemon directly
 (mirrors tools/dataset/judge.py's OllamaJudge, already proven working in
 scripts/calibration/compare_judges.py) and injects it into BlindJudge via the `client=`
-constructor param. See NEEDS-HUB-DECISION in the T2.3 report for why this
+constructor param. See NEEDS-HUB-DECISION in the report for why this
 bypasses `build_client("local", ...)`: the registered "local" provider
 (src/providers/local_client.py::LocalTinyLlama) is a HuggingFace-transformers
 loader, not an Ollama client — "local" as used by config/base.yml (Ollama
 models qwen2.5:7b-instruct / llama3.1:8b, per providers.md) has no matching
-ProviderRegistry entry yet. That gap is out of T2.3's scope (owned by
-T2.1/ops-engineer, the ProviderRegistry seam) but blocks a config-driven
-judge from running end-to-end today.
+ProviderRegistry entry, so a config-driven judge cannot be built through
+the registry alone; this module routes to the provider directly.
 
 Run (train split only, tlw env):
   python -m src.tlw.evaluation.calibration --n 40

@@ -1,6 +1,6 @@
-"""Build a boundary-targeted judge-calibration set (T3.9).
+"""Build a boundary-targeted judge-calibration set.
 
-The RAG/Track-A pass/fail decision lives entirely at the uncalibrated score
+The RAG/the teaching-loop study pass/fail decision lives entirely at the uncalibrated score
 3-vs-4 line (99.6% of real answers score 3 or 4). This samples REAL student
 answers stratified around that line, attaches the gold reference (legal for
 CALIBRATION — a score-path activity, teaching-loop-protocol §2 / L10-L12), and records each

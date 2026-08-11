@@ -550,20 +550,16 @@ def test_pilots_cannot_leak_into_a_headline():
 
 
 # --------------------------------------------------------------------------
-# The intervals, which nothing checked until a review found two had drifted
+# The published confidence intervals
 # --------------------------------------------------------------------------
 #
-# Every test above asserts a point estimate. None asserted a bound -- and the
-# report says "every conclusion here is drawn from the interval". Two published
-# intervals had in fact drifted from what the advertised reproduce command
-# returned, because two callers keyed the same clusters as `str` and as `int`,
-# `sorted()` ordered them lexically in one and numerically in the other, and the
-# generator therefore drew different resamples from identical data. The point
-# estimate is order-invariant, so nothing moved where anything was watching.
-#
-# `paired_cluster_bootstrap` now orders by `str(key)` regardless of key type.
-# These cases are what would have caught it: the published bounds themselves,
-# and a direct assertion that the key's type cannot change the answer.
+# The report draws its conclusions from intervals, not from point estimates, so
+# the bounds need the same drift protection as the points. They are also the
+# half that can move while a point estimate does not: the bootstrap draws
+# cluster *indices*, so anything that changes the order clusters are laid out in
+# changes which questions each resample selects, and only the interval shifts.
+# The second test asserts that invariant directly, at the level where it can be
+# violated.
 
 PUBLISHED_INTERVALS = [
     # (label, computed comparison, published low, published high, where)
@@ -605,9 +601,10 @@ def test_published_interval_still_holds(label, compute, low, high, where):
 def test_cluster_key_type_cannot_change_the_interval():
     """The root cause, asserted directly.
 
-    A caller is free to key clusters however it likes; the bootstrap must not
-    care. Before the fix these two calls returned different lower bounds from
-    byte-identical data and the same seed.
+    A caller may key clusters with strings or with integers, and the bootstrap
+    must return the same answer either way: `sorted()` orders those two types
+    differently, which would otherwise change the resample sequence and move
+    the interval while leaving the point estimate untouched.
     """
     from src.tlw.analysis.stats import paired_cluster_bootstrap
 

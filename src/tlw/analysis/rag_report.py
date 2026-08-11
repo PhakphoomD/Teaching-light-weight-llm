@@ -1,7 +1,7 @@
-"""RAG ablation report (T3.4, rag-medquad-protocol §4/§6) — the {3B, 3B+RAG, 7B, 7B+RAG}
-table + headline delta, reusing the Track-A statistics machinery.
+"""RAG ablation report (rag-medquad-protocol §4/§6) — the {3B, 3B+RAG, 7B, 7B+RAG}
+table + headline delta, reusing the the teaching-loop study statistics machinery.
 
-Why a separate module from report.py: the Track-A report keys everything by the
+Why a separate module from report.py: the the teaching-loop study report keys everything by the
 ADR-002 **arm letter** (A/B/C/D) and enforces the V8 single-memory-type guard
 (headline `none` runs must never mix with C'/D' `faiss` runs). The RAG ablation
 is different on both axes:
@@ -12,7 +12,7 @@ is different on both axes:
     not a V8 conflation. So this module does NOT apply the V8 guard.
 
 Everything else is reused verbatim from report.py/stats.py (the CI machinery is
-identical to Track A, so the RAG number is directly comparable): Wilson per
+identical to the teaching-loop study, so the RAG number is directly comparable): Wilson per
 label, paired cluster bootstrap + exact McNemar for the delta, the pre-
 registration honesty banner. Adds one RAG-only diagnostic column: faithfulness.
 Correctness stays the headline; faithfulness/reference_match are NEVER merged
@@ -61,7 +61,7 @@ def rag_label(run: RunRecord) -> str:
 
 def group_by_rag_label(runs: Sequence[RunRecord]) -> Dict[str, List[RunRecord]]:
     """{RAG label: [runs]} — only arm-A runs (the RAG ablation is single-pass);
-    a non-A run is ignored so a stray Track-A arm can't pollute the table."""
+    a non-A run is ignored so a stray the teaching-loop study arm can't pollute the table."""
     out: Dict[str, List[RunRecord]] = {}
     for r in runs:
         if r.arm != "A":
@@ -121,7 +121,7 @@ def build_rag_comparison(
     pre_registered_seeds: int = PRE_REGISTERED_N_SEEDS,
 ) -> RagComparisonResult:
     """Paired delta `pass_rate(label_a) - pass_rate(label_b)` with 95% cluster
-    bootstrap CI + exact McNemar, pooling seeds — the SAME machinery Track A
+    bootstrap CI + exact McNemar, pooling seeds — the SAME machinery the teaching-loop study
     used (comparability). No V8 guard: crossing memory.type is the design."""
     runs_a = runs_by_label.get(label_a, [])
     runs_b = runs_by_label.get(label_b, [])

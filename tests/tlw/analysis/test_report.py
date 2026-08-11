@@ -1,4 +1,4 @@
-"""Report-assembly tests (T2.8 step 2 + honesty banner, build rules 3-4)."""
+"""Report-assembly tests (step 2 + honesty banner, build rules 3-4)."""
 
 import pytest
 

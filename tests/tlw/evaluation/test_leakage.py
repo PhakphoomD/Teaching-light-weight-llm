@@ -1,4 +1,4 @@
-"""T2.3 leakage tests (LEAKAGE_AUDIT seal #1 + #5, extended to the judge).
+"""leakage tests (LEAKAGE_AUDIT seal #1 + #5, extended to the judge).
 
 1. BlindJudge.score() cannot leak a reference answer into the judge prompt,
    because its signature has no parameter to carry one — proven structurally
@@ -6,7 +6,7 @@
    planted reference string, even though nothing was ever passed).
 2. §0.2 family rule (V2) blocks a same-family judge at config load time —
    exercised end-to-end through `load_config` (not just `validate()` unit
-   tests in tests/tlw/config/), per T2.3 step 3.
+   tests in tests/tlw/config/),  step 3.
 """
 
 import inspect
@@ -75,7 +75,7 @@ def test_planted_reference_never_reaches_the_judge_prompt():
 
 
 def test_rubric_prompt_source_has_no_ground_truth_identifier():
-    """Grep-proof DoD (T2.3 spec): no `ground_truth` Python identifier
+    """Grep-proof DoD (spec): no `ground_truth` Python identifier
     (variable/parameter/attribute name) anywhere in the correctness-path
     module — prose mentions in docstrings/comments referring to the concept
     are fine, an actual identifier that could carry the reference is not."""

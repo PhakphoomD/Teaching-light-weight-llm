@@ -1,5 +1,5 @@
 # experiments/student-prompt/detailed-prompt-style.yml
-# Closes the open gate-(f) question: does the ORCA student preset differ from
+# Answers the open question: does the ORCA student preset differ from
 # MINIMAL? Identical to the armA baseline (0.864 seed42, minimal) but
 # preset.student = orca. No RAG, no memory — isolates the student prompt.
 #

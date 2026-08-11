@@ -1,4 +1,4 @@
-# Config block (T2.1) — six-slot Config Contract v1 loader + validation.
+# Config block — six-slot Config Contract v1 loader + validation.
 # Spec: .claude/rules/schema.md "Experiment Config Contract v1" (ADR-016/022).
 
 from .loader import DEFAULT_BASE_PATH, PROJECT_ROOT, deep_merge, load_config

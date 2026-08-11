@@ -1,7 +1,7 @@
-"""Real PromptPreset implementations (T2.4) — the ADR-020 survivor set.
+"""Real PromptPreset implementations — the ADR-020 survivor set.
 
 Registers 'minimal' (student) and 'orca' (teacher) into PRESET_REGISTRY,
-replacing the T2.2 `_PlaceholderPreset` stand-ins that registries.py
+replacing the earlier `_PlaceholderPreset` stand-ins that registries.py
 registered under these same two names (deleted by this task — see
 registries.py's history/diff).
 """
@@ -72,14 +72,14 @@ class MinimalStudentPreset(_YamlPreset):
 class OrcaStudentPreset(_YamlPreset):
     """student.orca.{first,refine} + student.selfrefine.critique fallback.
 
-    T2.7 gate-(f) DATA: the legacy "structured orca-paired" student pair
+    The legacy "structured orca-paired" student pair
     (PROMPT_CATALOG.md §6, S1/S2 `initial_draft`/`refine_with_teacher`),
     ported into config/prompts/student.yml under YAML style key `orca` and
     registered here as **"orca_student"** — plain "orca" is already taken by
     `OrcaTeacherPreset` above (PRESET_REGISTRY is one flat namespace shared
     by student/teacher preset names; this collision is a naming wrinkle to
     flag to the hub, not a bug). Selected via `preset.student: orca_student`
-    (T2.7 pilot only; ADR-022 (f) keeps "minimal" as the P2 default pending
+    (pre-registration pilot only; ADR-022 (f) keeps "minimal" as the P2 default pending
     the pilot's recommendation). `critique` falls back to the same GT-free
     `student.selfrefine.critique` skeleton MinimalStudentPreset uses, so this
     preset is also callable for arm B if an experiment ever selects it there.

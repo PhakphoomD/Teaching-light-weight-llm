@@ -1,20 +1,18 @@
-"""Every driver in `scripts/` must load without an unbound name.
+"""Every experiment driver under `scripts/` must load and resolve its names.
 
-This test exists because two of them did not, and nothing noticed. When the
-drivers were regrouped into one package per study, `GROUNDINGS` and a stopword
-set stopped being in scope in the files that used them. Both crashed at
-argument-parsing time — before any work, so the failure was total — and one of
-them is the command `reports/HOW_TO_REGENERATE.md` gives for the study that
-produced the project's largest single effect.
+`reports/HOW_TO_REGENERATE.md` promises that a reader can re-run any study from
+its driver. Nothing else in the suite imports `scripts/`, so without these two
+checks a driver can be broken by a refactor elsewhere and stay broken silently:
+the published numbers still reconcile, because they come from committed logs,
+while the command that produced them no longer runs.
 
-It survived because no test imported anything under `scripts/`. The published
-numbers were unaffected (they come from committed logs written before the
-move), but the claim that a reader can regenerate them was false for that
-directory.
+Two checks, because they fail differently. Importing the module catches a
+missing import or a syntax error at module scope. The static scan catches a
+name that is read but never bound anywhere in the file — a defect that survives
+import when it sits inside a function, and surfaces only when a reader runs the
+command.
 
-Importing each module is the cheapest check that covers the whole class:
-Python binds module-level names at import, and both defects were module-level.
-It does not run anything, need a network, or touch a model.
+Neither check executes a driver, opens a network connection, or loads a model.
 """
 
 from __future__ import annotations

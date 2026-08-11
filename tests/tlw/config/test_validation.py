@@ -1,6 +1,6 @@
-"""Unit tests for Config Contract v1 validation rules V1-V8 (T2.1).
+"""Unit tests for Config Contract v1 validation rules V1-V8.
 
-Each rule gets its own test (T2.1 step 3), plus a broken-config test proving
+Each rule gets its own test (step 3), plus a broken-config test proving
 all violations are reported together (fail-loud DoD).
 """
 

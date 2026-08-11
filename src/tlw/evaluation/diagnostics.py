@@ -1,4 +1,4 @@
-"""reference_match diagnostics (T2.3) — teaching-loop-protocol.md §2.
+"""reference_match diagnostics — teaching-loop-protocol.md §2.
 
 `reference_match` is a DIAGNOSTIC column, never the pass/fail decision
 (that is `correctness`, judge.py's BlindJudge). It exists only to expose
@@ -10,7 +10,7 @@ Computed AFTER the judge verdict, from separate call sites, into separate
 fields — callers must not fold this into `correctness`/`passed`.
 
 Primitives (normalize/tokenize/ROUGE-L LCS/MiniLM cosine) are reworked here
-from src/eval/metrics.py (read-only salvage per T2.3 spec) so this package
+from src/eval/metrics.py (read-only salvage  spec) so this package
 has zero import dependency on legacy/other src/ evaluation code.
 """
 

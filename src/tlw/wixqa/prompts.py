@@ -38,7 +38,7 @@ RAG_SYS = (
 TEMPERATURE = 0.3          #: student sampling temperature, fixed across every WixQA run
 MAX_TOKENS = 256           #: student answer cap
 MAX_PASSAGE_CHARS = 900    #: the ORIGINAL per-article grounding budget (ADR-030 / T3.11).
-#: Kept because it defines the `head900` control arm. T3.14 Stage 1 showed it
+#: Kept because it defines the `head900` control arm. Stage 1 showed it
 #: truncates 92.5% of gold articles; the winning `chunk2400` variant lives in
 #: `grounding.py`. Do not "fix" this constant — it is a measured baseline.
 

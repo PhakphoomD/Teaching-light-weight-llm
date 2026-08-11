@@ -1,4 +1,4 @@
-"""BlindJudge unit tests (T2.3): score-parsing edge cases + scoring contract.
+"""BlindJudge unit tests: score-parsing edge cases + scoring contract.
 
 No network calls — every test injects a FakeClient via BlindJudge(client=...).
 """

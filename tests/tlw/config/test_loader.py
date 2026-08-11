@@ -1,4 +1,4 @@
-"""Tests for the layered loader (T2.1): base -> experiment -> env, deep-merge,
+"""Tests for the layered loader: base -> experiment -> env, deep-merge,
 env-var mapping, path resolution, typed access, and base.yml itself."""
 
 from pathlib import Path

@@ -1,4 +1,4 @@
-"""Grounding-window behaviour — the T3.14 Stage-1 lever.
+"""Grounding-window behaviour — the Stage-1 lever.
 
 These are the properties the +0.130 result depends on. They run offline with a
 synthetic article; nothing here needs the WixQA data or a GPU.
@@ -35,7 +35,7 @@ def test_head_window_of_a_short_article_returns_all_of_it():
 
 def test_chunk_centred_window_is_centred_on_the_match_not_the_head():
     """The whole point of chunk-centring: a match at word 400 must not return
-    the article head, which is what T3.11 was doing."""
+    the article head, which is what was doing."""
     art = _article(1000)
     centred = window(art, 900, centre_word=400)
     assert "w400" in centred

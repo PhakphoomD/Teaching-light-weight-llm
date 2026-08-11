@@ -33,7 +33,7 @@ DEFAULT_BASE_PATH = PROJECT_ROOT / "config" / "base.yml"
 ENV_PREFIX = "EXPERIMENT_"
 # Legacy logging convention consumed by the frozen loop
 # (config/simplified_config.yml:105) — ignored here so both cores can coexist
-# during the strangler period; retired with the legacy in T2.9.
+# during the strangler period; retired with the legacy core.
 LEGACY_ENV_KEYS = frozenset({"EXPERIMENT_DIR", "EXPERIMENT_PHASE", "EXPERIMENT_NAME"})
 
 

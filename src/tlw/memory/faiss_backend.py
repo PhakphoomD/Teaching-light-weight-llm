@@ -1,8 +1,8 @@
-"""FaissMemory — slot D 'faiss' backend (T2.5, schema.md Memory v2 contract).
+"""FaissMemory — slot D 'faiss' backend (schema.md Memory v2 contract).
 
 Salvaged from `src/simplified/memory.py` (FAISS handling, IndexFlatIP over
 normalized MiniLM vectors, JSONL-for-inspection persistence, success-aware
-ranking) per T2.5's Read-first list — rewritten lean around the v2 episode
+ranking) 's Read-first list — rewritten lean around the v2 episode
 schema and a hard store-time tripwire (`tripwire.py`). `src/simplified/memory.py`
 is untouched (frozen legacy, structure.md §E).
 
@@ -44,7 +44,7 @@ def _blank_stats() -> Dict[str, Any]:
 @MEMORY_REGISTRY.register("faiss")
 class FaissMemory(MemoryBackend):
     """Per-run FAISS-backed teaching-note store. NOT thread/process safe
-    (deliberately single-user/single-machine, T1.3 Must-NOT — no prod scale)."""
+    (deliberately single-user/single-machine, Must-NOT — no prod scale)."""
 
     def __init__(
         self,
@@ -185,7 +185,7 @@ class FaissMemory(MemoryBackend):
 
     def _seed_from(self, seed_from: str) -> None:
         """Copy episodes from another store's episodes.jsonl into this fresh
-        store (Memory v2 contract §5). Denylist is enforced by the T2.1 config
+        store (Memory v2 contract §5). Denylist is enforced by the config
         loader (V6); this is defense-in-depth for direct construction."""
         from src.tlw.config.schema import MEMORY_PATH_DENYLIST
 

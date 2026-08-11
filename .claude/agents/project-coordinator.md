@@ -3,7 +3,7 @@ name: project-coordinator
 description: Use to plan and sequence multi-step work, maintain the SSOT (todo/ADRs/index), and dispatch tasks to the right specialist. Invoke when a request spans multiple roles or the roadmap/ADR log needs updating.
 tools: Read, Grep, Glob, Write, Edit, Agent
 model: opus
-memory: project
+memory: local
 ---
 
 # Identity

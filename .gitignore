@@ -274,4 +274,9 @@ src/simplified/legacy/
 
 # Subagent working memory: notes each specialist keeps for itself between sessions.
 # Internal to how the work is done, not part of what the work produced.
+# Claude Code: machine-specific settings and per-agent memory.
+# settings.local.json is documented as personal and must never be committed;
+# agent-memory-local/ is where the `memory: local` scope writes.
+/.claude/settings.local.json
+/.claude/agent-memory-local/
 /.claude/agent-memory/

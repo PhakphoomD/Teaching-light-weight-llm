@@ -5,7 +5,7 @@ saturated testbed (abort). If low -> real gap -> RAG has headroom -> build index
 Student = qwen2.5:3b (Ollama, no context). Judge = Groq llama-3.1-8b-instant
 in REFERENCE-COMPARING mode (sees question+gold+candidate). This is a gt_comparing
 judge, legitimate for closed-domain: the STUDENT stays blind (never sees gold),
-only the JUDGE sees gold to score. Not the Track-A blind judge (which can't verify
+only the JUDGE sees gold to score. Not the the teaching-loop study blind judge (which can't verify
 proprietary product facts). Standalone — does NOT touch the framework.
 
   python scripts/wixqa/run_baseline.py --limit 200

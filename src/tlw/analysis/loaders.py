@@ -1,4 +1,4 @@
-"""Run-artifact loaders (T2.8 step 1).
+"""Run-artifact loaders (step 1).
 
 Reads what `src/tlw/runner.py` actually writes (verified against the real
 n=5 dry-run artifacts, `runs/trackA_p2_arm{A,C}_diabetes__seed42__*`):

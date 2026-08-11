@@ -228,7 +228,7 @@ def _check_rag_corpus_path(cfg: Dict[str, Any], errors: List[str]) -> None:
 
 
 def _check_paths(cfg: Dict[str, Any], errors: List[str]) -> None:
-    """Path policy (T2.1 step 3): config paths must be project-relative —
+    """Path policy (step 3): config paths must be project-relative —
     kills hardcoded absolute paths (§0.3)."""
     from pathlib import PureWindowsPath, PurePosixPath
 
@@ -244,7 +244,7 @@ def _check_paths(cfg: Dict[str, Any], errors: List[str]) -> None:
             )
 
     _reject_absolute("memory.seed_from")
-    _reject_absolute("memory.corpus_path")  # rag index dir (T3.3)
+    _reject_absolute("memory.corpus_path")  # rag index dir
 
 
 def validate(cfg: Dict[str, Any]) -> None:

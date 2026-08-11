@@ -1,11 +1,11 @@
-"""Statistical correctness tests for stats.py (T2.8 teaching-loop-protocol.md §4).
+"""Statistical correctness tests for stats.py (teaching-loop-protocol.md §4).
 
 Every non-trivial number here is either hand-computable (worked in the
 docstring/comment) or cross-checked against an independent implementation
 (scipy.stats.binomtest for McNemar; a from-scratch Wilson formula written
 fresh in this file, not imported from stats.py) -- scipy is already
 installed in the tlw env; it is used here ONLY as a test-time cross-check,
-never imported by src/tlw/analysis (stdlib+numpy only, T2.8 build rule 6)."""
+never imported by src/tlw/analysis (stdlib+numpy only, build rule 6)."""
 
 import math
 

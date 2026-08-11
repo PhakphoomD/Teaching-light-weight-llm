@@ -1,4 +1,4 @@
-"""Registries for every Config Contract slot (T2.2) — the plugin seams.
+"""Registries for every Config Contract slot — the plugin seams.
 
 Generalizes the provider factory pattern (src/providers/factory.py, EXEMPLAR
 per docs/archive/CODE_MAP.md) to slots C/D/E/F: a seam interface (method names per
@@ -8,14 +8,15 @@ zero runner edits.
 
 Slot -> resolver map (structure.md §D):
   A student / B teacher / F judge client -> ProviderRegistry (build_client, exists)
-  C preset  -> PRESET_REGISTRY   (real: src/tlw/prompts/presets.py, T2.4, catalog ADR-020)
-  D memory  -> MEMORY_REGISTRY   ('none' real here; 'faiss' real, src/tlw/memory, T2.5)
-  E arm     -> STRATEGY_REGISTRY (real: src/tlw/loop/strategies.py, T2.4)
-  F judge   -> JUDGE_REGISTRY    (real: src/tlw/evaluation/judge.py, T2.3)
+  C preset  -> PRESET_REGISTRY   (real: src/tlw/prompts/presets.py, catalog ADR-020)
+  D memory  -> MEMORY_REGISTRY   ('none' real here; 'faiss' real, src/tlw/memory)
+  E arm     -> STRATEGY_REGISTRY (real: src/tlw/loop/strategies.py)
+  F judge   -> JUDGE_REGISTRY    (real: src/tlw/evaluation/judge.py)
 
-'rag' memory and 'gt_comparing' judge are deliberately NOT registered — a
-memory-on-rag or GT-comparing-judge run must fail loudly (§0.1) until (rag)
-Track B builds it or (gt_comparing) a new hub decision authorizes it.
+'rag' memory and 'gt_comparing' judge are deliberately NOT registered. A
+configuration naming either must fail loudly at load rather than fall back to
+something else (§0.1); each becomes available only when a real implementation
+registers itself.
 """
 
 from abc import ABC, abstractmethod
@@ -68,8 +69,9 @@ class Registry:
         return sorted(self._impls)
 
 
-# --- Seam interfaces (method names per structure.md §D; the owning task
-#     finalizes signatures: memory T2.5, preset/arm T2.4, judge T2.3) ---
+# --- Seam interfaces --------------------------------------------------------
+# One abstract base per configurable slot. Method names follow structure.md §D;
+# each concrete implementation lives in the block that owns the slot.
 
 
 class MemoryBackend(ABC):
@@ -81,7 +83,7 @@ class MemoryBackend(ABC):
     ) -> Optional[str]:
         """Persist one episode v2 (tripwire-gated). Returns id, or None if rejected.
 
-        `reference_answer` (T2.5 decision) is used ONLY to run the store-time
+        `reference_answer` is used ONLY to run the store-time
         tripwire (schema.md Memory v2 contract §2) — it is never persisted in
         the episode, the index, or any log. Callers that have no GT at hand
         (the headline no-memory arms) simply omit it.
@@ -187,20 +189,17 @@ class NoneMemory(MemoryBackend):
         }
 
 
-# --- Real implementations for the remaining slots (T2.4) ---
+# --- Real implementations for the remaining slots ---
 #
-# 'minimal'/'orca' presets: real, src/tlw/prompts/presets.py — register into
-# PRESET_REGISTRY on import of src.tlw.prompts. Replaces the T2.2
-# `_PlaceholderPreset` stand-ins that used to be registered here under these
-# same two names (this was their landing task).
+# 'minimal'/'orca' presets live in src/tlw/prompts/presets.py and register
+# themselves into PRESET_REGISTRY when src.tlw.prompts is imported.
 #
-# 'blind' judge is real (T2.3, src/tlw/evaluation/judge.py:BlindJudge) — it
+# 'blind' judge is real (src/tlw/evaluation/judge.py:BlindJudge) — it
 # registers itself into JUDGE_REGISTRY on import of src.tlw.evaluation.
-# 'gt_comparing' is deliberately NOT registered: blind-only was the gate
-# decision (ADR-022 (b)); building a GT-comparing judge would need a new hub
-# decision.
+# 'gt_comparing' is deliberately NOT registered. The headline metric is
+# blind correctness (ADR-022 (b)), so a reference-comparing judge has no
+# caller here and an unregistered name fails loudly rather than silently
+# scoring against the answer key.
 #
-# 'A'/'B'/'C'/'D' arm strategies: real, src/tlw/loop/strategies.py — register
-# into STRATEGY_REGISTRY on import of src.tlw.loop. Replaces the T2.2
-# `_PlaceholderArm` stand-ins that used to be registered here under these
-# same four names (this was their landing task).
+# 'A'/'B'/'C'/'D' arm strategies live in src/tlw/loop/strategies.py and
+# register themselves into STRATEGY_REGISTRY when src.tlw.loop is imported.

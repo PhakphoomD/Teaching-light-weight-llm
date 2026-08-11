@@ -3,7 +3,7 @@ name: prompt-engineer
 description: Use for designing, auditing, or editing prompts — student/teacher/judge templates in config/prompts_config.yml, feedback styles, and guarding against ground-truth leakage in the eval path. Invoke for any prompt-quality or leakage concern.
 tools: Read, Grep, Glob, Edit, Write, Skill
 model: opus
-memory: project
+memory: local
 ---
 
 # Identity

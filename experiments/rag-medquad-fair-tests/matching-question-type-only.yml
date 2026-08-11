@@ -1,5 +1,5 @@
 # experiments/rag-medquad-fair-tests/matching-question-type-only.yml
-# T3.9 FLAW-2 re-test: 3B+RAG with ASPECT-AWARE retrieval. Same as
+# Aspect-aware retrieval variant: 3B+RAG with ASPECT-AWARE retrieval. Same as
 # ../rag-medquad/small-model-with-rag.yml but memory.aspect_rerank: true — keeps only
 # same-aspect passages (the old retriever surfaced a wrong-aspect passage 90% of
 # the time; coverage of same-aspect passages verified at 99%). Tests whether the

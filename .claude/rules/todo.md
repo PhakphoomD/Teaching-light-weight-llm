@@ -1,3 +1,9 @@
+---
+paths:
+  - ".claude/**"
+  - "docs/plan/**"
+---
+
 # Roadmap / TODO (SSOT) — Renovation Plan (ADR-015)
 
 Status: `[ ]` todo · `[~]` in progress · `[x]` done · `[?]` needs user decision · ✋ = user gate

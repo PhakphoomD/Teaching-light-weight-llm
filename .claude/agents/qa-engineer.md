@@ -3,7 +3,7 @@ name: qa-engineer
 description: Use to write/run tests, verify a change actually works end-to-end, and check evaluation integrity (no leakage, metrics match logs, held-out is clean). Invoke after implementing a feature or before trusting any reported number.
 tools: Read, Grep, Glob, Bash, Write, Edit, Skill
 model: sonnet
-memory: project
+memory: local
 ---
 
 # Identity

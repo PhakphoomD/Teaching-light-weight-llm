@@ -62,14 +62,14 @@ def test_run_tripwire_no_reference_is_a_noop_pass():
     assert result.reason is None
 
 
-def test_run_tripwire_short_circuits_on_first_hit_t1():
+def test_run_tripwire_short_circuits_on_the_first_rule_that_fires():
     note = f"The correct answer is: {REFERENCE}"
     result = run_tripwire(note, REFERENCE, cosine_sim=0.0)  # T-2 would pass, T-1 must catch it
     assert result.rejected is True
     assert result.reason == "T-1"
 
 
-def test_run_tripwire_catches_t2_when_t1_would_pass():
+def test_similarity_rule_catches_what_the_shingle_rule_misses():
     note = "A short distinct paraphrase that shares no long run with the reference."
     result = run_tripwire(note, REFERENCE, cosine_sim=0.90, gt_similarity_max=0.80)
     assert result.rejected is True

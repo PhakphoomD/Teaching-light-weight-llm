@@ -1,7 +1,7 @@
 """Capture a curated set of before/after demo examples -> reports/rag-wixqa/demo-showcase.jsonl.
 
 These are the concrete "went from wrong -> right when the answer reached the prompt"
-exhibits the narrative (T3.17) shows, and the set selector the demo UI offers. The set
+exhibits the narrative shows, and the set selector the demo UI offers. The set
 is chosen to include BOTH honest cases:
 
   * gold-retrieved questions -> RAG has the material and helps

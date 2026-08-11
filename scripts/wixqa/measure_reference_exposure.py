@@ -1,25 +1,23 @@
-"""Does the grounding-window result survive where the window showed no new reference text?
+"""Separate the grounding-window effect from reference exposure.
 
-An external review raised the sharpest objection this project faces. On the
-support-documentation testbed the judge scores by comparison against an expert
-answer, and the knowledge-base articles that answer is distilled *from* are
-indexed deliberately and never scrubbed. The winning intervention widens the
-grounding window. So the objection is: the +0.130 might be the model being shown
-more of the text it is graded against, rather than more of the text it needs.
+On the support-documentation testbed the judge scores by comparison against an
+expert answer, and the knowledge-base articles those answers were written from
+are indexed deliberately and never scrubbed. Widening the grounding window
+therefore does two things at once: it shows the model more of the material it
+needs, and it shows the model more of the text it is graded against. The
+published effect cannot be attributed to the first until the second is measured.
 
-That objection cannot be settled by argument, only by measurement, and the
-measurement is a stratification. For every question this script rebuilds both
-grounding blocks — the narrow one the earlier rung showed and the wide one the
-winner showed — measures how much of the expert answer appears verbatim in each,
-and splits the questions by whether the wide window revealed any *new* reference
-text at all. If the effect holds on the stratum where it revealed none, the
-objection is answered. If it does not, the finding needs restating, and that is
-worth knowing.
+This script separates them. For every question it rebuilds both grounding
+blocks — the narrow window of the earlier rung and the wide window of the
+winner — measures how much of the expert answer appears verbatim in each using
+the twelve-token criterion the leakage guard uses elsewhere, and splits the
+questions by whether the wide window revealed any *new* reference text. The
+effect measured on the questions where it revealed none is the part of the
+result that exposure cannot explain.
 
-Everything here is deterministic and offline: retrieval is read from the
-committed run logs rather than re-run, so the blocks are the ones the model
-actually saw, and the only model loaded is the sentence encoder that locates the
-matched chunk.
+Deterministic and offline. Retrieval is read from the committed run logs rather
+than re-run, so the blocks are the ones the model actually saw, and the only
+model loaded is the sentence encoder that locates the matched chunk.
 
     python scripts/wixqa/measure_reference_exposure.py
 

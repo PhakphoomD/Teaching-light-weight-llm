@@ -1,5 +1,5 @@
-"""FaissMemory tests (T2.5): round-trip persistence, ranking, tripwire
-integration, per-run isolation, update_outcome math, and the phase6 red-team
+"""FaissMemory tests: round-trip persistence, ranking, tripwire
+integration, per-run isolation, update_outcome math, and the red-team
 fixture (schema.md Memory v2 contract; docs/EXPERIMENT_RESULTS.md §5.6).
 
 Uses the real sentence-transformers encoder + faiss (both installed in the
@@ -220,7 +220,8 @@ def test_update_outcome_unknown_id_is_a_noop(tmp_path):
     mem.update_outcome("does-not-exist", {"success": True, "final_score": 1.0})  # must not raise
 
 
-# --- red-team fixture: the phase6 GT-seeded memory store must be rejected 100% ---
+# --- red-team fixture: the answer-seeded memory store from the retracted run
+#     (logs/experiments/phase6/) must be rejected every time ---
 
 
 @pytest.mark.skipif(not GT_MEMORY_STORE.exists(), reason="phase6/gt_memory_store.jsonl not present")

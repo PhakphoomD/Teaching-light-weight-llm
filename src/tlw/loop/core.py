@@ -1,6 +1,6 @@
-"""Shared round-loop primitives (T2.4) — the honest-by-construction core.
+"""Shared round-loop primitives — the honest-by-construction core.
 
-CONCEPTS salvaged (read-only) from `simplified_teaching_loop.py` per T2.4's
+CONCEPTS salvaged (read-only) from `simplified_teaching_loop.py` 's
 Read-first list: round bookkeeping (a list of per-round records) and
 early-stop-on-pass. NONE of its ground-truth-hint machinery is ported —
 LAST_CHANCE (L1-L3, L5), the "one last chance" forced round (L3), and the
@@ -78,7 +78,7 @@ def assert_gt_free(prompt: str, ground_truth: Optional[str]) -> None:
 
 
 def grounding_block(memory, question: str, top_k: int, ground_truth: Optional[str] = None):
-    """RAG grounding (T3.3, ADR-026 / rag-medquad-protocol §1.4). Returns
+    """RAG grounding (ADR-026 / rag-medquad-protocol §1.4). Returns
     `(block_str, n_dropped)`: a labelled REFERENCE-PASSAGES block for the FIRST
     answer attempt, plus a count of passages filtered by the RAG-L3 leak filter.
     Empty block ("") when the backend does not ground the first attempt (the
@@ -152,7 +152,7 @@ def teacher_feedback(
 def judge_answer(judge, question: str, answer: str) -> Dict[str, Any]:
     """Score via the blind judge. No GT parameter exists to pass — the
     judge seam (`Judge.score(question, answer, mode)`, registries.py) is
-    structurally incapable of receiving one (T2.3, tests/tlw/evaluation/
+    structurally incapable of receiving one (tests/tlw/evaluation/
     test_leakage.py:test_score_signature_has_no_ground_truth_parameter)."""
     return judge.score(question, answer, mode="blind")
 
@@ -173,7 +173,7 @@ def make_round_record(
     `grounding_dropped` = passages filtered by RAG-L3 this round (0 for non-rag);
     `grounding_context` = the REFERENCE PASSAGES the student was grounded on
     (rag round-1 only; None otherwise) — persisted so the runner can compute the
-    faithfulness diagnostic post-hoc (T3.4, like reference_match)."""
+    faithfulness diagnostic post-hoc (like reference_match)."""
     return {
         "round": round_num,
         "answer": answer,

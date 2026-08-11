@@ -10,7 +10,6 @@
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(git branch:*)",
-      "Bash(C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe:*)",
       "PowerShell(git status:*)",
       "PowerShell(git diff:*)",
       "PowerShell(git log:*)"
@@ -34,10 +33,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Users\\ham25\\.conda\\envs\\tlw\\python.exe",
+            "command": "python",
             "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.py"],
             "timeout": 15,
-            "statusMessage": "Constitution guard (§0.5 / immutable data)"
+            "statusMessage": "Checking the project's data and environment rules"
           }
         ]
       }

@@ -1,13 +1,13 @@
-"""Arm strategies A/B/C/D (T2.4) — teaching-loop-protocol.md §1 / ADR-002.
+"""Arm strategies A/B/C/D — teaching-loop-protocol.md §1 / ADR-002.
 
 Each arm decides ONLY what feedback source feeds the student between
 rounds; scoring is always delegated to the judge seam (no scoring logic
-lives here, per T2.4 "Must NOT do"). No arm has a ground-truth-hint
+lives here,  "Must NOT do"). No arm has a ground-truth-hint
 fallback in any form — the legacy L1-L5 mechanism (LEAKAGE_AUDIT.md) does
 not exist in this module at all, structurally, not just off-by-default.
 
-Registers "A"/"B"/"C"/"D" into STRATEGY_REGISTRY on import (T2.2 pattern),
-replacing the T2.2 `_PlaceholderArm` stand-ins registries.py used to
+Registers "A"/"B"/"C"/"D" into STRATEGY_REGISTRY on import,
+replacing the earlier `_PlaceholderArm` stand-ins registries.py used to
 register under these same four names (deleted by this task).
 """
 
@@ -52,7 +52,7 @@ def _build_episode(
 class _BaseArm(ArmStrategy):
     """Shared preset resolution — every arm needs a student preset; C/D also
     need a teacher preset. Presets are resolved lazily (first use), and are
-    constructible with zero kwargs (`build_arm_strategy(arm)`, T2.2 pattern)
+    constructible with zero kwargs (`build_arm_strategy(arm)`, pattern)
     while still allowing an experiment to name a different preset family."""
 
     def __init__(
@@ -224,7 +224,7 @@ class _TeacherArm(_BaseArm):
             combined_feedback = feedback
             # Only faiss teaching-NOTES fold into refinement feedback here; RAG
             # passages (which lack `teaching_note`) are grounded at round 1 via
-            # `_first_prompt`, never re-injected as "prior guidance" (T3.3).
+            # `_first_prompt`, never re-injected as "prior guidance".
             if notes and notes[0].get("teaching_note"):
                 combined_feedback = f"{feedback}\n\nPrior guidance: {notes[0]['teaching_note']}"
 

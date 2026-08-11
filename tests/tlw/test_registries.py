@@ -1,10 +1,10 @@
-"""Tests for the slot registries (T2.2): resolution, fail-loud errors,
+"""Tests for the slot registries: resolution, fail-loud errors,
 the real 'none' memory backend, thin placeholders, and the open-for-extension
 DoD (a dummy backend added here needs zero changes outside this file)."""
 
 import pytest
 
-# Importing this registers the real BlindJudge under "blind" (T2.3) — must
+# Importing this registers the real BlindJudge under "blind" — must
 # happen before any test in this module calls build_judge("blind").
 import src.tlw.evaluation  # noqa: F401
 from src.tlw.config import load_config
@@ -91,11 +91,10 @@ def test_none_memory_never_reads_never_writes():
     }
 
 
-# --- Presets: T2.4 shipped, 'minimal'/'orca' now resolve to real classes ---
+# --- Presets: shipped, 'minimal'/'orca' now resolve to real classes ---
 
-def test_minimal_preset_resolves_to_the_real_t24_preset():
-    """T2.2's `_PlaceholderPreset` stand-in for 'minimal' is deleted; this
-    now builds the real student preset (src/tlw/prompts/presets.py)."""
+def test_minimal_preset_resolves_to_the_student_preset():
+    """'minimal' resolves to the student preset in src/tlw/prompts/presets.py."""
     import src.tlw.prompts  # noqa: F401
     from src.tlw.prompts.presets import MinimalStudentPreset
 
@@ -109,9 +108,8 @@ def test_minimal_preset_resolves_to_the_real_t24_preset():
     assert "Q" in critique and "A" in critique
 
 
-def test_orca_preset_resolves_to_the_real_t24_preset():
-    """T2.2's `_PlaceholderPreset` stand-in for 'orca' is deleted; this now
-    builds the real teacher preset (src/tlw/prompts/presets.py)."""
+def test_orca_preset_resolves_to_the_teacher_preset():
+    """'orca' resolves to the teacher preset in src/tlw/prompts/presets.py."""
     import src.tlw.prompts  # noqa: F401
     from src.tlw.prompts.presets import OrcaTeacherPreset
 
@@ -124,10 +122,8 @@ def test_orca_preset_resolves_to_the_real_t24_preset():
     assert "GT" in sighted
 
 
-def test_blind_resolves_to_the_real_t23_judge():
-    """T2.3 shipped: 'blind' now builds the real BlindJudge, not a
-    NotImplementedError placeholder (registries.py's _PlaceholderBlindJudge
-    was deleted when src/tlw/evaluation/judge.py landed)."""
+def test_blind_resolves_to_the_blind_judge():
+    """'blind' resolves to BlindJudge, the only judge the registry offers."""
     from src.tlw.evaluation.judge import BlindJudge
 
     judge = build_judge("blind")
@@ -145,9 +141,8 @@ def test_gt_comparing_judge_not_registered():
         build_judge("gt_comparing")
 
 
-def test_arm_strategies_resolve_to_the_real_t24_classes():
-    """T2.2's `_PlaceholderArm` stand-ins for A/B/C/D are deleted; these now
-    build the real arm strategies (src/tlw/loop/strategies.py)."""
+def test_arm_strategies_resolve_to_the_strategy_classes():
+    """A/B/C/D resolve to the arm strategies in src/tlw/loop/strategies.py."""
     import src.tlw.loop  # noqa: F401
     from src.tlw.loop.strategies import (
         BaselineArm,
@@ -164,10 +159,9 @@ def test_arm_strategies_resolve_to_the_real_t24_classes():
         assert isinstance(build_arm_strategy(arm), ArmStrategy)
 
 
-def test_faiss_registered_after_t25(tmp_path):
-    """T2.5 shipped: importing src.tlw.memory registers the real 'faiss'
-    backend (tripwire-gated, schema.md Memory v2 contract) — a memory-on run
-    now resolves to real storage instead of failing loudly (§0.1)."""
+def test_importing_the_memory_block_registers_faiss(tmp_path):
+    """Importing src.tlw.memory registers the 'faiss' backend, so a memory-on
+    run resolves to real storage (tripwire-gated, schema.md Memory v2)."""
     import src.tlw.memory  # noqa: F401  (side-effect import: registers "faiss")
 
     assert "faiss" in MEMORY_REGISTRY.names()
@@ -175,10 +169,9 @@ def test_faiss_registered_after_t25(tmp_path):
     assert isinstance(backend, MemoryBackend)
 
 
-def test_rag_registered_after_t33(tmp_path):
-    """T3.3 shipped: importing src.tlw.memory now registers the real 'rag'
-    backend (read-only corpus retriever, ADR-026) — it requires a corpus_path
-    and fails loud without one (rag-medquad-protocol §2)."""
+def test_importing_the_memory_block_registers_rag(tmp_path):
+    """Importing src.tlw.memory registers the 'rag' backend, a read-only corpus
+    retriever (ADR-026) that requires a corpus_path and fails loud without one."""
     import src.tlw.memory  # noqa: F401  (side-effect import: registers "rag")
 
     assert "rag" in MEMORY_REGISTRY.names()

@@ -3,7 +3,7 @@ name: data-engineer
 description: Use for all dataset work — cleaning, the Dataset Readiness Assessor, MedQuAD processing, dedup, splits, and anything under data/, scripts/, or tools/dataset/. Invoke to build or run the data pipeline.
 tools: Read, Grep, Glob, Bash, Write, Edit, WebSearch, WebFetch, NotebookEdit, Skill
 model: sonnet
-memory: project
+memory: local
 ---
 
 # Identity

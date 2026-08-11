@@ -1,6 +1,6 @@
-"""WixQA T3.14 Stage-1: paired comparison of two grounding variants.
+"""WixQA Stage-1: paired comparison of two grounding variants.
 
-Compares a treatment run (e.g. chunk2400) against the T3.11 control (head900) on
+Compares a treatment run (e.g. chunk2400) against the narrow-window control (head900) on
 the SAME questions and seeds, paired by idx. Reports the judge bars AND a
 continuous, judge-free completeness metric.
 

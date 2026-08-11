@@ -97,12 +97,12 @@ student:
     Improve your answer:
 
   # Last chance prompt (ground truth hint - force exact copy)
-  # Used only when loop.enable_last_chance is True. Phase 1 disables this.
+  # Used only when loop.enable_last_chance is True. The rebuilt system disables this.
   last_chance: |
     COPY THIS EXACTLY:
     {ground_truth}
 
-  # Simple minimal prompts used in Phase 1.1 and analysis experiments
+  # Simple minimal prompts used in the early experiments
   simple_minimal: |
     Question: {question}
 
@@ -156,7 +156,7 @@ student:
   
   # NOTE: Additional student prompt variants (simple, minimal, guided, etc.)
   # from earlier experiments have been removed here to keep the configuration
-  # focused on the three student strategies used in Phase 1:
+  # focused on the three student strategies:
   # - Minimal: first_attempt / refinement
   # - Structured: structured_first / structured_refine
   # - Self-Reflective: reflective_first / reflective_refine

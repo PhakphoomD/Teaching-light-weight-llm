@@ -1,4 +1,4 @@
-"""Demo engine — the retrieval + grounding + answer core of the WixQA RAG demo (T3.15).
+"""Demo engine — the retrieval + grounding + answer core of the WixQA RAG demo.
 
 Pure Python (no UI): it can be smoke-tested, and it is what `app/build_showcase.py`
 reuses to capture the before/after comparison examples that become a portfolio TABLE.

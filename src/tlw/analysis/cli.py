@@ -1,4 +1,4 @@
-"""CLI entrypoint (T2.8 build instruction 4):
+"""CLI entrypoint (build instruction 4):
 
     python -m src.tlw.analysis \\
         --runs-dir runs --comparison C-B [--memory-type none] \\
@@ -8,7 +8,7 @@ Prints an HONEST table: correctness and reference_match on separate lines,
 never merged (ADR-019); any comparison whose sample falls short of the
 pre-registered 125 questions / 3 seeds gets the loud NOT-pre-registered
 banner (report.py) so pilot/dry-run data can't be silently promoted into a
-result (T2.8 build instruction 4 / §0.1).
+result (build instruction 4 / §0.1).
 """
 
 from __future__ import annotations

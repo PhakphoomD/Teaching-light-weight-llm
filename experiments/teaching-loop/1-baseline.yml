@@ -9,7 +9,7 @@
 #   eval.judge         : Groq llama-3.1-8b-instant (moved OFF the local GPU so
 #                         the 3B student never judge-cohosts -> ~2-3x faster
 #                         local wall-clock; family = Llama != Qwen student, §0.2/V2 OK)
-#   eval.pass_threshold: 1.0 (score>=4 "correct AND complete" — the T2.7
+#   eval.pass_threshold: 1.0 (score>=4 "correct AND complete" — the pilot
 #                         headroom-pilot bar that produced a non-degenerate
 #                         result: baseline ~67-73%, not the old ceiling-effect 100%)
 #   params.arm         : A

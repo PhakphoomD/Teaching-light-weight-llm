@@ -16,20 +16,33 @@ or `decisions.md ADR-003` or `rubric.md D3`.
 
 ---
 
-## Read order
-1. `structure.md` — canonical repo layout (what goes where; what counts as junk)
-2. `agents.md` — the specialist team, archetypes, and who owns what
-3. `todo.md` — current roadmap and the active workstream
-4. `decisions.md` — the ADR log (why things are the way they are)
-5. `schema.md` — data contracts *(auto-loads under `data/`, `scripts/`, `tools/`)*
-6. `rubric.md` — dataset readiness rubric *(auto-loads under `data/`, `scripts/`, `tools/`)*
-7. `providers.md` — Groq + Ollama models, free-tier limits, and the §0.2 judge≠student rule
+## The rule files, and when each one reaches you
+
+Four load at the start of every session. Four carry `paths:` frontmatter and load only when you open
+a file they govern, which is why a session that never touches `data/` never pays for the data
+contracts. Add `paths:` to anything new that is only relevant somewhere specific.
+
+**Always loaded**
+
+1. `00-index.md` — this file: the Constitution, and where everything is
+2. `agents.md` — the specialist team and who owns what
+3. `structure.md` — the canonical repository layout, regenerated from the executed tree
+4. `decisions.md` — the ADR log: why each thing is the way it is
+
+**Loaded on demand**
+
+5. `schema.md` — data contracts and the six-slot experiment config — under `data/`, `scripts/`, `tools/`, `logs/`, `src/`
+6. `rubric.md` — the dataset readiness rubric — under `data/`, `scripts/`, `tools/`
+7. `providers.md` — model roster, free-tier limits, the §0.2 judge≠student rule — wherever a client is built
+8. `todo.md` — the dated work log, every box ticked — under `.claude/` and `docs/plan/`
 
 ## Fast facts
-- Dataset = **MedQuAD** (NIH, CC BY 4.0). "GHR" = Genetics Home Reference, *not* growth hormone receptor.
-- Goal = small local open-source LLM, deep in ONE domain, for small businesses.
-- Path = (A) honest research ablation proving the loop, then (B) RAG + LoRA product.
-- Hardware = RTX 4060 Laptop 8GB VRAM + 64GB RAM. Python env = conda `tlw`.
+- Testbeds = **MedQuAD** (NIH, CC BY 4.0) and **WixQA** (Wix help centre, MIT). "GHR" is Genetics
+  Home Reference, *not* growth hormone receptor — a mislabelled source directory, left as published.
+- Question = which interventions genuinely improve a small local model in one domain, and which only
+  appear to. Answered: `docs/EXPERIMENT_RESULTS.md`.
+- Status = research complete; the work now is maintenance, verification and presentation.
+- Hardware = RTX 4060 Laptop, 8 GB VRAM, 64 GB RAM. Python environment = conda `tlw`.
 
 ## Where things live
 | What | Where |
@@ -45,3 +58,5 @@ or `decisions.md ADR-003` or `rubric.md D3`.
 | Data (raw = immutable) | `data/Medical_Q&A/`, `data/medical_by_source/`; cleaned → `data/clean/` |
 | Experiment logs | `logs/experiments/` |
 | Long-form analysis | `docs/` |
+| Published results | `README.md`, `docs/EXPERIMENT_RESULTS.md` |
+| Committed evidence behind every number | `reports/` |

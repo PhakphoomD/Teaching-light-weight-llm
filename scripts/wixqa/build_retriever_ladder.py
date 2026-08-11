@@ -1,6 +1,6 @@
-"""WixQA T3.10: rank retriever variants by OFFLINE hit-rate@k. NO LLM calls.
+"""WixQA: rank retriever variants by OFFLINE hit-rate@k. NO LLM calls.
 
-The cheap de-risk before an expensive end-to-end run — the T2.7-pilot discipline
+The cheap de-risk before an expensive end-to-end run — the pilot-first discipline
 applied to retrieval. All the retrieval logic lives in `src.tlw.wixqa.retrieval`
 (ADR-034 §A4: scripts drive, they do not define); this file is the CLI.
 

@@ -1,6 +1,6 @@
-"""T3.3 RagMemory + grounding wiring + RAG-L3 leak guard.
+"""RagMemory + grounding wiring + RAG-L3 leak guard.
 
-Builds a tiny real index via the T3.2 builder (real MiniLM), then exercises the
+Builds a tiny real index via the builder (real MiniLM), then exercises the
 `rag` backend and the loop's grounding path with fake student/judge clients so
 no network/Ollama is needed.
 """

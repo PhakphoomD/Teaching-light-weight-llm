@@ -9,7 +9,7 @@ a figure asks for a result, the result is computed here from the artifact.
 Three classes of source, all committed, all labelled on the `Measurement`:
 
   runs/<study>/<condition>__seed<N>__<ts>/{summary,rounds}.jsonl
-      framework runs (Track A, MedQuAD RAG, fair tests, student prompt)
+      framework runs (the teaching-loop study, MedQuAD RAG, fair tests, student prompt)
   runs/rag-wixqa/<step>/seed<N>.jsonl  + retrieval_log.jsonl
       the standalone WixQA study -- one judged record per (question, seed)
   reports/**/*.{json,txt}
@@ -484,7 +484,7 @@ def wixqa_conditional_pass(step: str, bar: int = 3) -> Tuple[WilsonInterval, Wil
 
 
 # ==========================================================================
-# Framework runs -- Track A, MedQuAD RAG, fair tests, student prompt
+# Framework runs -- the teaching-loop study, MedQuAD RAG, fair tests, student prompt
 # ==========================================================================
 
 

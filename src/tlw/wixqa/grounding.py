@@ -1,4 +1,4 @@
-"""How much of a retrieved article reaches the prompt — the T3.14 Stage-1 lever.
+"""How much of a retrieved article reaches the prompt — the Stage-1 lever.
 
 This is the project's largest single finding, so it is worth stating plainly.
 The original grounding showed the **first 900 characters** of each retrieved
@@ -40,7 +40,7 @@ from .retrieval import chunks_of, encode
 CHARS_PER_WORD = 5.5
 
 #: The 2x2 grid: name -> (chars per article, centre on the matched chunk?).
-#: `head900` is the ADR-030/T3.11 control and must not change — it defines the
+#: `head900` is the ADR-030/control and must not change — it defines the
 #: baseline arm of a published comparison.
 GROUNDINGS: Dict[str, Tuple[int, bool]] = {
     "head900": (900, False),
@@ -49,11 +49,11 @@ GROUNDINGS: Dict[str, Tuple[int, bool]] = {
     "chunk2400": (2400, True),
 }
 
-#: What the runs after T3.14 Stage 1 should use.
+#: What the runs after Stage 1 should use.
 DEFAULT_GROUNDING = "chunk2400"
 
 #: Function words excluded when measuring how much of an answer's *content* a
-#: grounding window carries. Recovered verbatim from the pre-T3.18 script that
+#: grounding window carries. Recovered verbatim from the pre-script that
 #: produced `reports/rag-wixqa/context-window-coverage.json` — the coverage
 #: numbers in the report were computed with exactly this list, so changing it
 #: would change what those numbers mean.

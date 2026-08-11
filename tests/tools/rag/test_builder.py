@@ -1,4 +1,4 @@
-"""T3.2 RAG index builder tests — the held-out-exclusion seals are the point.
+"""RAG index builder tests — the held-out-exclusion seals are the point.
 
 Uses the real MiniLM encoder (same as tests/tlw/memory) on a tiny synthetic
 corpus, so the near-dup scrub is exercised against actual cosine values.

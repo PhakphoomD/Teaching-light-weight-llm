@@ -1,4 +1,4 @@
-"""YAML-backed template loading for the PromptPreset seam (slot C, T2.4).
+"""YAML-backed template loading for the PromptPreset seam (slot C).
 
 Generalizes the pre-renovation loader's `SafeDict` + `str.format_map` pattern
 (structure.md §C: the config block "generalizes prompt_loader.py YAML loading")
@@ -7,7 +7,7 @@ nothing imported it; git history keeps it.
 
 Reads from `config/prompts/{student,teacher}.yml` — the NEW ADR-020 files
 this task authors — never from `config/prompts_config.yml` (frozen, legacy,
-read-only source per T2.4's Read-first list; must not be edited here).
+read-only source 's Read-first list; must not be edited here).
 """
 
 from pathlib import Path

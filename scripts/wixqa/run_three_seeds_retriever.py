@@ -1,16 +1,16 @@
-"""WixQA T3.11 (P3-E): end-to-end dose-response run of a T3.10 retriever.
+"""WixQA: end-to-end dose-response run of the winning retriever.
 
 Generates the 3B student's answers grounded on a *chosen retriever's* top-k
 articles, at seeds {13,42,123}, so pass-rate can be plotted against retrieval
 hit-rate (the dose-response proof). CONFOUND CONTROL: everything is byte-identical
-to the T3.9 MiniLM RAG run EXCEPT which articles the retriever selects —
+to the MiniLM RAG run EXCEPT which articles the retriever selects —
   * same student (qwen2.5:3b, temp 0.3, seeded), same top-k (3),
-  * same grounding format (article title + contents[:900], RAG_SYS from T3.9),
+  * same grounding format (article title + contents[:900], RAG_SYS),
   * same downstream judge (scripts/wixqa/judge.py, Groq ref-comparing, PASS>=3).
 Only `--retriever` changes. Retrieval is seed-independent, so the ranking is
 computed ONCE and reused across the 3 seeds. Scores left null (judge separately).
 
-Grounding stays at the ARTICLE level (not the matched chunk) on purpose: the T3.9
+Grounding stays at the ARTICLE level (not the matched chunk) on purpose: the earlier
 conditional P(pass|gold retrieved)=0.400 was measured with article grounding, so
 holding it fixed is what makes the dose-response prediction testable — the retriever
 changes HOW OFTEN gold is retrieved, not the grounding payoff.
@@ -64,7 +64,7 @@ def main():
     # --- retrieval: computed ONCE (seed-independent) --------------------------
     cached = OUT / f"retrieval_log_{a.retriever}.jsonl"
     if a.reuse_retrieval and cached.is_file():
-        # Reuse the EXACT retrieved article ids from the T3.11 run. This is both
+        # Reuse the EXACT retrieved article ids from the better-retriever run. This is both
         # faster (skips re-encoding the 6,221-article KB) and stricter confound
         # control: retrieval is then provably identical and the grounding window
         # is the only thing that changed.

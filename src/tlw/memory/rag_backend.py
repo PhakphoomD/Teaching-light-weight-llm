@@ -1,7 +1,7 @@
-"""RagMemory — slot D 'rag' backend (T3.3, rag-medquad-protocol §2 / schema.md slot-D rag).
+"""RagMemory — slot D 'rag' backend (rag-medquad-protocol §2 / schema.md slot-D rag).
 
 The third MemoryBackend implementation: a corpus-backed, READ-ONLY retriever
-over a prebuilt index (T3.2, `tools/rag/`). It satisfies the SAME seam as
+over a prebuilt index (`tools/rag/`). It satisfies the SAME seam as
 `faiss`/`none` (`store`/`retrieve`/`update_outcome`/`stats`, registries.py) so
 the runner is unchanged — but it differs on three points (schema.md slot-D rag):
   - payload = domain PASSAGES (train answers), not run-written teaching notes
@@ -27,7 +27,7 @@ import numpy as np
 
 from src.tlw.registries import MEMORY_REGISTRY, MemoryBackend
 
-# Aspect-aware rerank (T3.9 FLAW-2 fix): MiniLM retrieval is disease-name-
+# Aspect-aware rerank (aspect-aware reranking): MiniLM retrieval is disease-name-
 # dominated, so "treatments for X" retrieves "symptoms of X" (90% wrong aspect,
 # measured). Classifying the query/passage ASPECT and keeping only same-aspect
 # passages fixes it (corpus coverage verified at 99%). Order matters (specific

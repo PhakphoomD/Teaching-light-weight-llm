@@ -1,13 +1,13 @@
-"""Build the LoRA SFT dataset (T3.6) — standard instruction tuning on the
+"""Build the LoRA SFT dataset — standard instruction tuning on the
 Diabetes TRAIN split's (question -> gold reference answer) pairs.
 
-Recipe rationale (T3.5 gate, ADR-027): the loop-as-factory recipe the light
+Recipe rationale (gate, ADR-027): the loop-as-factory recipe the light
 spec assumed (self-refine + RAG grounding) yields NO distillable signal on this
 near-ceiling testbed — self-refine does not engage on TRAIN (the 3B passes
-round-1, T3.6 smoke) and RAG hurts (ADR-027). So the honest LoRA target is the
+round-1, smoke) and RAG hurts (ADR-027). So the honest LoRA target is the
 domain's own reference answers (TRAIN only), teaching the 3B the domain answer
 style/format (LIMA: fine-tuning teaches style, not facts). Held-out gain is
-expected to be modest/null and will be reported honestly (T3.8).
+expected to be modest/null and will be reported honestly.
 
 Anti-leak (§0.2): TRAIN split only; the held-out 125 are never included and are
 verified absent by id AND by question text. Cloud-free (no judge/Groq needed —

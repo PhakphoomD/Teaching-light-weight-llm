@@ -1,8 +1,8 @@
-"""Runner (T2.6) — the composition root: config -> six slots -> arm run -> summary.jsonl.
+"""The composition root: config -> six slots -> arm run -> summary.jsonl.
 
 "we run this one file, and settings A(student)/B(teacher)/C(preset)/D(memory)/
-E(params)/F(eval) decide everything; we only edit which one to use" (T2.6
-Why, docs/EXPERIMENT_RESULTS.md §5.3). This module is the ONLY place that builds a
+E(params)/F(eval) decide everything; we only edit which one to use"
+(docs/EXPERIMENT_RESULTS.md §5.3). This module is the ONLY place that builds a
 client/memory/preset/judge/arm from a config and wires them together; every
 block is imported only through its registry (registries.py) or `build_client`
 (src/providers/factory.py) — never constructed by hand, never hardcoded.
@@ -41,22 +41,22 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from dotenv import load_dotenv
 
-# --- Strangler provider override (T2.6 build decision 2) -------------------
+# --- Provider override ------------------------------------------------------
 # MUST be imported before any build_client("local", ...) call in this module:
 # it re-registers "local" -> Ollama (see src/tlw/providers.py docstring for
 # why the existing "local" entry, LocalTinyLlama, is not what providers.md
 # means by "local", and why silent re-registration is safe/verified here).
 import src.tlw.providers  # noqa: F401,E402
 
-# --- Registry-populating blocks (T2.2 pattern) ------------------------------
+# --- Registry-populating imports --------------------------------------------
 # Each import is a side effect: it registers real implementations into the
 # slot registries (registries.py). Importing all four before resolving any
 # config value is required so params.arm / preset.* / memory.type / eval.mode
 # never fall back to a missing/placeholder registration.
-import src.tlw.evaluation  # noqa: F401,E402  registers "blind" judge (T2.3)
-import src.tlw.memory  # noqa: F401,E402  registers "faiss" backend (T2.5)
-import src.tlw.prompts  # noqa: F401,E402  registers "minimal"/"orca" presets (T2.4)
-import src.tlw.loop  # noqa: F401,E402  registers "A"/"B"/"C"/"D" arm strategies (T2.4)
+import src.tlw.evaluation  # noqa: F401,E402  registers "blind" judge
+import src.tlw.memory  # noqa: F401,E402  registers "faiss" backend
+import src.tlw.prompts  # noqa: F401,E402  registers "minimal"/"orca" presets
+import src.tlw.loop  # noqa: F401,E402  registers "A"/"B"/"C"/"D" arm strategies
 
 from src.providers.factory import build_client  # noqa: E402
 from src.tlw.config.loader import load_config  # noqa: E402
@@ -80,7 +80,7 @@ RUNS_ROOT = PROJECT_ROOT / "runs"
 
 
 def make_run_id(config_path: Path, seed: int, now: Optional[datetime] = None) -> str:
-    """`<config-stem>__seed<seed>__<UTC timestamp>` (T2.6 build decision, §0.3)."""
+    """`<config-stem>__seed<seed>__<UTC timestamp>` (§0.3)."""
     ts = (now or datetime.now(timezone.utc)).strftime("%Y%m%dT%H%M%SZ")
     return f"{Path(config_path).stem}__seed{seed}__{ts}"
 
@@ -126,7 +126,7 @@ class _TokenCounter:
     wall-clock seconds into a shared sink dict, keyed by role. Never changes
     behavior (`.chat(...)` args and return value pass straight through) — it
     exists purely so the runner can report honest timing/token numbers
-    (T2.6 dry-run requirement) without editing the frozen loop-core call
+     without editing the frozen loop-core call
     sites (`src/tlw/loop/core.py::_chat_text` discards `response.usage`)."""
 
     def __init__(self, client: Any, sink: Dict[str, Dict[str, Any]], key: str):
@@ -267,7 +267,7 @@ def _build_params(cfg: ExperimentConfig, run_id: str, ground_truth: Optional[str
     seam). `ground_truth` is included ONLY for arm D (its own teacher prompt
     may legally see it, §0.2) — absent/None for A/B/C so arm C stays blind by
     construction and the memory tripwire path is inert for the headline
-    memory-off arms (T2.6 build decision: "REQUIRED for arm D, absent/None
+    memory-off arms ("REQUIRED for arm D, absent/None
     elsewhere"). `reference_match` diagnostics for ALL arms are computed
     separately, post-hoc, by the runner (see `_diagnose_round` below) — that
     is a distinct, runner-only, legal score-path use of GT (teaching-loop-protocol.md §2,
@@ -285,7 +285,7 @@ def _build_params(cfg: ExperimentConfig, run_id: str, ground_truth: Optional[str
     }
     # ground_truth is passed to the arm ONLY as a guard input (never into a
     # prompt): arm D's teacher may legally see it (§0.2), and a rag run needs it
-    # for the RAG-L3 leak guard on the grounded student prompt (T3.3/ADR-026 —
+    # for the RAG-L3 leak guard on the grounded student prompt (ADR-026 —
     # a retrieved passage carrying a 12-token gold shingle aborts the run; the
     # build-time RAG-L1/L2 scrub is the primary seal, this is defence-in-depth).
     if cfg.params.arm == "D" or cfg.memory.type == "rag":
@@ -327,7 +327,7 @@ def run_experiment(
     pairs (from `run.py --teacher-fallback` / `--judge-fallback`, format
     `provider:model`, e.g. `local:qwen2.5:7b-instruct`) — runtime resilience
     for the Groq-primary full run, not part of experiment identity (kept out
-    of the Config Contract, T2.6 build decision 3 precedent for `--data`)."""
+    of the Config Contract, build decision 3 precedent for `--data`)."""
     random.seed(cfg.params.seed)
     try:
         import numpy as np
@@ -395,15 +395,15 @@ def run_experiment(
         "gt_substring_shingle": cfg.memory.gt_substring_shingle,
         "gt_similarity_max": cfg.memory.gt_similarity_max,
         "seed_from": cfg.memory.seed_from,
-        "corpus_path": cfg.memory.corpus_path,  # rag backend (T3.3); ignored by none/faiss
+        "corpus_path": cfg.memory.corpus_path,  # rag backend; ignored by none/faiss
         "max_passage_words": cfg.memory.max_passage_words,
-        "aspect_rerank": bool(cfg.memory.aspect_rerank),  # T3.9 FLAW-2 fix
+        "aspect_rerank": bool(cfg.memory.aspect_rerank),  # aspect-aware reranking
     }
     if cfg.memory.type != "none":
         memory_kwargs["storage_dir"] = str(run_dir / "memory")
     memory = build_memory_backend(cfg.memory.type, **memory_kwargs)
 
-    # Faithfulness diagnostic (T3.4, rag-medquad-protocol §4.2) — built ONLY for rag runs
+    # Faithfulness diagnostic (rag-medquad-protocol §4.2) — built ONLY for rag runs
     # (it needs retrieved passages). Reuses the SAME judge model as the blind
     # correctness judge for one consistent evaluator; it sees (answer, passages)
     # only, never the gold answer (§0.2). Computed post-hoc like reference_match,
@@ -513,7 +513,7 @@ def run_experiment(
                 "semantic_sim_mean": (sum(ref_semantic) / len(ref_semantic)) if ref_semantic else None,
                 "rouge_l_mean": (sum(ref_rouge) / len(ref_rouge)) if ref_rouge else None,
             },
-            "faithfulness": {  # RAG groundedness diagnostic (rag runs only, T3.4)
+            "faithfulness": {  # RAG groundedness diagnostic (rag runs only)
                 "mean": (sum(faithfulness_values) / len(faithfulness_values)) if faithfulness_values else None,
                 "n": len(faithfulness_values),
                 "null": faithfulness_null,
@@ -546,7 +546,7 @@ def run_experiment(
 
 def print_summary(summary: Dict[str, Any]) -> None:
     """Honest console summary: correctness AND reference_match as SEPARATE
-    columns, never merged (T2.6 step 1 / teaching-loop-protocol.md §2, ADR-019)."""
+    columns, never merged (teaching-loop-protocol.md §2, ADR-019)."""
     rm = summary["metrics"]["reference_match"]
     sem = rm["semantic_sim_mean"]
     rouge = rm["rouge_l_mean"]

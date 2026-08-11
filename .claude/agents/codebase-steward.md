@@ -3,7 +3,7 @@ name: codebase-steward
 description: Use for code quality, consistency, conventions, and refactoring across src/ and tools/. Invoke to review a change for reuse/simplification, reduce complexity, or keep the codebase coherent (e.g. the 500-line run() method).
 tools: Read, Grep, Glob, Edit, Write, Bash, Skill
 model: sonnet
-memory: project
+memory: local
 ---
 
 # Identity

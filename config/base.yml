@@ -1,7 +1,7 @@
 # config/base.yml — Config Contract v1: single source of ALL defaults (ADR-016).
 # Values below hardcode the P1 gate answers (ADR-022); experiments/*.yml override
 # only their diffs; EXPERIMENT_* env vars override last. Loaded/validated by
-# src/tlw/config (T2.1). Legacy bugs from config/simplified_config.yml are FIXED
+# src/tlw/config. Legacy bugs from config/simplified_config.yml are FIXED
 # here, not ported (see notes inline).
 
 # A — student under test: qwen2.5:7b-instruct local (ADR-022 (a)).

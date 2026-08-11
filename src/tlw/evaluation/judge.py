@@ -1,4 +1,4 @@
-"""BlindJudge (T2.3) — the Track-A headline correctness judge.
+"""BlindJudge — the the teaching-loop study headline correctness judge.
 
 Implements teaching-loop-protocol.md §3 exactly: an independent, blind (Q+answer only,
 NEVER the reference) LLM judge that returns a 0-4 correctness verdict.

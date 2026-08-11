@@ -1,4 +1,4 @@
-"""Leakage-seal tests for the loop block (T2.4 DoD step 3/4).
+"""Leakage-seal tests for the loop block (DoD step 3/4).
 
 Proves, with mocked student/teacher/judge (no API calls), that no
 student-bound or judge-bound prompt ever carries the reference answer in
@@ -7,7 +7,7 @@ even structurally defending against a misbehaving teacher that tries to
 echo it back (the L7/Trace-C failure mode, LEAKAGE_AUDIT.md).
 
 See DoD accounting at the bottom of this file's companion report for the
-full census-item -> test mapping (also restated in the T2.4 spoke report).
+full census-item -> test mapping (also restated in the spoke report).
 """
 
 import pytest
@@ -73,7 +73,7 @@ def test_student_bound_prompts_never_contain_gt(arm, make_client, make_judge):
 @pytest.mark.parametrize("arm", ["A", "B", "C"])
 def test_judge_bound_calls_never_receive_gt(arm, make_client, make_judge):
     """The judge seam (Judge.score(question, answer, mode)) has no GT
-    parameter at all (T2.3, tests/tlw/evaluation/test_leakage.py) — this
+    parameter at all (tests/tlw/evaluation/test_leakage.py) — this
     confirms the loop never even tries to smuggle one through `answer`
     beyond what the student itself produced."""
     student = make_client(["draft v1", "self-critique or n/a", "draft v2"])

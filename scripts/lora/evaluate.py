@@ -1,9 +1,9 @@
-"""T3.8 — evaluate base 3B vs 3B+LoRA on the held-out 125, HF inference, judged
-by the VALIDATED Groq blind judge (T3.9: Groq kappa 0.54, local rejected).
+"""Evaluate base 3B against 3B+LoRA on the held-out 125, HF inference, judged
+by the VALIDATED Groq blind judge (Groq kappa 0.54, local rejected).
 
 Both arms run on the SAME HF-inference stack (4-bit base, chat template), so the
 delta isolates the LoRA effect. Correctness = blind Groq judge, score>=4 (the
-Track-A / RAG bar). Paired bootstrap CI over questions. §0.2: judge never sees gold.
+the teaching-loop study / RAG bar). Paired bootstrap CI over questions. §0.2: judge never sees gold.
 
   HF_HUB_OFFLINE=1 python scripts/lora/evaluate.py --adapter models/lora_diabetes --seeds 1,2,3
 """

@@ -1,8 +1,8 @@
-# Teacher-bound presets — ADR-020 survivor set + T2.4 arm-C skeleton.
+# Teacher-bound presets — ADR-020 survivor set + arm-C skeleton.
 # `orca.sighted` is ported (verbatim template text) from config/prompts_config.yml
 # `teacher.orca_critique` (T1 in PROMPT_CATALOG.md, config/prompts_config.yml:169-201)
-# — the Phase-2 winner (pass_rate 0.90, logs/experiments/phase2/summary.jsonl:3).
-# `orca.blind` fills the T1.5 §5a skeleton (arm C): orca_critique with the
+# — the winning teacher style (pass_rate 0.90, logs/experiments/phase2/summary.jsonl:3).
+# `orca.blind` fills the prompt-catalogue skeleton (arm C): orca_critique with the
 # `[Target Answer] {ground_truth}` block removed.
 #
 # `orca.sighted` legally shows GT to the TEACHER ONLY (§0.2) — never ported

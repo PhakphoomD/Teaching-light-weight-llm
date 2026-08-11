@@ -1,5 +1,5 @@
-"""Report assembly (T2.8 steps 1-2 + CLI table). Turns loaded runs into the
-tables T2.8 asks for -- WITHOUT writing any prose document. The narrative half
+"""Report assembly (steps 1-2 + CLI table). Turns loaded runs into the
+tables the analysis reports -- WITHOUT writing any prose document. The narrative half
 lives in `docs/EXPERIMENT_RESULTS.md` and is authored, not generated.
 
 Two hard rules enforced here, not just documented:
@@ -9,7 +9,7 @@ Two hard rules enforced here, not just documented:
 - **Sample-size honesty banner.** Any comparison built from fewer than the
   pre-registered 125 held-out questions or fewer than 3 seeds gets a loud
   "NOT the pre-registered sample" banner, so a pilot/dry-run (n=5, 1 seed)
-  can never be silently read as the headline result (T2.8 build rule 4).
+  can never be silently read as the headline result (build rule 4).
 """
 
 from __future__ import annotations
@@ -107,7 +107,7 @@ def banner_for(
     )
 
 
-# --- secondary views (T2.8 step 2) --------------------------------------------
+# --- secondary views (step 2) --------------------------------------------
 
 
 def reference_match_divergence(runs_by_arm: Dict[str, List[RunRecord]]) -> Dict[str, Dict[str, Optional[float]]]:
@@ -275,7 +275,7 @@ def build_report(
     pre_registered_n: int = PRE_REGISTERED_N_QUESTIONS,
     pre_registered_seeds: int = PRE_REGISTERED_N_SEEDS,
 ) -> Dict[str, Any]:
-    """Assemble the full T2.8-step-1/2 report dict for one `memory_type`
+    """Assemble the full report dict for one `memory_type`
     slice of the runs (headline = "none"; pass "faiss" for the C'/D'
     ablation -- callers must not mix the two in one `build_report` call,
     each comparison inside re-asserts V8 per-arm anyway)."""

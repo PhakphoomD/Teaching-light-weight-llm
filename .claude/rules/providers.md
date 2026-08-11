@@ -1,3 +1,12 @@
+---
+paths:
+  - "src/**"
+  - "scripts/**"
+  - "config/**"
+  - "experiments/**"
+  - "app/**"
+---
+
 # Providers & Models (config — ADR-013)
 
 ## Groq (free tier — primary cloud). Enabled at org level:

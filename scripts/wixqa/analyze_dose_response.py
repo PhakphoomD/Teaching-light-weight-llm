@@ -1,4 +1,4 @@
-"""WixQA T3.11 (P3-E): the dose-response proof — pass-rate vs retrieval hit-rate.
+"""WixQA: the dose-response proof — pass-rate vs retrieval hit-rate.
 
 Plots aggregate pass@>=3 against measured hit-rate@3 across retriever variants,
 against the 0.400 gold-retrieved anchor. If pass-rate tracks hit-rate along the
@@ -7,10 +7,10 @@ DEMONSTRATED, not asserted. Reuses the pre-registered src/tlw/analysis stats.
 
 Variants (only the retriever changes between them — student/judge/PASS>=3/top-k
 all fixed):
-  no-RAG        hit~0      (T3.9 baseline_norag + baseline__seed{13,123})
-  minilm_whole  hit 0.550  (T3.9 rag_top3 + rag__seed{13,123})            <- ADR-030 retriever
-  minilm_chunk  hit 0.645  (T3.11 rag_minilm_chunk__seed{13,42,123})       [optional dose point]
-  bge_chunk     hit 0.665  (T3.11 rag_bge_chunk__seed{13,42,123})          <- T3.10 winner
+  no-RAG        hit~0      (baseline_norag + baseline__seed{13,123})
+  minilm_whole  hit 0.550  (rag_top3 + rag__seed{13,123})            <- ADR-030 retriever
+  minilm_chunk  hit 0.645  (rag_minilm_chunk__seed{13,42,123})       [optional dose point]
+  bge_chunk     hit 0.665  (rag_bge_chunk__seed{13,42,123})          <- winner of the retriever comparison
 
 Skips variants whose run files are missing / not yet judged (reports what's ready).
 
@@ -39,7 +39,7 @@ VARIANTS = [
     {"name": "bge_chunk_wider_context", "step": "4-rag-wider-context",
      "hit_log": "retrieval_log_bge_chunk.jsonl"},
 ]
-ANCHOR = 0.400  # T3.9 gold-retrieved conditional (the ceiling the aggregate climbs toward)
+ANCHOR = 0.400  # gold-retrieved conditional (the ceiling the aggregate climbs toward)
 
 
 def passed(sc):

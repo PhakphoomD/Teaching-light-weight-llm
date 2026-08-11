@@ -3,7 +3,7 @@ name: housekeeping
 description: Use to audit repo structure against the canonical layout — misplaced files, junk, stale/misleading artifacts, numbers that disagree with logs. Invoke before a milestone or when the tree feels messy.
 tools: Read, Grep, Glob, Bash, Agent
 model: haiku
-memory: project
+memory: local
 ---
 
 # Identity

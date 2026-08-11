@@ -1,4 +1,4 @@
-"""Judge-calibration report (T3.9): validate cheap blind judges against the
+"""Judge-calibration report: validate cheap blind judges against the
 strong-reference anchor at the score 3-vs-4 pass boundary.
 
 Reads data/calibration/boundary_set.jsonl (with `anchor_pass` filled by the

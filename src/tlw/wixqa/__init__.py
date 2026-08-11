@@ -1,4 +1,4 @@
-"""WixQA study library — the shared pieces of the P3-E experiments.
+"""WixQA study library — the shared pieces of the the retrieval-bottleneck study experiments.
 
 These four modules used to live inside `scripts/wixqa_*.py` and were imported
 script-to-script (15 edges). That made the experiment drivers load-bearing
@@ -11,8 +11,8 @@ the scripts are thin drivers again.
 |---|---|
 | `paths`     | where the WixQA data and its index live |
 | `prompts`   | the exact student/judge prompts and decoding settings of ADR-030 |
-| `retrieval` | encoders, chunking, and the seven retriever variants of the T3.10 ladder |
-| `grounding` | how much of a retrieved article reaches the prompt (T3.14 Stage 1) |
+| `retrieval` | encoders, chunking, and the seven retriever variants of the retriever comparison |
+| `grounding` | how much of a retrieved article reaches the prompt (Stage 1) |
 
 **Nothing here may change behaviour.** The prompts, the chunk size, the encoder
 prefixes and the decoding parameters are the controlled variables of published

@@ -1,4 +1,4 @@
-"""reference_match diagnostics tests (T2.3): computed independently of, and
+"""reference_match diagnostics tests: computed independently of, and
 never merged into, correctness. Deterministic parts (rouge_l/tokenize) run
 without any model download; semantic_sim tests are skipped if
 sentence-transformers/the MiniLM weights aren't available offline."""

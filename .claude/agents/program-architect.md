@@ -3,7 +3,7 @@ name: program-architect
 description: Use for system design, architecture decisions, and technology choices (RAG stack, LoRA/QLoRA setup, eval architecture, module boundaries). Invoke before large structural changes or when weighing trade-offs that need evidence.
 tools: Read, Grep, Glob, WebSearch, WebFetch, Write, Edit, Skill
 model: opus
-memory: project
+memory: local
 ---
 
 # Identity

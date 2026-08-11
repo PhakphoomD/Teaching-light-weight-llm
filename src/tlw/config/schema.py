@@ -71,9 +71,9 @@ ALLOWED_KEYS: Dict[str, Any] = {
         "gt_substring_shingle": None,
         "gt_similarity_max": None,
         "seed_from": None,
-        "corpus_path": None,  # rag only (T3.3, ADR-026) — prebuilt tools/rag/ index dir
+        "corpus_path": None,  # rag only (ADR-026) — prebuilt tools/rag/ index dir
         "max_passage_words": None,  # rag only — sub-chunk cap (rag-medquad-protocol §1.1)
-        "aspect_rerank": None,  # rag only (T3.9 FLAW-2 fix) — keep only same-aspect passages
+        "aspect_rerank": None,  # rag only (aspect-aware reranking) — keep only same-aspect passages
     },
     "params": {  # E
         "seed": None,
@@ -146,9 +146,9 @@ class MemorySlot:
     gt_substring_shingle: Optional[int] = None
     gt_similarity_max: Optional[float] = None
     seed_from: Optional[str] = None  # resolved project-relative by the loader
-    corpus_path: Optional[str] = None  # rag only (T3.3) — resolved project-relative by the loader
+    corpus_path: Optional[str] = None  # rag only — resolved project-relative by the loader
     max_passage_words: Optional[int] = None  # rag only
-    aspect_rerank: Optional[bool] = None  # rag only (T3.9 FLAW-2 fix)
+    aspect_rerank: Optional[bool] = None  # rag only (aspect-aware reranking)
 
 
 @dataclass(frozen=True)

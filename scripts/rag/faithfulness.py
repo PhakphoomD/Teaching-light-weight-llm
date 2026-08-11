@@ -1,8 +1,8 @@
-"""Offline RAG faithfulness diagnostic pass (T3.4/T3.5).
+"""Offline RAG faithfulness diagnostic pass.
 
 The full 3B+RAG run is executed with `--no-faithfulness` so the CORRECTNESS
 judge (Groq) stays within its daily token cap and consistent with the reused
-Track-A 3B baseline. Faithfulness is a DIAGNOSTIC (never the headline, ADR-019),
+the teaching-loop study 3B baseline. Faithfulness is a DIAGNOSTIC (never the headline, ADR-019),
 so it is computed here afterwards, off the critical path, with a LOCAL judge
 (no Groq cap, no contention with the student — the student is not running now).
 

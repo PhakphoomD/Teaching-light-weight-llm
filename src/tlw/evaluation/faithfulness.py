@@ -1,4 +1,4 @@
-"""FaithfulnessJudge (T3.4, rag-medquad-protocol §4.2) — the RAG groundedness DIAGNOSTIC.
+"""FaithfulnessJudge (rag-medquad-protocol §4.2) — the RAG groundedness DIAGNOSTIC.
 
 RAGAS-style groundedness (Es et al. 2023, arXiv 2309.15217): given an ANSWER and
 the retrieved CONTEXT passages, what fraction of the answer's factual claims are
@@ -84,7 +84,7 @@ def _context_to_text(passages: Union[str, List[Any], None]) -> str:
 class FaithfulnessJudge:
     """Independent groundedness judge. Reuses a judge client (DI or built from
     provider/model). Same model family constraints do not apply (it never sees
-    the student answer's gold, only passages) but reusing the Track-A judge
+    the student answer's gold, only passages) but reusing the the teaching-loop study judge
     keeps one consistent evaluator."""
 
     def __init__(

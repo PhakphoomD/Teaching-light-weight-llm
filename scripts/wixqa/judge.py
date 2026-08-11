@@ -1,4 +1,4 @@
-"""WixQA T3.9 (P3-E): resumable, budget-aware scoring of generated runs.
+"""WixQA: resumable, budget-aware scoring of generated runs.
 
 Scores any record with score==null in the given run file(s) using the EXACT
 ADR-030 reference-comparing judge (Groq llama-3.1-8b-instant, JUDGE_SYS reused
@@ -6,7 +6,7 @@ from wixqa_baseline.py, temperature 0, max_tokens 8). §0.2-legal for closed
 domain: only the JUDGE sees the gold reference; the student stayed blind.
 
 Why a separate resumable pass: Groq's 8b-instant TPD cap (500K) is org-wide and
-too small to judge 6×200 answers in one go (todo lesson). This script:
+too small to judge 6×200 answers in one go. This script:
   * self-paces via the GroqClient RateLimiter (RPM/TPM),
   * persists each score to disk immediately (crash/interrupt-safe),
   * STOPS GRACEFULLY on a daily-cap error (ChatResult.error) instead of writing

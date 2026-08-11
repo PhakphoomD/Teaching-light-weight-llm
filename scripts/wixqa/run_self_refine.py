@@ -1,8 +1,8 @@
-"""WixQA T3.14 Stage-2 (P3-E): self-refine ON TOP OF RAG — the Loop+RAG system.
+"""WixQA: self-refine ON TOP OF RAG — the Loop+RAG system.
 
 The configuration the project is named after, never previously evaluated: every
 RAG run so far was single-pass (arm A), and the loop (self-refine) was only ever
-run WITHOUT RAG (Track A). This runs them together (ADR-032).
+run WITHOUT RAG (the teaching-loop study). This runs them together (ADR-032).
 
 Design (from the Stage-1 findings and the pre-registered plan):
 

@@ -1,4 +1,4 @@
-"""Track-A analysis block (T2.8 SCRIPT half — qa-engineer, per ADR-019/teaching-loop-protocol.md §4).
+"""the teaching-loop study analysis block (SCRIPT half — qa-engineer, per ADR-019/teaching-loop-protocol.md §4).
 
 This package computes the **pre-registered** headline statistic — the loop
 effect `pass_rate(C) - pass_rate(B)`, with a 95% paired cluster-bootstrap CI
@@ -7,9 +7,9 @@ descriptive Wilson intervals per arm (teaching-loop-protocol.md §4.2/§4.3) —
 `runs/<run_id>/{summary.jsonl,rounds.jsonl,config_used.json}` artifacts
 written by `src/tlw/runner.py`.
 
-It is a REUSABLE, TESTED block, not a throwaway notebook (T2.8 step 1). It
-does NOT write `docs/EXPERIMENT_RESULTS.md §7.1` — that is the REPORT half of T2.8,
-out of scope here because the full Track-A run has not happened yet (§0.1:
+It is a REUSABLE, TESTED block, not a throwaway notebook (step 1). It
+does NOT write `docs/EXPERIMENT_RESULTS.md §7.1` — that is the report's job,
+out of scope here because the full the teaching-loop study run has not happened yet (§0.1:
 no results doc before real data). Only synthetic fixtures and the n=5
 dry-run artifacts under `runs/trackA_p2_arm{A,C}_diabetes__seed42__*` back
 these tests; a full pilot/headline run must re-validate the real numbers.

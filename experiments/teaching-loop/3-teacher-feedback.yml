@@ -7,7 +7,7 @@
 # params.seed supplied per-run via EXPERIMENT_PARAMS_SEED (not hardcoded here).
 #
 # HEADLINE CLAIM = pass_rate(C) - pass_rate(B), 95% CI (teaching-loop-protocol.md §4.3),
-# computed by T2.8 across seeds {13, 42, 123} on the real 125-question heldout.
+# computed across seeds {13, 42, 123} on the real 125-question heldout.
 #
 # Run:
 #   $env:EXPERIMENT_PARAMS_SEED = "42"

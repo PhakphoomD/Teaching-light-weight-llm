@@ -1,4 +1,4 @@
-"""T2.4 preset-block tests: the ADR-020 survivor set resolves correctly, and
+"""preset-block tests: the ADR-020 survivor set resolves correctly, and
 the two quarantined leak templates (LEAKAGE_AUDIT L1/L7) can never be
 reached through the registry, no matter what."""
 
@@ -48,11 +48,11 @@ def test_unknown_variant_raises_key_error():
         preset.get("nonexistent_variant")
 
 
-# --- T2.7 gate-(f) DATA: student.orca (registered "orca_student") ---
+# --- The alternative student style: student.orca (registered "orca_student") ---
 
 
 def test_orca_student_preset_renders_first_and_refine_via_single_feedback_slot():
-    """Same call signature as MinimalStudentPreset — T2.4's loop always
+    """Same call signature as MinimalStudentPreset — the loop always
     calls render('refine', ..., feedback=<one string>) (strategies.py
     _TeacherArm.run:194-196), so the ported orca pair must accept that
     signature too, not the legacy two-field {teacher_critique}/
@@ -122,8 +122,8 @@ def test_quarantined_style_key_in_yaml_would_fail_loudly(tmp_path, monkeypatch):
 
 def test_only_minimal_and_orca_are_registered_presets():
     """No stray preset names leaked in from the graveyard (PROMPT_CATALOG's
-    35 ARCHIVE variants stay un-registered, T1.5). 'orca_student' is the
-    T2.7 gate-(f) DATA addition — the legacy structured student pair."""
+    35 ARCHIVE variants stay un-registered). 'orca_student' is the
+    The legacy structured student pair, kept as the comparison arm."""
     assert set(PRESET_REGISTRY.names()) == {"minimal", "orca", "orca_student"}
 
 

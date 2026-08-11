@@ -1,22 +1,22 @@
 # experiments/lora/generate-training-data.yml
 #
 # SUPERSEDED — kept for the record, not used by the shipped result. This recipe
-# was written for T3.6 and then abandoned: a smoke run showed self-refine does
+# was written and then abandoned: a smoke run showed self-refine does
 # not engage on the near-ceiling train split (5/5 passed at round 1), so there
 # was no signal to distil. The LoRA adapter that was actually trained and
 # evaluated (ADR-028, -0.292) used standard gold-SFT built by
 # scripts/lora/build_data.py, which calls no model at all.
 #
-# T3.6 LoRA data-generation recipe (NOT a measurement run). Uses the loop as the
+# LoRA data-generation recipe (NOT a measurement run). Uses the loop as the
 # offline factory (ADR-024): arm B (self-refine) on the 3B over the Diabetes
 # TRAIN split, to produce (question -> self-refined answer) pairs the 3B itself
-# can reach, so T3.7 LoRA can bake that self-refine style into 1-pass weights.
+# can reach, so LoRA can bake that self-refine style into 1-pass weights.
 #
-# Recipe chosen per the T3.5 gate (ADR-027): self-refine, NOT RAG — RAG hurts
+# Recipe chosen per the gate (ADR-027): self-refine, NOT RAG — RAG hurts
 # (3B net-zero, 7B −7pt), while self-refine is the honest +9pt gain (ADR-024).
 #
 # Diffs from config/base.yml:
-#   student : local qwen2.5:3b (the product floor we will LoRA-tune, T3.7)
+#   student : local qwen2.5:3b (the product floor we will LoRA-tune)
 #   eval    : local llama3.1:8b judge (Llama != Qwen student, §0.2/V2; free, no
 #             Groq cap — the quality gate that keeps only answers scoring >= 4),
 #             pass_threshold 1.0 (score>=4 "correct AND complete")

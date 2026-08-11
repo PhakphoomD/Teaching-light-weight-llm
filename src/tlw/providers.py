@@ -1,13 +1,12 @@
-"""Ollama-backed 'local' provider for the new core (T2.6 build decision 2).
+"""Ollama-backed 'local' provider for the new core.
 
 `.claude/rules/providers.md` defines **local = Ollama** (`qwen2.5:7b-instruct`,
 `llama3.1:8b`, RTX 4060 8GB). But the ProviderRegistry's existing "local"
 entry (`src/providers/local_client.py::LocalTinyLlama`) is a
 HuggingFace-transformers TinyLlama loader — a different provider entirely.
-This gap was already flagged, not fixed, in T2.3
-(`src/tlw/evaluation/calibration.py` module docstring: "'local' as used by
-config/base.yml ... has no matching ProviderRegistry entry yet ... owned by
-T2.1/ops-engineer, the ProviderRegistry seam").
+The same gap is described from the other side in
+`src/tlw/evaluation/calibration.py`, which routes to the provider directly
+because "local" cannot be resolved through the registry alone.
 
 **Fix (strangler-style, structure.md §E):** this module registers a real
 Ollama HTTP client under the SAME name "local", so any process that imports
@@ -78,7 +77,7 @@ class OllamaClient(LLMClient):
         }
         if seed is not None:
             # Ollama `options.seed` makes sampling reproducible for a given
-            # (model, prompt, options) — used by the WixQA 3-seed re-run (T3.9)
+            # (model, prompt, options) — used by the WixQA 3-seed re-run
             # so seeds {13,42,123} are distinct-but-reproducible draws (§0.3).
             options["seed"] = seed
         payload = {

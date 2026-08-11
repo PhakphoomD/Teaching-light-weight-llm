@@ -1,10 +1,10 @@
-"""Synthetic run-dir fixture factory for T2.8 analysis tests.
+"""Synthetic run-dir fixture factory for analysis tests.
 
 Writes the same three files `src/tlw/runner.py` writes
 (`config_used.json`, `rounds.jsonl`, `summary.jsonl`), shaped exactly like
 the real fields verified live against the n=5 dry-run artifacts
 (`runs/trackA_p2_arm{A,C}_diabetes__seed42__*`). Synthetic fixtures are the
-primary test vehicle (T2.8 task instructions) -- the real dry-run dirs are
+primary test vehicle (task instructions) -- the real dry-run dirs are
 used only for a separate shapes-only loader smoke test.
 """
 
@@ -36,7 +36,7 @@ def _write_run(
     memory_episodes: int = 0,
     memory_rejects: int = 0,
     rounds_per_question: Optional[Sequence[int]] = None,
-    faithfulness_mean: Optional[float] = None,  # RAG groundedness diagnostic (T3.4)
+    faithfulness_mean: Optional[float] = None,  # RAG groundedness diagnostic
     grounding_filtered: int = 0,
 ) -> Path:
     run_dir.mkdir(parents=True, exist_ok=True)

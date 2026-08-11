@@ -1,4 +1,4 @@
-"""T3.7 — QLoRA 4-bit fine-tune of Qwen2.5-3B-Instruct on the Diabetes SFT set,
+"""QLoRA 4-bit fine-tune of Qwen2.5-3B-Instruct on the Diabetes SFT set,
 on an RTX 4060 (8GB). Produces a LoRA adapter in models/lora_diabetes/.
 
 Design for 8GB: 4-bit NF4 base + bf16 compute + gradient checkpointing + LoRA on

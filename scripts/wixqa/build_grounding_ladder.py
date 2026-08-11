@@ -1,20 +1,20 @@
-"""WixQA T3.14 Stage-1 (P3-E): OFFLINE grounding ladder — answer-coverage@budget. NO LLM.
+"""WixQA: OFFLINE grounding ladder — answer-coverage@budget. NO LLM.
 
-The T3.11 diagnostic found we truncate the answer out of the prompt ourselves:
+The pre-run diagnostic found we truncate the answer out of the prompt ourselves:
 gold articles are median 3,555 chars but grounding shows only the first 900, so
 the student sees ~25% of the gold article and only ~36% of the expert answer's
 content words (the full article holds ~72%). This script ranks grounding
 variants by how much of the answer actually REACHES the prompt — the exact
-analogue of T3.10's offline hit-rate ladder, and the cheap gate before any
+analogue of the offline hit-rate comparison, and the cheap gate before any
 end-to-end run.
 
 2x2 factorial (isolates the two levers independently):
                      budget 900/article      budget 2400/article
-  article HEAD       G1 head900 (= T3.11)    G3 head2400
+  article HEAD       G1 head900 (the control)    G3 head2400
   CHUNK-centred      G2 chunk900             G4 chunk2400
 `chunk-centred` uses the retriever's OWN localisation: bge_chunk matches a
 180-word chunk, so we centre the window on that chunk instead of the article
-head (T3.11 discarded this — the matched chunk can sit mid-article).
+head (discarded this — the matched chunk can sit mid-article).
 
 HONESTY (§0.2): the reference answer is used ONLY here, offline, by the analyst,
 to SCORE coverage — exactly the same status as using gold article-ids to score
@@ -37,7 +37,7 @@ from src.tlw.wixqa.retrieval import encode, load_data
 from src.tlw.wixqa.grounding import (GROUNDINGS, STOP_WORDS, best_chunk_word_offset,
                                      window)
 
-RL = ROOT / "runs/rag-wixqa/retrieval_log_bge_chunk.jsonl"   # the T3.11 retrieval (article ids per question)
+RL = ROOT / "runs/rag-wixqa/retrieval_log_bge_chunk.jsonl"   # the retrieval (article ids per question)
 OUT = ROOT / "reports/rag-wixqa"; OUT.mkdir(parents=True, exist_ok=True)
 
 def content(text: str):

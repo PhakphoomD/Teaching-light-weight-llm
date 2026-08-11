@@ -1,5 +1,5 @@
 # experiments/rag-medquad-fair-tests/much-bigger-library.yml
-# T3.9 comprehensive-corpus test: 3B+RAG over the FULL 7-domain MedQuAD corpus
+# Comprehensive-corpus variant: 3B+RAG over the FULL 7-domain MedQuAD corpus
 # (~10k records, held-out excluded + leak-scrubbed) instead of the Diabetes
 # train-only 414. Tests whether a broader corpus (more chance of relevant
 # same-disease content) changes RAG's verdict. Default retriever (no aspect

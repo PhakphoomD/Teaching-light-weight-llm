@@ -1,4 +1,4 @@
-"""CLI tests (T2.8 build instruction 4): the demo invocation + the banner
+"""CLI tests (build instruction 4): the demo invocation + the banner
 must actually reach stdout, and correctness/reference_match must print as
 separate lines."""
 

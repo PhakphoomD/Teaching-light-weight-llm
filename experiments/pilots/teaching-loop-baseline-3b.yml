@@ -3,7 +3,7 @@
 #   student -> qwen2.5:3b     (product floor, ADR-015; smaller model)
 #   eval.pass_threshold -> 1.0 (score>=4 "correct AND complete", not just >=3
 #                               "correct") — restores baseline headroom so the
-#                               loop has something to improve. See T2.7 pilot
+#                               loop has something to improve. See pre-registration pilot
 #                               finding: at >=3 the baseline passes 100% (no
 #                               room); at >=4 it drops to ~67%.
 # Judge stays llama3.1:8b (Qwen student != Llama judge, §0.2/V2 unchanged),

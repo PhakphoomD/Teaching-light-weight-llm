@@ -1,4 +1,4 @@
-"""Tests for the T2.6 runner: config->blocks composition (mocked, no API),
+"""Tests for the runner: config->blocks composition (mocked, no API),
 run_id format, summary-shape round-trip vs schema.md, CLI arg handling, and
 the strangler "local"-provider override behavior.
 
@@ -314,7 +314,7 @@ def test_main_default_data_path_is_heldout():
 
 
 def test_local_provider_is_ollama_not_tinyllama():
-    """T2.6 build decision 2: importing src.tlw.providers (done at
+    """build decision 2: importing src.tlw.providers (done at
     src.tlw.runner import time) re-registers "local" -> OllamaClient,
     overwriting src/providers/local_client.py's LocalTinyLlama registration
     for any process that imports the new core."""
@@ -554,7 +554,7 @@ def test_main_wires_teacher_and_judge_fallback_flags(tmp_path, monkeypatch, tiny
 
 
 def test_main_legacy_teacher_fallback_model_flag_maps_to_local():
-    """--teacher-fallback-model (T2.6 original, local-only) still works as a
+    """--teacher-fallback-model (original, local-only) still works as a
     deprecated alias for --teacher-fallback local:<model>."""
     parser_args = ["--config", "x.yml", "--teacher-fallback-model", "qwen2.5:7b-instruct"]
     import argparse as _argparse
