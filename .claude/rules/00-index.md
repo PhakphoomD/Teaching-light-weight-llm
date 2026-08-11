@@ -11,7 +11,7 @@ or `decisions.md ADR-003` or `rubric.md D3`.
 - **§0.2 No ground-truth leakage in evaluation.** The student/eval path must never see the reference answer. Teacher-sees-GT is allowed only for feedback / training-data generation — never for *measuring* learning.
 - **§0.3 Reproducible.** Deterministic, seeded, single-command, documented — so others can follow.
 - **§0.4 Evidence-backed.** Every claim/finding cites something actually read (file:line) or run (command + output). No reporting what you did not open.
-- **§0.5 Environment.** Run Python **only** via the full path `C:\Users\ham25\.conda\envs\tlw\python.exe`. The bare `python` alias is the Windows Store stub.
+- **§0.5 Environment.** Run Python **only** through this project's `tlw` environment, named by its full path on the machine you are on — never a bare `python`, which resolves to the Windows Store stub or to whichever interpreter is first on PATH. Print the path once with `conda run -n tlw python -c "import sys; print(sys.executable)"` and use it verbatim; `README.md` §Install has the full procedure.
 - **§0.6 Approved principles are frozen.** Do not change §0 or any accepted ADR yourself. If you believe one should change, raise a finding "needs user approval" — never edit it unilaterally.
 
 ---

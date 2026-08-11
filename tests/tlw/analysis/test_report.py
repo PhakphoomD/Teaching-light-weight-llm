@@ -1,4 +1,4 @@
-"""Report-assembly tests (step 2 + honesty banner, build rules 3-4)."""
+"""Report assembly: the per-arm table, the headline comparison, the honesty banner."""
 
 import pytest
 

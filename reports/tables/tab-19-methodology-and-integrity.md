@@ -13,7 +13,7 @@
 | Leakage | the student never sees the reference; a guard aborts the run if it appears in a prompt. It fired once, on the arm designed to leak |
 | Data integrity | 5 records emptied by a mid-run crash were regenerated before judging and stamped as repaired; leaving them would have biased that arm down ~2.5pt |
 | Reproducibility | every figure and table here regenerates from committed logs with `python scripts/make_figures.py`. **No headline number is typed by hand.** Three values are not recomputed — reference coverage and the extraction ratio (content-overlap metrics the study scripts computed at analysis time) and four answer-length examples — and each is labelled where it appears, in tab-10 and tab-13. A blanket claim would have been easier to write and false |
-| Test suite | 476 tests (`pytest tests/ -q`), including `tests/tlw/figures/`, which recomputes each published headline from its artifact and fails if a figure and a document ever disagree |
+| Test suite | 479 tests (`pytest tests/ -q`), including `tests/tlw/figures/`, which recomputes each published headline from its artifact and fails if a figure and a document ever disagree |
 
 ### And the ones that caught something
 

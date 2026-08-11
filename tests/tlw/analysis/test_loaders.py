@@ -1,4 +1,4 @@
-"""Loader tests (step 1): discovery, parsing, V8 no-conflation guard.
+"""Run-discovery and parsing, and the guard that stops two conditions being pooled.
 
 Synthetic fixtures (`make_run`) are the primary vehicle. The real n=5 dry-run
 artifacts under `runs/teaching-loop-medquad/pilots/trackA_p2_arm{A,C}_diabetes__seed42__*`

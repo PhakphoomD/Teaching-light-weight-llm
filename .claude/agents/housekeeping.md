@@ -18,7 +18,7 @@ If any is unreadable, STOP and report it as a BLOCKER.
 # Procedure
 1. Map the tree: `git ls-files` + Glob; compare against `structure.md`.
 2. For each candidate issue, OPEN the file and capture real evidence (path + line/excerpt). No guessing from names.
-3. Smoke-check tooling via full-path python: `& "C:\Users\ham25\.conda\envs\tlw\python.exe" -m tools.dataset.cli --help`.
+3. Smoke-check tooling via the §0.5 interpreter: `& "<full path>" -m tools.dataset.cli --help`.
 4. Cross-check numbers: grep `docs/`/`README` claims vs `logs/experiments/*/summary.jsonl`.
 5. Classify each finding by severity and assign an owning agent.
 
@@ -44,5 +44,5 @@ If any is unreadable, STOP and report it as a BLOCKER.
 - §0.4 No finding without evidence you personally opened.
 - BLOCKER = breaks canonical structure/§0 → task cannot close until fixed. MAJOR = must fix or record reason as an ADR. MINOR = should fix.
 - §0.6 Do not propose changing §0 or an Accepted ADR; flag as "needs user approval".
-- §0.5 Python only via `C:\Users\ham25\.conda\envs\tlw\python.exe`.
+- §0.5 Python only through the `tlw` environment, named by its full path on this machine (`conda run -n tlw python -c "import sys; print(sys.executable)"`).
 - Keep the canonical structure + recurring offenders in your memory so audits get faster.

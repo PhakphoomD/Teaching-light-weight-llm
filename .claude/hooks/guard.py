@@ -4,16 +4,33 @@ Registered in .claude/settings.json. Reads the hook JSON from stdin.
 Exit 0 = allow (normal permission flow), exit 2 + stderr = block and tell Claude why.
 
 Enforces:
-  - 00-index §0.5: Python runs only via the tlw conda env full path (bare `python`/`pip`
-    on Windows hits the Store stub or the wrong env).
+  - 00-index §0.5: Python runs through this project's environment, never a bare
+    `python`/`pip` (on Windows that resolves to the Store stub, or to whichever
+    interpreter happens to be first on PATH).
   - structure.md:   raw data dirs are immutable; experiment logs are evidence (§0.1) and
     must never be edited by hand.
 """
 import json
+import os
 import re
+import shutil
 import sys
 
-TLW = r"C:\Users\ham25\.conda\envs\tlw\python.exe"
+
+def project_interpreter() -> str:
+    """The interpreter this project's commands should name, on this machine.
+
+    Resolved rather than written down, so the guard is correct in any checkout.
+    `TLW_PYTHON` wins when set; otherwise the interpreter running this hook is
+    the right answer, because Claude Code launches the hook with the project's
+    own Python.
+    """
+    return (
+        os.environ.get("TLW_PYTHON")
+        or sys.executable
+        or shutil.which("python")
+        or "python"
+    )
 
 # Paths (relative, forward- or back-slash) that no file tool may modify.
 PROTECTED = [
@@ -47,10 +64,15 @@ def main() -> None:
         cmd = tool_input.get("command") or ""
         m = BARE_PY.search(cmd)
         if m:
+            py = project_interpreter()
             block(
-                f"BLOCKED by .claude/hooks/guard.py (00-index §0.5): bare `{m.group(1)}` "
-                f"is the Windows Store stub / wrong env. Run Python only via the full "
-                f'path: & "{TLW}" (pip: & "{TLW}" -m pip).'
+                f"BLOCKED by .claude/hooks/guard.py (00-index §0.5): a bare "
+                f"`{m.group(1)}` does not reliably resolve to this project's "
+                f"environment. Name this machine's interpreter in full:\n"
+                f'  & "{py}" <args>\n'
+                f'  & "{py}" -m pip <args>\n'
+                f"Print it with: conda run -n tlw python -c "
+                f"\"import sys; print(sys.executable)\"  (or set TLW_PYTHON)."
             )
         # Bash writing into protected dirs (>, >>, cp/mv/rm/sed -i targeting them).
         # `>>?(?!&)` matches real file redirects but NOT fd-duplication like `2>&1`

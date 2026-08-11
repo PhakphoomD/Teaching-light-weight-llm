@@ -1,4 +1,4 @@
-"""CLI tests (build instruction 4): the demo invocation + the banner
+"""CLI tests: the documented invocation and the honesty banner
 must actually reach stdout, and correctness/reference_match must print as
 separate lines."""
 

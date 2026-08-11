@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import ast
 import builtins
+import subprocess
 import importlib.util
 import sys
 from pathlib import Path
@@ -99,3 +100,18 @@ def test_driver_has_no_unbound_name(path: Path) -> None:
         f"{path.relative_to(ROOT)} reads {missing} but never binds or imports "
         f"them; this is how GROUNDINGS and the stopword set were lost"
     )
+
+
+def test_the_documented_test_inventory_is_current():
+    """docs/HOW_TO_RUN.md lists every test file and its count.
+
+    A reader uses that table to run one group rather than the whole suite, so a
+    new file nobody documented, or a count that has moved, makes the table
+    misleading in exactly the way a stale command is. The generator holds the
+    comparison; this only calls it.
+    """
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "make_test_inventory.py"), "--check"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

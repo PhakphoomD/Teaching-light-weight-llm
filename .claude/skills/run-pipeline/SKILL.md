@@ -9,7 +9,7 @@ Authority: `00-index §0.3` (reproducible), `§0.5` (python path), `rules/schema
 
 ## The one command
 ```powershell
-& "C:\Users\ham25\.conda\envs\tlw\python.exe" -m tools.dataset.cli --all
+& "$env:TLW_PYTHON" -m tools.dataset.cli --all   # or the full path from §0.5
 ```
 Run from the repo root. Single domain: replace `--all` with `--domain <name>`.
 

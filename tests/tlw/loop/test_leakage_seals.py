@@ -1,4 +1,4 @@
-"""Leakage-seal tests for the loop block (DoD step 3/4).
+"""The loop's leakage seals: no prompt bound for the student may carry the reference.
 
 Proves, with mocked student/teacher/judge (no API calls), that no
 student-bound or judge-bound prompt ever carries the reference answer in

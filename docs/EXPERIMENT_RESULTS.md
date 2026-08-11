@@ -1533,7 +1533,7 @@ Regenerates all 17 figures (light and dark) and all 22 tables from `runs/`, `rep
 python -m pytest tests/ -q
 ```
 
-476 tests, including `tests/tlw/figures/`, which recomputes each published headline from its
+479 tests, including `tests/tlw/figures/`, which recomputes each published headline from its
 artifact and fails if a figure and a document disagree.
 
 ```bash

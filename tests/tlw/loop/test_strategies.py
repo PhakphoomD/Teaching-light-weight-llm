@@ -1,4 +1,4 @@
-"""Call-pattern tests for arm strategies A/B/C/D (DoD step 5).
+"""Call patterns for the four arm strategies: who is asked what, and in which order.
 
 All mocked — no API calls. Proves: A = exactly one student call, zero
 teacher calls. B = zero teacher calls, ever. C/D = teacher called between

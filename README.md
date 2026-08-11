@@ -192,6 +192,10 @@ all 17 figures, all 22 tables, 26 null results, and the six guardrails that caug
 
 ## Install and run
 
+The short version is below. **[docs/HOW_TO_RUN.md](docs/HOW_TO_RUN.md)** is the full guide: every
+command grouped by what you are trying to do, a table of all 25 test files with the command that
+runs each one on its own, and a troubleshooting section.
+
 **Requirements:** Python 3.11+, [Ollama](https://ollama.com) for the local model, ~8GB VRAM for the
 optional fine-tune. A Groq free-tier key is needed only to re-run judging.
 
@@ -241,7 +245,7 @@ Regenerates all 17 figures (light and dark) and all 22 tables from the committed
 python -m pytest tests/ -q
 ```
 
-476 tests, including a suite that recomputes each published headline from its artifact and fails if
+479 tests, including a suite that recomputes each published headline from its artifact and fails if
 a figure and a document ever disagree.
 
 ```bash
@@ -273,6 +277,7 @@ tests/                     mirrors src/ and tools/
 
 | looking for | go to |
 |---|---|
+| how to run any of this, including one test at a time | [docs/HOW_TO_RUN.md](docs/HOW_TO_RUN.md) |
 | the whole study with every number | [docs/EXPERIMENT_RESULTS.md](docs/EXPERIMENT_RESULTS.md) |
 | how the answer key used to reach the model | [docs/LEAKAGE_AUDIT.md](docs/LEAKAGE_AUDIT.md) |
 | what was decided before each study ran | [docs/protocol/](docs/protocol/README.md) |

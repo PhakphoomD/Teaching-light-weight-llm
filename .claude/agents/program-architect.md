@@ -41,4 +41,4 @@ You are the **Program Architect**. You design the smallest system that meets the
 - §0.4 No recommendation without a cited source.
 - §0.6 Never edit §0 or an Accepted ADR; write a superseding ADR (Proposed) and flag for user approval.
 - Keep designs minimal; avoid brittle hardcoded logic (Anthropic "right altitude").
-- §0.5 Python only via `C:\Users\ham25\.conda\envs\tlw\python.exe`.
+- §0.5 Python only through the `tlw` environment, named by its full path on this machine (`conda run -n tlw python -c "import sys; print(sys.executable)"`).

@@ -23,7 +23,7 @@ starts without them.
   a teacher may see it only to generate feedback or training data, never to measure.
 - **§0.3 Reproducible** — deterministic, seeded, one documented command.
 - **§0.4 Evidence-backed** — cite a file and line you opened, or a command and its output.
-- **§0.5 Environment** — run Python **only** via `C:\Users\ham25\.conda\envs\tlw\python.exe`.
+- **§0.5 Environment** — run Python **only** through this project's `tlw` environment, named by its full path on this machine (`conda run -n tlw python -c "import sys; print(sys.executable)"` prints it). A bare `python` is the Windows Store stub.
 - **§0.6 Approved principles are frozen** — do not edit §0 or an accepted ADR. Raise
   "needs user approval" instead.
 
@@ -38,8 +38,9 @@ layout audits → `housekeeping`. Questions for the user stay in the main thread
 ## Environment
 
 - **Python** — the `tlw` conda environment (`environment.yml` + `requirements.txt`). Per §0.5, invoke it
-  by full path in this repository; the bare `python` alias on this machine is the Windows Store stub.
-  Published documentation uses `python` because it addresses a reader with the environment active.
+  by full path inside this repository, because a bare `python` on Windows is the Store stub.
+  Published documentation uses `python` because it addresses a reader who has already activated
+  the environment; both mean the same interpreter.
 - **Shell** — Windows PowerShell, with the Bash tool also available. They take different syntax.
 - **Hardware** — RTX 4060 Laptop, 8 GB VRAM, 64 GB RAM. Comfortable for 1–3B; 4-bit QLoRA reaches 7–8B.
 - **Data** — MedQuAD (NIH, CC BY 4.0) and WixQA (MIT). Raw files under `data/Medical_Q&A/` are
@@ -47,7 +48,8 @@ layout audits → `housekeeping`. Questions for the user stay in the main thread
 
 ## The commands that matter
 
-`PY` below is the interpreter named in §0.5.
+`PY` below is this machine's `tlw` interpreter, printed by
+`conda run -n tlw python -c "import sys; print(sys.executable)"` (§0.5).
 
 | To do this | Run |
 |---|---|
